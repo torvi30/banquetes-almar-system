@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Admin | Banquetes Almar</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <section class="section">
+    <div class="container" style="max-width: 500px;">
+      <div class="section-heading">
+        <p class="section-label">Administrador</p>
+        <h2>Iniciar sesión</h2>
+      </div>
+
+      <form id="loginForm" class="quote-form" style="grid-template-columns: 1fr;">
+        <div class="form-group">
+          <label for="email">Correo</label>
+          <input type="email" id="email" placeholder="admin@almar.com" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" placeholder="Tu contraseña" required />
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Ingresar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script src="../js/login.js"></script>
+</body>
+</html>
