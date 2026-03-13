@@ -1,24 +1,25 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
+require("dotenv").config()
 
-const authRoutes = require("./routes/auth.routes");
-const quoteRoutes = require("./routes/quotes.routes");
+const express = require("express")
+const cors = require("cors")
 
-const app = express();
+const authRoutes = require("./routes/auth.routes")
+const quoteRoutes = require("./routes/quotes.routes")
 
-app.use(cors());
-app.use(express.json());
+const app = express()
+
+app.use(cors())
+app.use(express.json())
 
 app.get("/", (req, res) => {
-  res.json({ message: "Servidor backend Banquetes Almar activo." });
-});
+  res.send("Backend Banquetes Almar funcionando 🚀")
+})
 
-app.use("/api/auth", authRoutes);
-app.use("/api/quotes", quoteRoutes);
+app.use("/api/auth", authRoutes)
+app.use("/api/quotes", quoteRoutes)
 
-const PORT = process.env.PORT || 3001;
+const PORT = 3001
 
 app.listen(PORT, () => {
-  console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
-});
+  console.log(`Servidor backend corriendo en http://localhost:${PORT}`)
+})

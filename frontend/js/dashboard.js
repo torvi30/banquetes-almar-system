@@ -3,29 +3,30 @@ const adminWelcome = document.getElementById("adminWelcome");
 const logoutBtn = document.getElementById("logoutBtn");
 
 const token = localStorage.getItem("token");
-const adminNombre = localStorage.getItem("adminNombre");
 
 if (!token) {
+  alert("Debes iniciar sesión primero.");
   window.location.href = "./login.html";
 }
 
-if (adminWelcome && adminNombre) {
-  adminWelcome.textContent = `Bienvenido, ${adminNombre}`;
-}
+adminWelcome.textContent = "Bienvenido, Administrador";
 
-const loadQuotes = async () => {
+async function cargarCotizaciones() {
   try {
-    const response = await fetch("http://localhost:3001/api/quotes", {
+    const res = await fetch("http://localhost:3001/api/quotes", {
+      method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`
+        "Content-Type": "application/json"
       }
     });
 
-    const data = await response.json();
+    const data = await res.json();
 
-    if (!response.ok) {
-      throw new Error(data.message || "No se pudieron cargar las cotizaciones.");
+    if (!res.ok) {
+      throw new Error(data.message || "Error al obtener cotizaciones");
     }
+
+    quotesContainer.innerHTML = "";
 
     if (!data.length) {
       quotesContainer.innerHTML = `
@@ -37,32 +38,30 @@ const loadQuotes = async () => {
       return;
     }
 
-    quotesContainer.innerHTML = data.map((quote) => `
-      <article class="reason-card" style="text-align:left;">
+    data.forEach((quote) => {
+      const card = document.createElement("div");
+      card.className = "reason-card";
+      card.style.textAlign = "left";
+
+      card.innerHTML = `
         <h3>${quote.nombre}</h3>
         <p><strong>Teléfono:</strong> ${quote.telefono}</p>
         <p><strong>Evento:</strong> ${quote.evento}</p>
         <p><strong>Personas:</strong> ${quote.personas}</p>
-        <p><strong>Mensaje:</strong> ${quote.mensaje}</p>
-        <p><strong>Fecha:</strong> ${new Date(quote.created_at).toLocaleString()}</p>
-      </article>
-    `).join("");
+        <p><strong>Mensaje:</strong> ${quote.mensaje ?? ""}</p>
+      `;
+
+      quotesContainer.appendChild(card);
+    });
   } catch (error) {
-    console.error(error);
+    console.error("ERROR DASHBOARD:", error);
     alert(error.message);
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("adminNombre");
-    window.location.href = "./login.html";
   }
-};
-
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("adminNombre");
-    window.location.href = "./login.html";
-  });
 }
 
-loadQuotes();
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("token");
+  window.location.href = "./login.html";
+});
+
+cargarCotizaciones();

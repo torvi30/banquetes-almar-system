@@ -1,34 +1,32 @@
-const loginForm = document.getElementById("loginForm");
+const form = document.getElementById("loginForm")
 
-if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+form.addEventListener("submit", async (e) => {
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
+  e.preventDefault()
 
-    try {
-      const response = await fetch("http://localhost:3001/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
-      });
+  const email = document.getElementById("email").value
+  const password = document.getElementById("password").value
 
-      const data = await response.json();
+  const res = await fetch("http://localhost:3001/api/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email, password })
+  })
 
-      if (!response.ok) {
-        throw new Error(data.message || "Error en login.");
-      }
+  const data = await res.json()
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("adminNombre", data.admin.nombre);
+  if (res.ok) {
 
-      window.location.href = "./dashboard.html";
-    } catch (error) {
-      console.error(error);
-      alert(error.message);
-    }
-  });
-}
+    localStorage.setItem("token", data.token)
+
+    window.location.href = "dashboard.html"
+
+  } else {
+
+    alert(data.message)
+
+  }
+
+})
