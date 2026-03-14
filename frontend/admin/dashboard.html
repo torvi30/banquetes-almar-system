@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
-  <section class="section">
+  <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
         <p class="section-label">Panel Admin</p>
@@ -15,11 +15,20 @@
         <p id="adminWelcome"></p>
       </div>
 
-      <div style="display:flex; justify-content:flex-end; margin-bottom: 1rem;">
-        <button id="logoutBtn" class="btn btn-secondary">Cerrar sesión</button>
+      <div class="admin-topbar">
+        <div class="admin-summary">
+          <div class="summary-card">
+            <span class="summary-title">Total de solicitudes</span>
+            <strong id="totalQuotes">0</strong>
+          </div>
+        </div>
+
+        <button id="logoutBtn" class="btn btn-secondary">
+          Cerrar sesión
+        </button>
       </div>
 
-      <div id="quotesContainer" style="display:grid; gap:1rem;"></div>
+      <div id="quotesContainer" class="quotes-grid"></div>
     </div>
   </section>
 

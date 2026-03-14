@@ -652,3 +652,131 @@
       font-size: 0.95rem;
     }
   }
+  .admin-panel {
+    min-height: 100vh;
+  }
+  
+  .admin-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  .admin-summary {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .summary-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(230, 199, 123, 0.18);
+    border-radius: 18px;
+    padding: 1rem 1.2rem;
+    min-width: 220px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+  
+  .summary-title {
+    display: block;
+    color: #cfcfcf;
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .summary-card strong {
+    font-size: 1.8rem;
+    color: #e6c77b;
+  }
+  
+  .quotes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .quote-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    border: 1px solid rgba(230, 199, 123, 0.18);
+    border-radius: 22px;
+    padding: 1.4rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+  }
+  
+  .quote-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .quote-card h3 {
+    color: #f5f5f5;
+    margin-bottom: 0.35rem;
+    font-size: 1.2rem;
+  }
+  
+  .quote-date {
+    color: #bcbcbc;
+    font-size: 0.85rem;
+  }
+  
+  .quote-badge {
+    background: rgba(200, 155, 60, 0.12);
+    color: #e6c77b;
+    border: 1px solid rgba(230, 199, 123, 0.2);
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  
+  .quote-card-body p {
+    color: #d8d8d8;
+    margin-bottom: 0.6rem;
+  }
+  
+  .quote-card-actions {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-top: 1.2rem;
+  }
+  
+  .btn-danger {
+    background: transparent;
+    color: #ff9f9f;
+    border: 1px solid rgba(255, 120, 120, 0.4);
+  }
+  
+  .btn-danger:hover {
+    background: rgba(255, 120, 120, 0.08);
+  }
+  
+  .empty-state-card {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    border-radius: 22px;
+    border: 1px solid rgba(230, 199, 123, 0.18);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  
+  .empty-state-card h3 {
+    color: #e6c77b;
+    margin-bottom: 0.7rem;
+  }
+  
+  .empty-state-card p {
+    color: #d0d0d0;
+  }
+  
+  @media (max-width: 900px) {
+    .quotes-grid {
+      grid-template-columns: 1fr;
+    }
+  }
