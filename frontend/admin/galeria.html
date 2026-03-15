@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galería Admin | Banquetes Almar</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <section class="section admin-panel">
+    <div class="container">
+      <div class="section-heading">
+        <p class="section-label">Panel Admin</p>
+        <h2>Administrar galería</h2>
+        <p>Sube y elimina imágenes para la página principal.</p>
+      </div>
+
+      <div class="admin-menu">
+        <a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
+        <a href="./galeria.html" class="btn btn-secondary">Galería</a>
+        <a href="./login.html" class="btn btn-secondary">Cerrar sesión</a>
+      </div>
+
+      <form id="galleryForm" class="quote-form" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="titulo">Título de la imagen</label>
+          <input type="text" id="titulo" name="titulo" placeholder="Ej: Matrimonio elegante" />
+        </div>
+
+        <div class="form-group">
+          <label for="imagen">Seleccionar imagen</label>
+          <input type="file" id="imagen" name="imagen" accept="image/*" required />
+        </div>
+
+        <div class="form-group full-width">
+          <button type="submit" class="btn btn-primary">Subir imagen</button>
+        </div>
+      </form>
+
+      <div id="galleryAdminGrid" class="quotes-grid" style="margin-top: 2rem;"></div>
+    </div>
+  </section>
+
+  <script src="../js/galeria-admin.js"></script>
+</body>
+</html>

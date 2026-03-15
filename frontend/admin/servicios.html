@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Servicios Admin | Banquetes Almar</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<section class="section admin-panel">
+<div class="container">
+
+<div class="section-heading">
+<p class="section-label">Panel Admin</p>
+<h2>Administrar servicios</h2>
+<p>Agrega o elimina servicios del sitio web.</p>
+</div>
+
+<div class="admin-menu">
+<a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
+<a href="./galeria.html" class="btn btn-secondary">Galería</a>
+<a href="./servicios.html" class="btn btn-secondary">Servicios</a>
+<a href="./login.html" class="btn btn-secondary">Cerrar sesión</a>
+</div>
+
+<form id="serviceForm" class="quote-form" enctype="multipart/form-data">
+
+<div class="form-group">
+<label>Título</label>
+<input type="text" id="titulo" required>
+</div>
+
+<div class="form-group">
+<label>Imagen</label>
+<input type="file" id="imagen" required>
+</div>
+
+<div class="form-group full-width">
+<label>Descripción</label>
+<textarea id="descripcion" rows="4" required></textarea>
+</div>
+
+<div class="form-group full-width">
+<button type="submit" class="btn btn-primary">Crear servicio</button>
+</div>
+
+</form>
+
+<div id="servicesGrid" class="quotes-grid" style="margin-top:2rem;"></div>
+
+</div>
+</section>
+
+<script src="../js/servicios-admin.js"></script>
+
+</body>
+</html>

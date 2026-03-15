@@ -780,3 +780,10 @@
       grid-template-columns: 1fr;
     }
   }
+  .admin-menu {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
