@@ -8,6 +8,7 @@ const authRoutes = require("./routes/auth.routes");
 const quoteRoutes = require("./routes/quotes.routes");
 const galleryRoutes = require("./routes/gallery.routes");
 const servicesRoutes = require("./routes/services.routes");
+const eventsRoutes = require("./routes/events.routes");
 const app = express();
 
 app.use(cors({
@@ -26,6 +27,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/quotes", quoteRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/services", servicesRoutes);
+app.use("/api/events", eventsRoutes);
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
