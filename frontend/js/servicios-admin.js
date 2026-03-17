@@ -1,75 +1,111 @@
+const form = document.getElementById("formServicio");
+const listaServicios = document.getElementById("listaServicios");
+
 const token = localStorage.getItem("token");
-const form = document.getElementById("serviceForm");
-const grid = document.getElementById("servicesGrid");
 
-async function cargarServicios() {
+if (!token) {
+  alert("Debes iniciar sesión");
+  window.location.href = "./login.html";
+}
 
-  const res = await fetch("http://localhost:3001/api/services");
-  const data = await res.json();
+// 🔥 Crear servicio
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-  grid.innerHTML = "";
+  const formData = new FormData();
+  formData.append("titulo", document.getElementById("titulo").value);
+  formData.append("descripcion", document.getElementById("descripcion").value);
+  formData.append("imagen", document.getElementById("imagen").files[0]);
 
-  if(!data.length){
-    grid.innerHTML = `<div class="empty-state-card">
-    <h3>No hay servicios aún</h3>
-    </div>`;
-    return;
+  try {
+    const res = await fetch("http://localhost:3001/api/services", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      },
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Error al crear servicio");
+    }
+
+    alert("Servicio creado correctamente");
+    form.reset();
+    cargarServicios();
+
+  } catch (error) {
+    console.error("ERROR SERVICIO:", error);
+    alert(error.message);
   }
+});
 
-  data.forEach(service => {
+// 🔥 Cargar servicios
+async function cargarServicios() {
+  try {
+    const res = await fetch("http://localhost:3001/api/services");
+    const data = await res.json();
 
-    const card = document.createElement("article");
-    card.className = "quote-card";
+    listaServicios.innerHTML = "";
 
-    card.innerHTML = `
-    <img src="http://localhost:3001/uploads/${service.imagen}" style="width:100%;height:220px;object-fit:cover;border-radius:16px;margin-bottom:1rem;">
-    <h3>${service.titulo}</h3>
-    <p>${service.descripcion}</p>
-    <div class="quote-card-actions">
-    <button class="btn btn-danger" onclick="eliminarServicio(${service.id})">Eliminar</button>
-    </div>
-    `;
+    data.forEach(servicio => {
+      const div = document.createElement("div");
 
-    grid.appendChild(card);
+      div.innerHTML = `
+        <h3>${servicio.titulo}</h3>
+        <p>${servicio.descripcion}</p>
+        <img src="http://localhost:3001/uploads/${servicio.imagen}" width="200"/>
+        <br><br>
+        <button onclick="eliminarServicio(${servicio.id})">Eliminar</button>
+        <hr>
+      `;
 
+      listaServicios.appendChild(div);
+    });
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// 🔥 Eliminar servicio
+async function eliminarServicio(id) {
+  const confirmar = confirm("¿Eliminar servicio?");
+  if (!confirmar) return;
+
+  try {
+    const res = await fetch(`http://localhost:3001/api/services/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Error al eliminar");
+    }
+
+    cargarServicios();
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+}
+
+// 🔥 LOGOUT (IMPORTANTE)
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("adminNombre");
+    window.location.href = "./login.html";
   });
-
 }
-
-async function eliminarServicio(id){
-
-const confirmar = confirm("Eliminar servicio?");
-if(!confirmar) return;
-
-await fetch(`http://localhost:3001/api/services/${id}`,{
-method:"DELETE",
-headers:{ Authorization:`Bearer ${token}` }
-});
-
-cargarServicios();
-
-}
-
-form.addEventListener("submit", async e => {
-
-e.preventDefault();
-
-const data = new FormData();
-
-data.append("titulo",document.getElementById("titulo").value);
-data.append("descripcion",document.getElementById("descripcion").value);
-data.append("imagen",document.getElementById("imagen").files[0]);
-
-await fetch("http://localhost:3001/api/services",{
-method:"POST",
-headers:{ Authorization:`Bearer ${token}` },
-body:data
-});
-
-form.reset();
-
-cargarServicios();
-
-});
 
 cargarServicios();

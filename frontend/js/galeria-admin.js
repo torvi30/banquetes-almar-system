@@ -105,5 +105,14 @@ galleryForm.addEventListener("submit", async (e) => {
     alert(error.message);
   }
 });
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("adminNombre");
+    window.location.href = "./login.html";
+  });
+}
 
 cargarGaleriaAdmin();
