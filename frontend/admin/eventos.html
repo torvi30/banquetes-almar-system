@@ -1,104 +1,78 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Eventos | Banquetes Almar</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
+  <section class="section admin-panel">
+    <div class="container">
+      <div class="section-heading">
+        <p class="section-label">Panel Admin</p>
+        <h2>Administrar eventos</h2>
+        <p>Registra y controla los eventos del negocio.</p>
+      </div>
 
-<section class="section admin-panel">
-  <div class="container">
+      <div class="admin-menu">
+        <a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
+        <a href="./galeria.html" class="btn btn-secondary">Galería</a>
+        <a href="./servicios.html" class="btn btn-secondary">Servicios</a>
+        <a href="./eventos.html" class="btn btn-secondary">Eventos</a>
+        <button id="logoutBtn" class="btn btn-secondary" type="button">Cerrar sesión</button>
+      </div>
 
-    <div class="section-heading">
-      <p class="section-label">Panel Admin</p>
-      <h2>Administrar eventos</h2>
-      <p>Registra, edita y controla los eventos del negocio.</p>
+      <form id="eventForm" class="quote-form">
+        <div class="form-group">
+          <label for="cliente">Cliente</label>
+          <input type="text" id="cliente" name="cliente" required />
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input type="text" id="telefono" name="telefono" />
+        </div>
+
+        <div class="form-group">
+          <label for="tipo">Tipo de evento</label>
+          <input type="text" id="tipo" name="tipo" />
+        </div>
+
+        <div class="form-group">
+          <label for="fecha">Fecha del evento</label>
+          <input type="date" id="fecha" name="fecha" />
+        </div>
+
+        <div class="form-group">
+          <label for="lugar">Lugar</label>
+          <input type="text" id="lugar" name="lugar" />
+        </div>
+
+        <div class="form-group">
+          <label for="personas">Personas</label>
+          <input type="number" id="personas" name="personas" min="1" />
+        </div>
+
+        <div class="form-group">
+          <label for="valorTotal">Valor total</label>
+          <input type="number" id="valorTotal" name="valorTotal" min="0" step="0.01" />
+        </div>
+
+        <div class="form-group">
+          <label for="abono">Abono</label>
+          <input type="number" id="abono" name="abono" min="0" step="0.01" />
+        </div>
+
+        <div class="form-group full-width event-form-actions">
+          <button type="submit" class="btn btn-primary">Guardar evento</button>
+        </div>
+      </form>
+
+      <div id="eventsList" class="quotes-grid" style="margin-top: 2rem;"></div>
     </div>
+  </section>
 
-    <div class="admin-menu">
-      <a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
-      <a href="./galeria.html" class="btn btn-secondary">Galería</a>
-      <a href="./servicios.html" class="btn btn-secondary">Servicios</a>
-      <a href="./eventos.html" class="btn btn-secondary">Eventos</a>
-      <button id="logoutBtn" class="btn btn-secondary">Cerrar sesión</button>
-    </div>
-
-    <form id="eventForm" class="quote-form">
-
-      <input type="hidden" id="eventoId">
-
-      <div class="form-group">
-        <label>Cliente</label>
-        <input type="text" id="cliente" required>
-      </div>
-
-      <div class="form-group">
-        <label>Teléfono</label>
-        <input type="text" id="telefono">
-      </div>
-
-      <div class="form-group">
-        <label>Tipo de evento</label>
-        <input type="text" id="tipo_evento">
-      </div>
-
-      <div class="form-group">
-        <label>Fecha del evento</label>
-        <input type="date" id="fecha_evento">
-      </div>
-
-      <div class="form-group">
-        <label>Lugar</label>
-        <input type="text" id="lugar">
-      </div>
-
-      <div class="form-group">
-        <label>Personas</label>
-        <input type="number" id="personas">
-      </div>
-
-      <div class="form-group">
-        <label>Valor total</label>
-        <input type="number" id="valor_total">
-      </div>
-
-      <div class="form-group">
-        <label>Abono</label>
-        <input type="number" id="abono">
-      </div>
-
-      <div class="form-group">
-        <label>Estado</label>
-        <select id="estado">
-          <option>Nuevo</option>
-          <option>Contactado</option>
-          <option>Cotizado</option>
-          <option>Confirmado</option>
-          <option>Realizado</option>
-          <option>Cancelado</option>
-        </select>
-      </div>
-
-      <div class="form-group full-width">
-        <label>Observaciones</label>
-        <textarea id="observaciones"></textarea>
-      </div>
-
-      <div class="form-group full-width event-form-actions">
-        <button type="submit" class="btn btn-primary" id="saveEventBtn">Guardar evento</button>
-        <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
-      </div>
-
-    </form>
-
-    <div id="eventsGrid" class="quotes-grid" style="margin-top:2rem;"></div>
-
-  </div>
-</section>
-
-<script src="../js/eventos-admin.js"></script>
-
+  <script src="../js/eventos-admin.js"></script>
 </body>
 </html>

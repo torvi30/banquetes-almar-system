@@ -1,137 +1,119 @@
 const express = require("express");
-const db = require("../config/db");
-const verifyToken = require("../middleware/auth");
-
 const router = express.Router();
+const fs = require("fs");
+const path = require("path");
 
-// Obtener todos los eventos
-router.get("/", async (req, res) => {
+const filePath = path.join(__dirname, "../data/eventos.json");
+
+function leerEventos() {
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, "[]");
+  }
+
+  const data = fs.readFileSync(filePath, "utf8");
+  return JSON.parse(data || "[]");
+}
+
+function guardarEventos(data) {
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+}
+
+router.get("/", (req, res) => {
   try {
-    const [rows] = await db.query(
-      "SELECT *, (valor_total - abono) AS saldo FROM eventos ORDER BY fecha_evento DESC"
-    );
-
-    res.json(rows);
+    const eventos = leerEventos();
+    res.json(eventos);
   } catch (error) {
-    console.log("ERROR EVENTOS:", error);
+    console.log("ERROR GET EVENTOS:", error);
     res.status(500).json({ message: "Error al obtener eventos" });
   }
 });
 
-// Crear evento
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", (req, res) => {
   try {
     const {
       cliente,
       telefono,
-      tipo_evento,
-      fecha_evento,
+      tipo,
+      fecha,
       lugar,
       personas,
-      valor_total,
-      abono,
-      estado,
-      observaciones
+      valorTotal,
+      abono
     } = req.body;
 
-    const totalNumero = Number(valor_total || 0);
-    const abonoNumero = Number(abono || 0);
-    const saldo = totalNumero - abonoNumero;
+    const eventos = leerEventos();
 
-    await db.query(
-      `INSERT INTO eventos 
-      (cliente, telefono, tipo_evento, fecha_evento, lugar, personas, valor_total, abono, saldo, estado, observaciones)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        cliente,
-        telefono,
-        tipo_evento,
-        fecha_evento,
-        lugar,
-        personas,
-        totalNumero,
-        abonoNumero,
-        saldo,
-        estado,
-        observaciones
-      ]
-    );
+    const nuevoEvento = {
+      id: Date.now(),
+      cliente: cliente || "",
+      telefono: telefono || "",
+      tipo: tipo || "",
+      fecha: fecha || "",
+      lugar: lugar || "",
+      personas: Number(personas || 0),
+      valorTotal: Number(valorTotal || 0),
+      abono: Number(abono || 0)
+    };
 
-    res.json({ message: "Evento creado" });
+    eventos.push(nuevoEvento);
+    guardarEventos(eventos);
+
+    res.json(nuevoEvento);
   } catch (error) {
-    console.log("ERROR CREAR EVENTO:", error);
+    console.log("ERROR POST EVENTO:", error);
     res.status(500).json({ message: "Error al crear evento" });
   }
 });
 
-// Editar evento
-router.put("/:id", verifyToken, async (req, res) => {
+router.put("/:id", (req, res) => {
   try {
     const { id } = req.params;
-
     const {
       cliente,
       telefono,
-      tipo_evento,
-      fecha_evento,
+      tipo,
+      fecha,
       lugar,
       personas,
-      valor_total,
-      abono,
-      estado,
-      observaciones
+      valorTotal,
+      abono
     } = req.body;
 
-    const totalNumero = Number(valor_total || 0);
-    const abonoNumero = Number(abono || 0);
-    const saldo = totalNumero - abonoNumero;
+    let eventos = leerEventos();
 
-    await db.query(
-      `UPDATE eventos SET
-        cliente = ?,
-        telefono = ?,
-        tipo_evento = ?,
-        fecha_evento = ?,
-        lugar = ?,
-        personas = ?,
-        valor_total = ?,
-        abono = ?,
-        saldo = ?,
-        estado = ?,
-        observaciones = ?
-      WHERE id = ?`,
-      [
-        cliente,
-        telefono,
-        tipo_evento,
-        fecha_evento,
-        lugar,
-        personas,
-        totalNumero,
-        abonoNumero,
-        saldo,
-        estado,
-        observaciones,
-        id
-      ]
+    eventos = eventos.map((ev) =>
+      String(ev.id) === String(id)
+        ? {
+            ...ev,
+            cliente: cliente || "",
+            telefono: telefono || "",
+            tipo: tipo || "",
+            fecha: fecha || "",
+            lugar: lugar || "",
+            personas: Number(personas || 0),
+            valorTotal: Number(valorTotal || 0),
+            abono: Number(abono || 0)
+          }
+        : ev
     );
 
-    res.json({ message: "Evento actualizado correctamente" });
+    guardarEventos(eventos);
+
+    res.json({ message: "Evento actualizado" });
   } catch (error) {
-    console.log("ERROR EDITAR EVENTO:", error);
-    res.status(500).json({ message: "Error al editar evento" });
+    console.log("ERROR PUT EVENTO:", error);
+    res.status(500).json({ message: "Error al actualizar evento" });
   }
 });
 
-// Eliminar evento
-router.delete("/:id", verifyToken, async (req, res) => {
+router.delete("/:id", (req, res) => {
   try {
     const { id } = req.params;
 
-    await db.query(
-      "DELETE FROM eventos WHERE id = ?",
-      [id]
-    );
+    let eventos = leerEventos();
+    eventos = eventos.filter((ev) => String(ev.id) !== String(id));
+
+    guardarEventos(eventos);
 
     res.json({ message: "Evento eliminado" });
   } catch (error) {

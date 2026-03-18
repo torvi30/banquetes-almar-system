@@ -1,57 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Servicios Admin | Banquetes Almar</title>
-<link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servicios Admin | Banquetes Almar</title>
+  <link rel="stylesheet" href="../css/style.css">
 </head>
-
 <body>
 
 <section class="section admin-panel">
-<div class="container">
+  <div class="container">
 
-<div class="section-heading">
-<p class="section-label">Panel Admin</p>
-<h2>Administrar servicios</h2>
-<p>Agrega o elimina servicios del sitio web.</p>
-</div>
+    <div class="section-heading">
+      <p class="section-label">Panel Admin</p>
+      <h2>Administrar servicios</h2>
+      <p>Agrega, edita o elimina servicios del sitio web.</p>
+    </div>
 
-<div class="admin-menu">
-<a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
-<a href="./galeria.html" class="btn btn-secondary">Galería</a>
-<a href="./servicios.html" class="btn btn-secondary">Servicios</a>
-<a href="./eventos.html" class="btn btn-secondary">Eventos</a>
-<a href="./login.html" class="btn btn-secondary">Cerrar sesión</a>
-</div>
+    <div class="admin-menu">
+      <a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
+      <a href="./galeria.html" class="btn btn-secondary">Galería</a>
+      <a href="./servicios.html" class="btn btn-secondary">Servicios</a>
+      <a href="./eventos.html" class="btn btn-secondary">Eventos</a>
+      <button id="logoutBtn" class="btn btn-secondary" type="button">Cerrar sesión</button>
+    </div>
 
-<form id="serviceForm" class="quote-form" enctype="multipart/form-data">
+    <form id="serviceForm" class="quote-form" enctype="multipart/form-data">
 
-<div class="form-group">
-<label>Título</label>
-<input type="text" id="titulo" required>
-</div>
+      <input type="hidden" id="serviceId">
 
-<div class="form-group">
-<label>Imagen</label>
-<input type="file" id="imagen" required>
-</div>
+      <div class="form-group">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" required>
+      </div>
 
-<div class="form-group full-width">
-<label>Descripción</label>
-<textarea id="descripcion" rows="4" required></textarea>
-</div>
+      <div class="form-group">
+        <label for="imagen">Imagen</label>
+        <input type="file" id="imagen" accept="image/*">
+      </div>
 
-<div class="form-group full-width">
-<button type="submit" class="btn btn-primary">Crear servicio</button>
-</div>
+      <div class="form-group full-width">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" rows="4" required></textarea>
+      </div>
 
-</form>
+      <div class="form-group full-width event-form-actions">
+        <button type="submit" class="btn btn-primary" id="saveServiceBtn">Crear servicio</button>
+        <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
+      </div>
 
-<div id="servicesGrid" class="quotes-grid" style="margin-top:2rem;"></div>
+    </form>
 
-</div>
+    <div id="servicesGrid" class="quotes-grid" style="margin-top:2rem;"></div>
+
+  </div>
 </section>
 
 <script src="../js/servicios-admin.js"></script>
