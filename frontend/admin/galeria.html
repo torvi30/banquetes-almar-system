@@ -1,54 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galería Admin | Banquetes Almar</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-  <section class="section admin-panel">
-    <div class="container">
-      <div class="section-heading">
-        <p class="section-label">Panel Admin</p>
-        <h2>Administrar galería</h2>
-        <p>Sube y elimina imágenes para la página principal.</p>
-      </div>
 
-      <div class="admin-menu">
+<section class="section admin-panel">
+  <div class="container">
 
-        <a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
-      
-        <a href="./galeria.html" class="btn btn-secondary">Galería</a>
-      
-        <a href="./servicios.html" class="btn btn-secondary">Servicios</a>
-      
-        <a href="./eventos.html" class="btn btn-secondary">Eventos</a>
-      
-        <button id="logoutBtn" class="btn btn-secondary">Cerrar sesión</button>
-      
-      </div>
-
-      <form id="galleryForm" class="quote-form" enctype="multipart/form-data">
-        <div class="form-group">
-          <label for="titulo">Título de la imagen</label>
-          <input type="text" id="titulo" name="titulo" placeholder="Ej: Matrimonio elegante" />
-        </div>
-
-        <div class="form-group">
-          <label for="imagen">Seleccionar imagen</label>
-          <input type="file" id="imagen" name="imagen" accept="image/*" required />
-        </div>
-
-        <div class="form-group full-width">
-          <button type="submit" class="btn btn-primary">Subir imagen</button>
-        </div>
-      </form>
-
-      <div id="galleryAdminGrid" class="quotes-grid" style="margin-top: 2rem;"></div>
+    <div class="section-heading">
+      <p class="section-label">Panel Admin</p>
+      <h2>Administrar galería</h2>
+      <p>Sube, edita o elimina imágenes para la página principal.</p>
     </div>
-  </section>
 
-  <script src="../js/galeria-admin.js"></script>
+    <div class="admin-menu">
+      <a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
+      <a href="./galeria.html" class="btn btn-secondary">Galería</a>
+      <a href="./servicios.html" class="btn btn-secondary">Servicios</a>
+      <a href="./eventos.html" class="btn btn-secondary">Eventos</a>
+      <button id="logoutBtn" class="btn btn-secondary" type="button">Cerrar sesión</button>
+    </div>
+
+    <form id="galleryForm" class="quote-form" enctype="multipart/form-data">
+
+      <input type="hidden" id="galleryId">
+
+      <div class="form-group">
+        <label for="titulo">Título de la imagen</label>
+        <input type="text" id="titulo" placeholder="Ej: Mesa principal dorada" required>
+      </div>
+
+      <div class="form-group">
+        <label for="seccion">Sección</label>
+        <select id="seccion" required>
+          <option value="">Selecciona una sección</option>
+          <option value="Matrimonios">Matrimonios</option>
+          <option value="Cumpleaños">Cumpleaños</option>
+          <option value="Quince años">Quince años</option>
+          <option value="Empresariales">Empresariales</option>
+          <option value="Bautizos">Bautizos</option>
+          <option value="Decoración">Decoración</option>
+        </select>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="imagen">Seleccionar imagen</label>
+        <input type="file" id="imagen" accept="image/*">
+      </div>
+
+      <div class="form-group full-width event-form-actions">
+        <button type="submit" class="btn btn-primary" id="saveGalleryBtn">Subir imagen</button>
+        <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
+      </div>
+
+    </form>
+
+    <div id="galleryGrid" class="quotes-grid" style="margin-top:2rem;"></div>
+
+  </div>
+</section>
+
+<script src="../js/galeria-admin.js"></script>
+
 </body>
 </html>

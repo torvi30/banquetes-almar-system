@@ -64,7 +64,7 @@ router.put("/:id/status", verifyToken, async (req, res) => {
     const { id } = req.params;
     const { estado } = req.body;
 
-    const estadosValidos = ["Nuevo", "Contactado", "Reservado", "Finalizado", "Convertido"];
+    const estadosValidos = ["Nuevo", "Contactado", "Confirmado", "Cancelado", "Convertido"];
 
     if (!estadosValidos.includes(estado)) {
       return res.status(400).json({
@@ -78,7 +78,7 @@ router.put("/:id/status", verifyToken, async (req, res) => {
     );
 
     res.json({
-      message: "Estado actualizado"
+      message: "Estado actualizado correctamente"
     });
   } catch (error) {
     console.log("ERROR UPDATE STATUS:", error);

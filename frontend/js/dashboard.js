@@ -34,6 +34,18 @@ function construirWhatsappLink(quote) {
   return `https://wa.me/57${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
 }
 
+function obtenerClaseEstado(estado) {
+  const estadoNormalizado = String(estado || "Nuevo").toLowerCase();
+
+  if (estadoNormalizado === "nuevo") return "estado-nuevo";
+  if (estadoNormalizado === "contactado") return "estado-contactado";
+  if (estadoNormalizado === "confirmado") return "estado-confirmado";
+  if (estadoNormalizado === "cancelado") return "estado-cancelado";
+  if (estadoNormalizado === "convertido") return "estado-convertido";
+
+  return "estado-nuevo";
+}
+
 async function cargarStats() {
   try {
     const res = await fetch("http://localhost:3001/api/stats", {
@@ -175,6 +187,7 @@ async function cargarCotizaciones() {
       card.className = "quote-card";
 
       const whatsappLink = construirWhatsappLink(quote);
+      const claseEstado = obtenerClaseEstado(quote.estado);
 
       card.innerHTML = `
         <div class="quote-card-header">
@@ -188,7 +201,12 @@ async function cargarCotizaciones() {
         <div class="quote-card-body">
           <p><strong>Teléfono:</strong> ${quote.telefono}</p>
           <p><strong>Personas:</strong> ${quote.personas}</p>
-          <p><strong>Estado:</strong> <span class="status-pill">${quote.estado || "Nuevo"}</span></p>
+          <p>
+            <strong>Estado:</strong>
+            <span class="estado-badge ${claseEstado}">
+              ${quote.estado || "Nuevo"}
+            </span>
+          </p>
           <p><strong>Mensaje:</strong> ${quote.mensaje ? quote.mensaje : "Sin detalles adicionales."}</p>
         </div>
 
@@ -200,8 +218,8 @@ async function cargarCotizaciones() {
           <select class="status-select" data-id="${quote.id}">
             <option value="Nuevo" ${quote.estado === "Nuevo" ? "selected" : ""}>Nuevo</option>
             <option value="Contactado" ${quote.estado === "Contactado" ? "selected" : ""}>Contactado</option>
-            <option value="Reservado" ${quote.estado === "Reservado" ? "selected" : ""}>Reservado</option>
-            <option value="Finalizado" ${quote.estado === "Finalizado" ? "selected" : ""}>Finalizado</option>
+            <option value="Confirmado" ${quote.estado === "Confirmado" ? "selected" : ""}>Confirmado</option>
+            <option value="Cancelado" ${quote.estado === "Cancelado" ? "selected" : ""}>Cancelado</option>
             <option value="Convertido" ${quote.estado === "Convertido" ? "selected" : ""}>Convertido</option>
           </select>
 

@@ -1,23 +1,22 @@
-const API = "http://localhost:3001/api/events";
+const API_URL = "http://localhost:3001/api/events";
 
 const form = document.getElementById("eventForm");
-const lista = document.getElementById("eventsList");
+const grid = document.getElementById("eventsGrid");
 const logoutBtn = document.getElementById("logoutBtn");
 
-let editandoId = null;
+const eventIdInput = document.getElementById("eventId");
+const nombreInput = document.getElementById("nombre");
+const fechaInput = document.getElementById("fecha");
+const tipoInput = document.getElementById("tipo");
+const personasInput = document.getElementById("personas");
+const estadoInput = document.getElementById("estado");
+const imagenInput = document.getElementById("imagen");
+const descripcionInput = document.getElementById("descripcion");
 
-function calcularEstado(total, abono) {
-  total = Number(total || 0);
-  abono = Number(abono || 0);
+const saveBtn = document.getElementById("saveEventBtn");
+const cancelBtn = document.getElementById("cancelEditBtn");
 
-  if (abono <= 0) return "Pendiente";
-  if (abono < total) return "Parcial";
-  return "Pagado";
-}
-
-function formatearDinero(valor) {
-  return "$" + Number(valor || 0).toLocaleString("es-CO");
-}
+let enviando = false;
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
@@ -27,140 +26,173 @@ if (logoutBtn) {
   });
 }
 
+function limpiarFormulario() {
+  eventIdInput.value = "";
+  nombreInput.value = "";
+  fechaInput.value = "";
+  tipoInput.value = "";
+  personasInput.value = "";
+  estadoInput.value = "Pendiente";
+  imagenInput.value = "";
+  descripcionInput.value = "";
+  saveBtn.textContent = "Crear evento";
+}
+
+if (cancelBtn) {
+  cancelBtn.addEventListener("click", () => {
+    limpiarFormulario();
+  });
+}
+
 async function cargarEventos() {
   try {
-    const res = await fetch(API);
+    const res = await fetch(API_URL);
     const data = await res.json();
 
-    lista.innerHTML = "";
+    grid.innerHTML = "";
 
-    if (!data.length) {
-      lista.innerHTML = `
+    if (!res.ok) {
+      throw new Error(data.message || "No se pudieron cargar los eventos");
+    }
+
+    if (!Array.isArray(data) || !data.length) {
+      grid.innerHTML = `
         <div class="empty-state-card">
-          <h3>No hay eventos registrados</h3>
-          <p>Cuando guardes eventos aparecerán aquí.</p>
+          <h3>No hay eventos</h3>
+          <p>Crea el primer evento.</p>
         </div>
       `;
       return;
     }
 
-    data.forEach((ev) => {
-      const saldo = Number(ev.valorTotal || 0) - Number(ev.abono || 0);
-      const estadoPago = calcularEstado(ev.valorTotal, ev.abono);
+    data.forEach((evento) => {
+      const card = document.createElement("article");
+      card.className = "quote-card";
 
-      lista.innerHTML += `
-        <article class="quote-card">
-          <h3>${ev.cliente}</h3>
-          <p><strong>Teléfono:</strong> ${ev.telefono || "No definido"}</p>
-          <p><strong>Evento:</strong> ${ev.tipo || "No definido"}</p>
-          <p><strong>Fecha:</strong> ${ev.fecha || "No definida"}</p>
-          <p><strong>Lugar:</strong> ${ev.lugar || "No definido"}</p>
-          <p><strong>Personas:</strong> ${ev.personas || 0}</p>
-          <p><strong>Total:</strong> ${formatearDinero(ev.valorTotal)}</p>
-          <p><strong>Abono:</strong> ${formatearDinero(ev.abono)}</p>
-          <p><strong>Saldo:</strong> ${formatearDinero(saldo)}</p>
-          <p><strong>Estado pago:</strong> ${estadoPago}</p>
+      card.innerHTML = `
+        ${evento.imagen ? `
+          <img
+            src="http://localhost:3001/uploads/${evento.imagen}"
+            alt="${evento.nombre || "Evento"}"
+            style="width:100%; height:220px; object-fit:cover; border-radius:16px; margin-bottom:1rem;"
+          >
+        ` : ""}
 
-          <div class="quote-card-actions">
-            <button class="btn btn-success" onclick="editar(${ev.id})">Editar</button>
-            <button class="btn btn-danger" onclick="eliminarEvento(${ev.id})">Eliminar</button>
-          </div>
-        </article>
+        <h3>${evento.nombre || "Sin nombre"}</h3>
+        <p><strong>Fecha:</strong> ${evento.fecha || "Sin fecha"}</p>
+        <p><strong>Tipo:</strong> ${evento.tipo || "Sin tipo"}</p>
+        <p><strong>Personas:</strong> ${evento.personas || 0}</p>
+        <p><strong>Estado:</strong> ${evento.estado || "Pendiente"}</p>
+        <p style="margin-top: 0.8rem; opacity: 0.9;">
+          <strong>Detalles:</strong> ${evento.descripcion || "Sin descripción"}
+        </p>
+
+        <div class="quote-card-actions">
+          <button class="btn btn-success edit-btn" data-id="${evento.id}">
+            Editar
+          </button>
+          <button class="btn btn-danger delete-btn" data-id="${evento.id}">
+            Eliminar
+          </button>
+        </div>
       `;
+
+      grid.appendChild(card);
     });
+
+    document.querySelectorAll(".edit-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const evento = data.find((e) => String(e.id) === String(btn.dataset.id));
+        if (!evento) return;
+
+        eventIdInput.value = evento.id;
+        nombreInput.value = evento.nombre || "";
+        fechaInput.value = evento.fecha || "";
+        tipoInput.value = evento.tipo || "";
+        personasInput.value = evento.personas || "";
+        estadoInput.value = evento.estado || "Pendiente";
+        descripcionInput.value = evento.descripcion || "";
+
+        saveBtn.textContent = "Actualizar evento";
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      });
+    });
+
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const confirmar = confirm("¿Eliminar evento?");
+        if (!confirmar) return;
+
+        await fetch(`${API_URL}/${btn.dataset.id}`, {
+          method: "DELETE"
+        });
+
+        await cargarEventos();
+      });
+    });
+
   } catch (error) {
-    console.error("ERROR CARGAR EVENTOS:", error);
-    alert("Error al cargar eventos");
+    console.error("ERROR CARGANDO EVENTOS:", error);
+    alert("Error cargando eventos");
   }
 }
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  alert("Formulario enviado"); // 👈 prueba
+  if (enviando) return;
+  enviando = true;
 
-  console.log("CLICK DETECTADO");
+  const id = eventIdInput.value;
 
-  const evento = {
-    cliente: form.cliente.value,
-    telefono: form.telefono.value,
-    tipo: form.tipo.value,
-    fecha: form.fecha.value,
-    lugar: form.lugar.value,
-    personas: form.personas.value,
-    valorTotal: Number(form.valorTotal.value || 0),
-    abono: Number(form.abono.value || 0)
-  };
+  const formData = new FormData();
+  formData.append("nombre", nombreInput.value);
+  formData.append("fecha", fechaInput.value);
+  formData.append("tipo", tipoInput.value);
+  formData.append("personas", Number(personasInput.value || 0));
+  formData.append("estado", estadoInput.value);
+  formData.append("descripcion", descripcionInput.value);
 
-  console.log("DATOS:", evento);
+  if (imagenInput.files[0]) {
+    formData.append("imagen", imagenInput.files[0]);
+  }
 
   try {
-    const res = await fetch("http://localhost:3001/api/events", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(evento)
-    });
+    let res;
 
-    console.log("RESPUESTA:", res);
+    if (id) {
+      res = await fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        body: formData
+      });
+    } else {
+      res = await fetch(API_URL, {
+        method: "POST",
+        body: formData
+      });
+    }
 
-    const data = await res.json();
-    console.log("DATA:", data);
+    const result = await res.json();
 
-    alert("Evento guardado");
+    if (!res.ok) {
+      throw new Error(result.message || "Error guardando evento");
+    }
 
-    form.reset();
-    cargarEventos();
+    alert(id ? "Evento actualizado correctamente" : "Evento creado correctamente");
+
+    limpiarFormulario();
+    await cargarEventos();
 
   } catch (error) {
-    console.error("ERROR:", error);
-    alert("Error al guardar");
+    console.error("ERROR GUARDANDO EVENTO:", error);
+    alert("Error guardando evento");
   }
+
+  enviando = false;
 });
-
-window.editar = async (id) => {
-  try {
-    const res = await fetch(API);
-    const data = await res.json();
-
-    const ev = data.find((e) => String(e.id) === String(id));
-    if (!ev) return;
-
-    form.cliente.value = ev.cliente || "";
-    form.telefono.value = ev.telefono || "";
-    form.tipo.value = ev.tipo || "";
-    form.fecha.value = ev.fecha || "";
-    form.lugar.value = ev.lugar || "";
-    form.personas.value = ev.personas || "";
-    form.valorTotal.value = ev.valorTotal || "";
-    form.abono.value = ev.abono || "";
-
-    editandoId = id;
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  } catch (error) {
-    console.error("ERROR EDITAR:", error);
-  }
-};
-
-window.eliminarEvento = async (id) => {
-  const confirmar = confirm("¿Eliminar evento?");
-  if (!confirmar) return;
-
-  try {
-    await fetch(`${API}/${id}`, {
-      method: "DELETE"
-    });
-
-    cargarEventos();
-  } catch (error) {
-    console.error("ERROR ELIMINAR:", error);
-    alert("Error al eliminar evento");
-  }
-};
 
 cargarEventos();

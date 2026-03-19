@@ -816,3 +816,82 @@
     gap: 1rem;
     flex-wrap: wrap;
   }
+  .btn-success {
+    background: transparent;
+    color: #9df0b5;
+    border: 1px solid rgba(80, 200, 120, 0.35);
+  }
+  
+  .btn-success:hover {
+    background: rgba(80, 200, 120, 0.12);
+  }
+  
+  .estado-badge {
+    display: inline-block;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-left: 0.35rem;
+  }
+  
+  .estado-nuevo {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f5f5f5;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  
+  .estado-contactado {
+    background: rgba(52, 152, 219, 0.15);
+    color: #8fd3ff;
+    border: 1px solid rgba(52, 152, 219, 0.28);
+  }
+  
+  .estado-confirmado {
+    background: rgba(46, 204, 113, 0.14);
+    color: #9df0b5;
+    border: 1px solid rgba(46, 204, 113, 0.28);
+  }
+  
+  .estado-cancelado {
+    background: rgba(231, 76, 60, 0.14);
+    color: #ffb0a8;
+    border: 1px solid rgba(231, 76, 60, 0.28);
+  }
+  
+  .estado-convertido {
+    background: rgba(200, 155, 60, 0.16);
+    color: #f3d98f;
+    border: 1px solid rgba(200, 155, 60, 0.28);
+  }
+  .gallery-section-block {
+    width: 100%;
+  }
+  .gallery-filters {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  
+  .gallery-filter-btn {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .gallery-filter-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+  
+  .gallery-filter-btn.active {
+    background: rgba(200, 155, 60, 0.14);
+    border-color: rgba(230, 199, 123, 0.35);
+    color: var(--gold-light);
+  }
