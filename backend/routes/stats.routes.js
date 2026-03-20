@@ -1,42 +1,40 @@
 const express = require("express");
 const db = require("../config/db");
+const verifyToken = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-
+router.get("/", verifyToken, async (req, res) => {
   try {
-
-    const [totalEventos] = await db.query(
-      "SELECT COUNT(*) as total FROM eventos"
+    const [[eventosRow]] = await db.query(
+      "SELECT COUNT(*) AS totalEventos FROM eventos"
     );
 
-    const [confirmados] = await db.query(
-      "SELECT COUNT(*) as total FROM eventos WHERE estado = 'Confirmado'"
+    const [[confirmadosRow]] = await db.query(
+      `SELECT COUNT(*) AS confirmados
+       FROM eventos
+       WHERE estado IN ('Confirmado', 'Pagado')`
     );
 
-    const [ingresos] = await db.query(
-      "SELECT SUM(valor_total) as total FROM eventos"
-    );
-
-    const [pendiente] = await db.query(
-      "SELECT SUM(valor_total - abono) as total FROM eventos"
+    const [[dineroRow]] = await db.query(
+      `SELECT
+         COALESCE(SUM(abono), 0) AS ingresos,
+         COALESCE(SUM(saldo), 0) AS pendiente
+       FROM eventos`
     );
 
     res.json({
-      totalEventos: totalEventos[0].total,
-      confirmados: confirmados[0].total,
-      ingresos: ingresos[0].total || 0,
-      pendiente: pendiente[0].total || 0
+      totalEventos: Number(eventosRow.totalEventos || 0),
+      confirmados: Number(confirmadosRow.confirmados || 0),
+      ingresos: Number(dineroRow.ingresos || 0),
+      pendiente: Number(dineroRow.pendiente || 0)
     });
-
   } catch (error) {
-
     console.log("ERROR STATS:", error);
-    res.status(500).json({ message: "Error stats" });
-
+    res.status(500).json({
+      message: "Error al obtener estadísticas"
+    });
   }
-
 });
 
 module.exports = router;

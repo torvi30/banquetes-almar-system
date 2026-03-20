@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calendario | Banquetes Almar</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <section class="section admin-panel">
+    <div class="container">
+      <div class="section-heading">
+        <p class="section-label">Panel Admin</p>
+        <h2>Calendario de eventos</h2>
+        <p>Visualiza eventos por fecha y edítalos fácilmente.</p>
+      </div>
+
+      <div class="admin-menu">
+        <a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
+        <a href="./galeria.html" class="btn btn-secondary">Galería</a>
+        <a href="./servicios.html" class="btn btn-secondary">Servicios</a>
+        <a href="./eventos.html" class="btn btn-secondary">Eventos</a>
+        <a href="./calendario.html" class="btn btn-secondary">Calendario</a>
+        <button id="logoutBtn" class="btn btn-secondary" type="button">Cerrar sesión</button>
+      </div>
+
+      <div class="calendar-toolbar">
+        <button id="prevMonthBtn" class="btn btn-secondary" type="button">← Mes anterior</button>
+        <h3 id="calendarTitle">Calendario</h3>
+        <button id="nextMonthBtn" class="btn btn-secondary" type="button">Mes siguiente →</button>
+      </div>
+
+      <div class="calendar-weekdays">
+        <div>Lun</div>
+        <div>Mar</div>
+        <div>Mié</div>
+        <div>Jue</div>
+        <div>Vie</div>
+        <div>Sáb</div>
+        <div>Dom</div>
+      </div>
+
+      <div id="calendarGrid" class="calendar-grid"></div>
+
+      <div class="calendar-details-wrap">
+        <div class="calendar-panel">
+          <h3 id="selectedDayTitle">Selecciona un día</h3>
+          <div id="selectedDayEvents" class="calendar-events-list">
+            <div class="empty-state-card">
+              <h3>Sin selección</h3>
+              <p>Haz clic en un día del calendario para ver los eventos.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="calendar-panel">
+          <h3>Próximos eventos</h3>
+          <div id="upcomingEvents" class="calendar-events-list">
+            <div class="empty-state-card">
+              <h3>Cargando</h3>
+              <p>Estamos consultando los próximos eventos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="../js/calendario-admin.js"></script>
+</body>
+</html>

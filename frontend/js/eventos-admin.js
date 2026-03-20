@@ -5,18 +5,25 @@ const grid = document.getElementById("eventsGrid");
 const logoutBtn = document.getElementById("logoutBtn");
 
 const eventIdInput = document.getElementById("eventId");
-const nombreInput = document.getElementById("nombre");
-const fechaInput = document.getElementById("fecha");
-const tipoInput = document.getElementById("tipo");
+const clienteInput = document.getElementById("cliente");
+const telefonoInput = document.getElementById("telefono");
+const tipoEventoInput = document.getElementById("tipo_evento");
+const fechaEventoInput = document.getElementById("fecha_evento");
+const lugarInput = document.getElementById("lugar");
 const personasInput = document.getElementById("personas");
-const estadoInput = document.getElementById("estado");
+const valorTotalInput = document.getElementById("valor_total");
+const abonoInput = document.getElementById("abono");
 const imagenInput = document.getElementById("imagen");
-const descripcionInput = document.getElementById("descripcion");
+const observacionesInput = document.getElementById("observaciones");
 
 const saveBtn = document.getElementById("saveEventBtn");
 const cancelBtn = document.getElementById("cancelEditBtn");
 
 let enviando = false;
+
+function formatearDinero(valor) {
+  return "$" + Number(valor || 0).toLocaleString("es-CO");
+}
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
@@ -28,13 +35,16 @@ if (logoutBtn) {
 
 function limpiarFormulario() {
   eventIdInput.value = "";
-  nombreInput.value = "";
-  fechaInput.value = "";
-  tipoInput.value = "";
+  clienteInput.value = "";
+  telefonoInput.value = "";
+  tipoEventoInput.value = "";
+  fechaEventoInput.value = "";
+  lugarInput.value = "";
   personasInput.value = "";
-  estadoInput.value = "Pendiente";
+  valorTotalInput.value = "";
+  abonoInput.value = "";
   imagenInput.value = "";
-  descripcionInput.value = "";
+  observacionesInput.value = "";
   saveBtn.textContent = "Crear evento";
 }
 
@@ -73,18 +83,23 @@ async function cargarEventos() {
         ${evento.imagen ? `
           <img
             src="http://localhost:3001/uploads/${evento.imagen}"
-            alt="${evento.nombre || "Evento"}"
+            alt="${evento.cliente || "Evento"}"
             style="width:100%; height:220px; object-fit:cover; border-radius:16px; margin-bottom:1rem;"
           >
         ` : ""}
 
-        <h3>${evento.nombre || "Sin nombre"}</h3>
-        <p><strong>Fecha:</strong> ${evento.fecha || "Sin fecha"}</p>
-        <p><strong>Tipo:</strong> ${evento.tipo || "Sin tipo"}</p>
+        <h3>${evento.cliente || "Sin cliente"}</h3>
+        <p><strong>Teléfono:</strong> ${evento.telefono || "No definido"}</p>
+        <p><strong>Tipo:</strong> ${evento.tipo_evento || "Sin tipo"}</p>
+        <p><strong>Fecha:</strong> ${evento.fecha_evento || "Sin fecha"}</p>
+        <p><strong>Lugar:</strong> ${evento.lugar || "Sin lugar"}</p>
         <p><strong>Personas:</strong> ${evento.personas || 0}</p>
+        <p><strong>Total:</strong> ${formatearDinero(evento.valor_total)}</p>
+        <p><strong>Abono:</strong> ${formatearDinero(evento.abono)}</p>
+        <p><strong>Saldo:</strong> ${formatearDinero(evento.saldo)}</p>
         <p><strong>Estado:</strong> ${evento.estado || "Pendiente"}</p>
         <p style="margin-top: 0.8rem; opacity: 0.9;">
-          <strong>Detalles:</strong> ${evento.descripcion || "Sin descripción"}
+          <strong>Observaciones:</strong> ${evento.observaciones || "Sin observaciones"}
         </p>
 
         <div class="quote-card-actions">
@@ -106,12 +121,15 @@ async function cargarEventos() {
         if (!evento) return;
 
         eventIdInput.value = evento.id;
-        nombreInput.value = evento.nombre || "";
-        fechaInput.value = evento.fecha || "";
-        tipoInput.value = evento.tipo || "";
+        clienteInput.value = evento.cliente || "";
+        telefonoInput.value = evento.telefono || "";
+        tipoEventoInput.value = evento.tipo_evento || "";
+        fechaEventoInput.value = evento.fecha_evento || "";
+        lugarInput.value = evento.lugar || "";
         personasInput.value = evento.personas || "";
-        estadoInput.value = evento.estado || "Pendiente";
-        descripcionInput.value = evento.descripcion || "";
+        valorTotalInput.value = evento.valor_total || "";
+        abonoInput.value = evento.abono || "";
+        observacionesInput.value = evento.observaciones || "";
 
         saveBtn.textContent = "Actualizar evento";
 
@@ -137,7 +155,7 @@ async function cargarEventos() {
 
   } catch (error) {
     console.error("ERROR CARGANDO EVENTOS:", error);
-    alert("Error cargando eventos");
+    alert(error.message);
   }
 }
 
@@ -150,12 +168,15 @@ form.addEventListener("submit", async (e) => {
   const id = eventIdInput.value;
 
   const formData = new FormData();
-  formData.append("nombre", nombreInput.value);
-  formData.append("fecha", fechaInput.value);
-  formData.append("tipo", tipoInput.value);
+  formData.append("cliente", clienteInput.value);
+  formData.append("telefono", telefonoInput.value);
+  formData.append("tipo_evento", tipoEventoInput.value);
+  formData.append("fecha_evento", fechaEventoInput.value);
+  formData.append("lugar", lugarInput.value);
   formData.append("personas", Number(personasInput.value || 0));
-  formData.append("estado", estadoInput.value);
-  formData.append("descripcion", descripcionInput.value);
+  formData.append("valor_total", Number(valorTotalInput.value || 0));
+  formData.append("abono", Number(abonoInput.value || 0));
+  formData.append("observaciones", observacionesInput.value);
 
   if (imagenInput.files[0]) {
     formData.append("imagen", imagenInput.files[0]);
@@ -189,7 +210,7 @@ form.addEventListener("submit", async (e) => {
 
   } catch (error) {
     console.error("ERROR GUARDANDO EVENTO:", error);
-    alert("Error guardando evento");
+    alert(error.message);
   }
 
   enviando = false;

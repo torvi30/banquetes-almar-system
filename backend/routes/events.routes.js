@@ -1,27 +1,15 @@
 const express = require("express");
-const router = express.Router();
-const fs = require("fs");
-const path = require("path");
 const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const db = require("../config/db");
+
+const router = express.Router();
 
 const uploadsPath = path.join(__dirname, "../uploads");
-const filePath = path.join(__dirname, "../data/eventos.json");
 
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath, { recursive: true });
-}
-
-if (!fs.existsSync(filePath)) {
-  fs.writeFileSync(filePath, "[]");
-}
-
-function leerEventos() {
-  const data = fs.readFileSync(filePath, "utf8");
-  return JSON.parse(data || "[]");
-}
-
-function guardarEventos(data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
 const storage = multer.diskStorage({
@@ -36,60 +24,112 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.get("/", (req, res) => {
+function calcularEstado(total, abono) {
+  const valorTotal = Number(total || 0);
+  const valorAbono = Number(abono || 0);
+  const saldo = valorTotal - valorAbono;
+
+  if (valorTotal > 0 && saldo <= 0) return "Pagado";
+  if (valorAbono > 0) return "Confirmado";
+  return "Pendiente";
+}
+
+router.get("/", async (req, res) => {
   try {
-    const eventos = leerEventos();
-    res.json(eventos);
+    const [rows] = await db.query(
+      "SELECT * FROM eventos ORDER BY id DESC"
+    );
+
+    res.json(rows);
   } catch (error) {
     console.log("ERROR GET EVENTOS:", error);
     res.status(500).json({ message: "Error al obtener eventos" });
   }
 });
 
-router.post("/", upload.single("imagen"), (req, res) => {
+router.post("/", upload.single("imagen"), async (req, res) => {
   try {
-    const { nombre, fecha, tipo, personas, estado, descripcion } = req.body;
+    const {
+      cliente,
+      telefono,
+      tipo_evento,
+      fecha_evento,
+      lugar,
+      personas,
+      valor_total,
+      abono,
+      observaciones
+    } = req.body;
 
-    const eventos = leerEventos();
+    const total = Number(valor_total || 0);
+    const pago = Number(abono || 0);
+    const saldo = total - pago;
+    const estado = calcularEstado(total, pago);
+    const imagen = req.file ? req.file.filename : null;
 
-    const nuevoEvento = {
-      id: Date.now(),
-      nombre: nombre || "",
-      fecha: fecha || "",
-      tipo: tipo || "",
-      personas: Number(personas || 0),
-      estado: estado || "Pendiente",
-      descripcion: descripcion || "",
-      imagen: req.file ? req.file.filename : ""
-    };
+    await db.query(
+      `INSERT INTO eventos
+      (cliente, telefono, tipo_evento, fecha_evento, lugar, personas, valor_total, abono, saldo, estado, observaciones, imagen)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        cliente || "",
+        telefono || "",
+        tipo_evento || "",
+        fecha_evento || null,
+        lugar || "",
+        Number(personas || 0),
+        total,
+        pago,
+        saldo,
+        estado,
+        observaciones || "",
+        imagen
+      ]
+    );
 
-    eventos.push(nuevoEvento);
-    guardarEventos(eventos);
-
-    res.json(nuevoEvento);
+    res.json({ message: "Evento creado correctamente" });
   } catch (error) {
     console.log("ERROR POST EVENTO:", error);
-    res.status(500).json({ message: "Error al crear evento" });
+    res.status(500).json({
+      message: error.sqlMessage || "Error al crear evento"
+    });
   }
 });
 
-router.put("/:id", upload.single("imagen"), (req, res) => {
+router.put("/:id", upload.single("imagen"), async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, fecha, tipo, personas, estado, descripcion } = req.body;
+    const {
+      cliente,
+      telefono,
+      tipo_evento,
+      fecha_evento,
+      lugar,
+      personas,
+      valor_total,
+      abono,
+      observaciones
+    } = req.body;
 
-    let eventos = leerEventos();
-    const index = eventos.findIndex((ev) => String(ev.id) === String(id));
+    const total = Number(valor_total || 0);
+    const pago = Number(abono || 0);
+    const saldo = total - pago;
+    const estado = calcularEstado(total, pago);
 
-    if (index === -1) {
+    const [rows] = await db.query(
+      "SELECT * FROM eventos WHERE id = ?",
+      [id]
+    );
+
+    if (!rows.length) {
       return res.status(404).json({ message: "Evento no encontrado" });
     }
 
-    const actual = eventos[index];
-    let nuevaImagen = actual.imagen || "";
+    const actual = rows[0];
+    let imagen = actual.imagen || null;
 
     if (req.file) {
-      nuevaImagen = req.file.filename;
+      imagen = req.file.filename;
 
       if (actual.imagen) {
         const viejaRuta = path.join(uploadsPath, actual.imagen);
@@ -99,47 +139,80 @@ router.put("/:id", upload.single("imagen"), (req, res) => {
       }
     }
 
-    eventos[index] = {
-      ...actual,
-      nombre: nombre || "",
-      fecha: fecha || "",
-      tipo: tipo || "",
-      personas: Number(personas || 0),
-      estado: estado || "Pendiente",
-      descripcion: descripcion || "",
-      imagen: nuevaImagen
-    };
+    await db.query(
+      `UPDATE eventos SET
+        cliente = ?,
+        telefono = ?,
+        tipo_evento = ?,
+        fecha_evento = ?,
+        lugar = ?,
+        personas = ?,
+        valor_total = ?,
+        abono = ?,
+        saldo = ?,
+        estado = ?,
+        observaciones = ?,
+        imagen = ?
+      WHERE id = ?`,
+      [
+        cliente || "",
+        telefono || "",
+        tipo_evento || "",
+        fecha_evento || null,
+        lugar || "",
+        Number(personas || 0),
+        total,
+        pago,
+        saldo,
+        estado,
+        observaciones || "",
+        imagen,
+        id
+      ]
+    );
 
-    guardarEventos(eventos);
-
-    res.json({ message: "Evento actualizado", evento: eventos[index] });
+    res.json({ message: "Evento actualizado correctamente" });
   } catch (error) {
     console.log("ERROR PUT EVENTO:", error);
-    res.status(500).json({ message: "Error al actualizar evento" });
+    res.status(500).json({
+      message: error.sqlMessage || "Error al actualizar evento"
+    });
   }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    let eventos = leerEventos();
-    const actual = eventos.find((ev) => String(ev.id) === String(id));
+    const [rows] = await db.query(
+      "SELECT * FROM eventos WHERE id = ?",
+      [id]
+    );
 
-    if (actual && actual.imagen) {
+    if (!rows.length) {
+      return res.status(404).json({ message: "Evento no encontrado" });
+    }
+
+    const actual = rows[0];
+
+    if (actual.imagen) {
       const rutaImagen = path.join(uploadsPath, actual.imagen);
       if (fs.existsSync(rutaImagen)) {
         fs.unlinkSync(rutaImagen);
       }
     }
 
-    eventos = eventos.filter((ev) => String(ev.id) !== String(id));
-    guardarEventos(eventos);
+    await db.query(
+      "DELETE FROM eventos WHERE id = ?",
+      [id]
+    );
 
     res.json({ message: "Evento eliminado" });
   } catch (error) {
     console.log("ERROR DELETE EVENTO:", error);
-    res.status(500).json({ message: "Error al eliminar evento" });
+    res.status(500).json({
+      message: error.sqlMessage || "Error al eliminar evento"
+    });
   }
 });
 
