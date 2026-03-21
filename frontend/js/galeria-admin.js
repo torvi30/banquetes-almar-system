@@ -1,4 +1,8 @@
 const token = localStorage.getItem("token");
+
+const categoryForm = document.getElementById("categoryForm");
+const newCategoryName = document.getElementById("newCategoryName");
+
 const form = document.getElementById("galleryForm");
 const grid = document.getElementById("galleryGrid");
 const logoutBtn = document.getElementById("logoutBtn");
@@ -7,7 +11,7 @@ const saveGalleryBtn = document.getElementById("saveGalleryBtn");
 
 const galleryIdInput = document.getElementById("galleryId");
 const tituloInput = document.getElementById("titulo");
-const seccionInput = document.getElementById("seccion");
+const categoriaIdInput = document.getElementById("categoria_id");
 const imagenInput = document.getElementById("imagen");
 
 if (!token) {
@@ -26,7 +30,7 @@ if (logoutBtn) {
 function limpiarFormulario() {
   galleryIdInput.value = "";
   tituloInput.value = "";
-  seccionInput.value = "";
+  categoriaIdInput.value = "";
   imagenInput.value = "";
   saveGalleryBtn.textContent = "Subir imagen";
 }
@@ -35,6 +39,24 @@ if (cancelEditBtn) {
   cancelEditBtn.addEventListener("click", () => {
     limpiarFormulario();
   });
+}
+
+async function cargarCategorias() {
+  try {
+    const res = await fetch("http://localhost:3001/api/gallery/categories");
+    const data = await res.json();
+
+    categoriaIdInput.innerHTML = `<option value="">Selecciona una categoría</option>`;
+
+    if (Array.isArray(data)) {
+      data.forEach((cat) => {
+        categoriaIdInput.innerHTML += `<option value="${cat.id}">${cat.nombre}</option>`;
+      });
+    }
+  } catch (error) {
+    console.error("ERROR CATEGORIAS:", error);
+    categoriaIdInput.innerHTML = `<option value="">Error cargando categorías</option>`;
+  }
 }
 
 async function cargarGaleria() {
@@ -65,7 +87,7 @@ async function cargarGaleria() {
           style="width:100%; height:220px; object-fit:cover; border-radius:16px; margin-bottom:1rem;"
         >
         <h3>${item.titulo}</h3>
-        <p><strong>Sección:</strong> ${item.seccion || "Sin sección"}</p>
+        <p><strong>Categoría:</strong> ${item.categoria || "Sin categoría"}</p>
 
         <div class="quote-card-actions">
           <button class="btn btn-success edit-gallery-btn" data-id="${item.id}">
@@ -104,7 +126,7 @@ async function cargarGaleria() {
 function cargarImagenEnFormulario(item) {
   galleryIdInput.value = item.id;
   tituloInput.value = item.titulo || "";
-  seccionInput.value = item.seccion || "";
+  categoriaIdInput.value = item.categoria_id || "";
   saveGalleryBtn.textContent = "Actualizar imagen";
 
   window.scrollTo({
@@ -139,6 +161,36 @@ async function eliminarImagen(id) {
   }
 }
 
+categoryForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await fetch("http://localhost:3001/api/gallery/categories", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        nombre: newCategoryName.value
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Error al crear categoría");
+    }
+
+    alert("Categoría creada correctamente.");
+    newCategoryName.value = "";
+    await cargarCategorias();
+  } catch (error) {
+    console.error("ERROR CREAR CATEGORIA:", error);
+    alert(error.message);
+  }
+});
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -147,7 +199,7 @@ form.addEventListener("submit", async (e) => {
 
   const formData = new FormData();
   formData.append("titulo", tituloInput.value);
-  formData.append("seccion", seccionInput.value);
+  formData.append("categoria_id", categoriaIdInput.value);
 
   if (imagenFile) {
     formData.append("imagen", imagenFile);
@@ -194,4 +246,7 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-cargarGaleria();
+(async function init() {
+  await cargarCategorias();
+  await cargarGaleria();
+})();

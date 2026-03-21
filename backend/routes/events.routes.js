@@ -96,9 +96,10 @@ router.post("/", upload.single("imagen"), async (req, res) => {
   }
 });
 
-router.put("/:id", upload.single("imagen"), async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
+
     const {
       cliente,
       telefono,
@@ -125,20 +126,6 @@ router.put("/:id", upload.single("imagen"), async (req, res) => {
       return res.status(404).json({ message: "Evento no encontrado" });
     }
 
-    const actual = rows[0];
-    let imagen = actual.imagen || null;
-
-    if (req.file) {
-      imagen = req.file.filename;
-
-      if (actual.imagen) {
-        const viejaRuta = path.join(uploadsPath, actual.imagen);
-        if (fs.existsSync(viejaRuta)) {
-          fs.unlinkSync(viejaRuta);
-        }
-      }
-    }
-
     await db.query(
       `UPDATE eventos SET
         cliente = ?,
@@ -151,8 +138,7 @@ router.put("/:id", upload.single("imagen"), async (req, res) => {
         abono = ?,
         saldo = ?,
         estado = ?,
-        observaciones = ?,
-        imagen = ?
+        observaciones = ?
       WHERE id = ?`,
       [
         cliente || "",
@@ -166,7 +152,6 @@ router.put("/:id", upload.single("imagen"), async (req, res) => {
         saldo,
         estado,
         observaciones || "",
-        imagen,
         id
       ]
     );
@@ -176,6 +161,48 @@ router.put("/:id", upload.single("imagen"), async (req, res) => {
     console.log("ERROR PUT EVENTO:", error);
     res.status(500).json({
       message: error.sqlMessage || "Error al actualizar evento"
+    });
+  }
+});
+
+router.put("/:id/imagen", upload.single("imagen"), async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [rows] = await db.query(
+      "SELECT * FROM eventos WHERE id = ?",
+      [id]
+    );
+
+    if (!rows.length) {
+      return res.status(404).json({ message: "Evento no encontrado" });
+    }
+
+    const actual = rows[0];
+
+    if (!req.file) {
+      return res.status(400).json({ message: "Debes enviar una imagen" });
+    }
+
+    const nuevaImagen = req.file.filename;
+
+    if (actual.imagen) {
+      const viejaRuta = path.join(uploadsPath, actual.imagen);
+      if (fs.existsSync(viejaRuta)) {
+        fs.unlinkSync(viejaRuta);
+      }
+    }
+
+    await db.query(
+      "UPDATE eventos SET imagen = ? WHERE id = ?",
+      [nuevaImagen, id]
+    );
+
+    res.json({ message: "Imagen actualizada correctamente" });
+  } catch (error) {
+    console.log("ERROR PUT IMAGEN EVENTO:", error);
+    res.status(500).json({
+      message: error.sqlMessage || "Error al actualizar imagen"
     });
   }
 });

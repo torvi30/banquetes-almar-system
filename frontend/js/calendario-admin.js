@@ -66,7 +66,15 @@ function getUpcomingEvents() {
       return parseLocalDate(fecha) >= today;
     })
     .sort((a, b) => normalizarFechaTexto(a.fecha_evento).localeCompare(normalizarFechaTexto(b.fecha_evento)))
-    .slice(0, 6);
+    .slice(0, 8);
+}
+
+function construirWhatsappUrl(ev) {
+  const telefonoLimpio = String(ev.telefono || "").replace(/\D/g, "");
+  if (!telefonoLimpio) return "";
+
+  const mensaje = `Hola ${ev.cliente || ""}, te escribimos de Banquetes Almar sobre tu evento ${ev.tipo_evento || ""} del ${normalizarFechaTexto(ev.fecha_evento) || ""}. Estado: ${ev.estado || "Pendiente"}. Saldo pendiente: ${formatMoney(ev.saldo)}.`;
+  return `https://wa.me/57${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
 }
 
 function renderUpcomingEvents() {
@@ -83,13 +91,16 @@ function renderUpcomingEvents() {
   }
 
   upcomingEvents.innerHTML = list.map(ev => `
-    <article class="calendar-event-card">
-      <h4>${ev.cliente || "Sin cliente"}</h4>
-      <p><strong>Fecha:</strong> ${formatLongDate(normalizarFechaTexto(ev.fecha_evento))}</p>
-      <p><strong>Tipo:</strong> ${ev.tipo_evento || "Sin tipo"}</p>
-      <p><strong>Lugar:</strong> ${ev.lugar || "Sin lugar"}</p>
-      <p><strong>Estado:</strong> ${ev.estado || "Pendiente"}</p>
-      <p><strong>Saldo:</strong> ${formatMoney(ev.saldo)}</p>
+    <article class="event-row-card">
+      <div class="event-row-main">
+        <strong>${ev.cliente || "Sin cliente"}</strong>
+        <p>${ev.tipo_evento || "Sin tipo"} · ${formatLongDate(normalizarFechaTexto(ev.fecha_evento))}</p>
+      </div>
+
+      <div class="event-row-side">
+        <span class="event-status-text">${ev.estado || "Pendiente"}</span>
+        <small>${formatMoney(ev.saldo)}</small>
+      </div>
     </article>
   `).join("");
 }
@@ -111,28 +122,26 @@ function renderSelectedDay(dateStr) {
   }
 
   selectedDayEvents.innerHTML = list.map(ev => `
-    <article class="calendar-event-card">
-      ${ev.imagen ? `
-        <img
-          src="http://localhost:3001/uploads/${ev.imagen}"
-          alt="${ev.cliente || "Evento"}"
-          class="calendar-event-image"
-        >
-      ` : ""}
+    <article class="event-row-card event-row-card-large">
+      <div class="event-row-main">
+        <strong>${ev.cliente || "Sin cliente"}</strong>
+        <p>${ev.tipo_evento || "Sin tipo"} · ${ev.lugar || "Sin lugar"}</p>
+        <p>Tel: ${ev.telefono || "No definido"}</p>
+        <p>Personas: ${ev.personas || 0}</p>
+        <p>Total: ${formatMoney(ev.valor_total)} · Abono: ${formatMoney(ev.abono)} · Saldo: ${formatMoney(ev.saldo)}</p>
+        <p>Obs: ${ev.observaciones || "Sin observaciones"}</p>
+      </div>
 
-      <h4>${ev.cliente || "Sin cliente"}</h4>
-      <p><strong>Tipo:</strong> ${ev.tipo_evento || "Sin tipo"}</p>
-      <p><strong>Teléfono:</strong> ${ev.telefono || "No definido"}</p>
-      <p><strong>Lugar:</strong> ${ev.lugar || "Sin lugar"}</p>
-      <p><strong>Personas:</strong> ${ev.personas || 0}</p>
-      <p><strong>Total:</strong> ${formatMoney(ev.valor_total)}</p>
-      <p><strong>Abono:</strong> ${formatMoney(ev.abono)}</p>
-      <p><strong>Saldo:</strong> ${formatMoney(ev.saldo)}</p>
-      <p><strong>Estado:</strong> ${ev.estado || "Pendiente"}</p>
-      <p><strong>Observaciones:</strong> ${ev.observaciones || "Sin observaciones"}</p>
+      <div class="event-row-side">
+        <span class="event-status-text">${ev.estado || "Pendiente"}</span>
 
-      <div class="quote-card-actions" style="margin-top:1rem;">
-        <button class="btn btn-primary" onclick="abrirEditar(${ev.id})">Editar</button>
+        <div class="event-actions-stack">
+          <button class="btn btn-primary" onclick="abrirEditar(${ev.id})">Editar</button>
+          <button class="btn btn-success" onclick="marcarPagado(${ev.id})">Marcar pagado</button>
+          ${ev.telefono ? `
+            <a class="btn btn-secondary" target="_blank" href="${construirWhatsappUrl(ev)}">WhatsApp</a>
+          ` : ""}
+        </div>
       </div>
     </article>
   `).join("");
@@ -172,9 +181,6 @@ function renderCalendar() {
     cell.innerHTML = `
       <span class="calendar-day-number">${day}</span>
       ${dayEvents.length ? `<span class="calendar-day-badge">${dayEvents.length}</span>` : ""}
-      <div class="calendar-day-preview">
-        ${dayEvents.slice(0, 2).map(ev => `<small>${ev.cliente || ev.tipo_evento || "Evento"}</small>`).join("")}
-      </div>
     `;
 
     cell.addEventListener("click", () => {
@@ -235,8 +241,21 @@ window.abrirEditar = function(id) {
         <input id="editAbono" type="number" value="${ev.abono || 0}" placeholder="Abono" />
         <textarea id="editObservaciones" rows="4" placeholder="Observaciones">${ev.observaciones || ""}</textarea>
 
+        <div class="modal-current-image">
+          ${ev.imagen ? `
+            <img src="http://localhost:3001/uploads/${ev.imagen}" alt="${ev.cliente || "Evento"}" class="modal-preview-image">
+          ` : `<p>Este evento no tiene imagen.</p>`}
+        </div>
+
+        <label class="modal-file-label" for="editImagen">Cambiar imagen</label>
+        <input id="editImagen" type="file" accept="image/*" />
+
         <div class="event-form-actions">
           <button class="btn btn-primary" onclick="guardarEdicion(${ev.id})">Guardar</button>
+          <button class="btn btn-success" onclick="marcarPagado(${ev.id})">Marcar pagado</button>
+          ${ev.telefono ? `
+            <a class="btn btn-secondary" target="_blank" href="${construirWhatsappUrl(ev)}">WhatsApp</a>
+          ` : ""}
           <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
         </div>
       </div>
@@ -282,11 +301,74 @@ window.guardarEdicion = async function(id) {
       throw new Error(result.message || "Error al actualizar evento");
     }
 
+    const imagenFile = document.getElementById("editImagen").files[0];
+
+    if (imagenFile) {
+      const formData = new FormData();
+      formData.append("imagen", imagenFile);
+
+      const imagenRes = await fetch(`${API_URL}/${id}/imagen`, {
+        method: "PUT",
+        body: formData
+      });
+
+      const imagenResult = await imagenRes.json();
+
+      if (!imagenRes.ok) {
+        throw new Error(imagenResult.message || "Error al actualizar imagen");
+      }
+    }
+
     alert("Evento actualizado correctamente");
     cerrarModal();
     await cargarEventos();
   } catch (error) {
     console.error("ERROR ACTUALIZANDO EVENTO:", error);
+    alert(error.message);
+  }
+};
+
+window.marcarPagado = async function(id) {
+  const ev = eventos.find(e => Number(e.id) === Number(id));
+  if (!ev) return;
+
+  const confirmar = confirm("¿Marcar este evento como pagado?");
+  if (!confirmar) return;
+
+  const valorTotal = Number(ev.valor_total || 0);
+
+  const data = {
+    cliente: ev.cliente,
+    telefono: ev.telefono,
+    tipo_evento: ev.tipo_evento,
+    fecha_evento: normalizarFechaTexto(ev.fecha_evento),
+    lugar: ev.lugar,
+    personas: ev.personas,
+    valor_total: valorTotal,
+    abono: valorTotal,
+    observaciones: ev.observaciones
+  };
+
+  try {
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result.message || "No se pudo marcar como pagado");
+    }
+
+    alert("Evento marcado como pagado");
+    cerrarModal();
+    await cargarEventos();
+  } catch (error) {
+    console.error("ERROR MARCAR PAGADO:", error);
     alert(error.message);
   }
 };

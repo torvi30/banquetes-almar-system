@@ -2,28 +2,15 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const db = require("../config/db");
 const verifyToken = require("../middleware/auth");
 
 const router = express.Router();
 
 const uploadsPath = path.join(__dirname, "../uploads");
-const filePath = path.join(__dirname, "../data/galeria.json");
 
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath, { recursive: true });
-}
-
-if (!fs.existsSync(filePath)) {
-  fs.writeFileSync(filePath, "[]");
-}
-
-function leerGaleria() {
-  const data = fs.readFileSync(filePath, "utf8");
-  return JSON.parse(data || "[]");
-}
-
-function guardarGaleria(data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
 const storage = multer.diskStorage({
@@ -38,115 +25,169 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.get("/", (req, res) => {
+router.get("/categories", async (req, res) => {
   try {
-    const galeria = leerGaleria();
-    res.json(galeria);
+    const [rows] = await db.query(
+      "SELECT id, nombre, created_at FROM categorias_galeria ORDER BY nombre ASC"
+    );
+    res.json(rows);
+  } catch (error) {
+    console.log("ERROR GET CATEGORIAS GALERIA:", error);
+    res.status(500).json({ message: "Error al obtener categorías" });
+  }
+});
+
+router.post("/categories", verifyToken, async (req, res) => {
+  try {
+    const { nombre } = req.body;
+
+    if (!nombre || !nombre.trim()) {
+      return res.status(400).json({ message: "El nombre de la categoría es obligatorio" });
+    }
+
+    const categoria = nombre.trim();
+
+    await db.query(
+      "INSERT INTO categorias_galeria (nombre) VALUES (?)",
+      [categoria]
+    );
+
+    res.json({ message: "Categoría creada correctamente" });
+  } catch (error) {
+    console.log("ERROR POST CATEGORIA GALERIA:", error);
+
+    if (error.code === "ER_DUP_ENTRY") {
+      return res.status(400).json({ message: "Esa categoría ya existe" });
+    }
+
+    res.status(500).json({ message: "Error al crear categoría" });
+  }
+});
+
+router.get("/", async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT 
+        g.id,
+        g.titulo,
+        g.imagen,
+        g.created_at,
+        c.id AS categoria_id,
+        c.nombre AS categoria
+      FROM galeria g
+      INNER JOIN categorias_galeria c ON g.categoria_id = c.id
+      ORDER BY c.nombre ASC, g.id DESC
+    `);
+
+    res.json(rows);
   } catch (error) {
     console.log("ERROR GET GALERIA:", error);
     res.status(500).json({ message: "Error al obtener galería" });
   }
 });
 
-router.post("/", verifyToken, upload.single("imagen"), (req, res) => {
+router.post("/", verifyToken, upload.single("imagen"), async (req, res) => {
   try {
-    const { titulo, seccion } = req.body;
+    const { titulo, categoria_id } = req.body;
 
-    if (!titulo || !seccion || !req.file) {
-      return res.status(400).json({
-        message: "Título, sección e imagen son obligatorios"
-      });
+    if (!titulo || !titulo.trim()) {
+      return res.status(400).json({ message: "El título es obligatorio" });
     }
 
-    const galeria = leerGaleria();
+    if (!categoria_id) {
+      return res.status(400).json({ message: "La categoría es obligatoria" });
+    }
 
-    const nuevaImagen = {
-      id: Date.now(),
-      titulo: titulo.trim(),
-      seccion: seccion.trim(),
-      imagen: req.file.filename
-    };
+    if (!req.file) {
+      return res.status(400).json({ message: "La imagen es obligatoria" });
+    }
 
-    galeria.push(nuevaImagen);
-    guardarGaleria(galeria);
+    await db.query(
+      "INSERT INTO galeria (titulo, categoria_id, imagen) VALUES (?, ?, ?)",
+      [titulo.trim(), Number(categoria_id), req.file.filename]
+    );
 
-    res.json({
-      message: "Imagen agregada correctamente",
-      item: nuevaImagen
-    });
+    res.json({ message: "Imagen agregada correctamente" });
   } catch (error) {
     console.log("ERROR POST GALERIA:", error);
     res.status(500).json({ message: "Error al crear imagen de galería" });
   }
 });
 
-router.put("/:id", verifyToken, upload.single("imagen"), (req, res) => {
+router.put("/:id", verifyToken, upload.single("imagen"), async (req, res) => {
   try {
     const { id } = req.params;
-    const { titulo, seccion } = req.body;
+    const { titulo, categoria_id } = req.body;
 
-    if (!titulo || !seccion) {
-      return res.status(400).json({
-        message: "Título y sección son obligatorios"
-      });
+    if (!titulo || !titulo.trim()) {
+      return res.status(400).json({ message: "El título es obligatorio" });
     }
 
-    const galeria = leerGaleria();
-    const index = galeria.findIndex(item => String(item.id) === String(id));
+    if (!categoria_id) {
+      return res.status(400).json({ message: "La categoría es obligatoria" });
+    }
 
-    if (index === -1) {
+    const [rows] = await db.query(
+      "SELECT * FROM galeria WHERE id = ?",
+      [id]
+    );
+
+    if (!rows.length) {
       return res.status(404).json({ message: "Imagen no encontrada" });
     }
 
-    const actual = galeria[index];
+    const actual = rows[0];
     let nuevaImagen = actual.imagen;
 
     if (req.file) {
       nuevaImagen = req.file.filename;
 
-      const viejaImagenPath = path.join(uploadsPath, actual.imagen);
-      if (fs.existsSync(viejaImagenPath)) {
-        fs.unlinkSync(viejaImagenPath);
+      if (actual.imagen) {
+        const viejaImagenPath = path.join(uploadsPath, actual.imagen);
+        if (fs.existsSync(viejaImagenPath)) {
+          fs.unlinkSync(viejaImagenPath);
+        }
       }
     }
 
-    galeria[index] = {
-      ...actual,
-      titulo: titulo.trim(),
-      seccion: seccion.trim(),
-      imagen: nuevaImagen
-    };
+    await db.query(
+      "UPDATE galeria SET titulo = ?, categoria_id = ?, imagen = ? WHERE id = ?",
+      [titulo.trim(), Number(categoria_id), nuevaImagen, id]
+    );
 
-    guardarGaleria(galeria);
-
-    res.json({
-      message: "Imagen actualizada correctamente",
-      item: galeria[index]
-    });
+    res.json({ message: "Imagen actualizada correctamente" });
   } catch (error) {
     console.log("ERROR PUT GALERIA:", error);
     res.status(500).json({ message: "Error al actualizar imagen de galería" });
   }
 });
 
-router.delete("/:id", verifyToken, (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
-    const galeria = leerGaleria();
 
-    const item = galeria.find(g => String(g.id) === String(id));
-    if (!item) {
+    const [rows] = await db.query(
+      "SELECT * FROM galeria WHERE id = ?",
+      [id]
+    );
+
+    if (!rows.length) {
       return res.status(404).json({ message: "Imagen no encontrada" });
     }
 
-    const nuevaLista = galeria.filter(g => String(g.id) !== String(id));
+    const item = rows[0];
 
-    const imagePath = path.join(uploadsPath, item.imagen);
-    if (fs.existsSync(imagePath)) {
-      fs.unlinkSync(imagePath);
+    if (item.imagen) {
+      const imagePath = path.join(uploadsPath, item.imagen);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
     }
 
-    guardarGaleria(nuevaLista);
+    await db.query(
+      "DELETE FROM galeria WHERE id = ?",
+      [id]
+    );
 
     res.json({ message: "Imagen eliminada correctamente" });
   } catch (error) {

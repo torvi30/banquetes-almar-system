@@ -24,41 +24,45 @@
         <button id="logoutBtn" class="btn btn-secondary" type="button">Cerrar sesión</button>
       </div>
 
-      <div class="calendar-toolbar">
-        <button id="prevMonthBtn" class="btn btn-secondary" type="button">← Mes anterior</button>
-        <h3 id="calendarTitle">Calendario</h3>
-        <button id="nextMonthBtn" class="btn btn-secondary" type="button">Mes siguiente →</button>
-      </div>
-
-      <div class="calendar-weekdays">
-        <div>Lun</div>
-        <div>Mar</div>
-        <div>Mié</div>
-        <div>Jue</div>
-        <div>Vie</div>
-        <div>Sáb</div>
-        <div>Dom</div>
-      </div>
-
-      <div id="calendarGrid" class="calendar-grid"></div>
-
-      <div class="calendar-details-wrap">
+      <div class="calendar-main-layout">
         <div class="calendar-panel">
-          <h3 id="selectedDayTitle">Selecciona un día</h3>
-          <div id="selectedDayEvents" class="calendar-events-list">
-            <div class="empty-state-card">
-              <h3>Sin selección</h3>
-              <p>Haz clic en un día del calendario para ver los eventos.</p>
-            </div>
+          <div class="calendar-toolbar">
+            <button id="prevMonthBtn" class="btn btn-secondary" type="button">←</button>
+            <h3 id="calendarTitle">Calendario</h3>
+            <button id="nextMonthBtn" class="btn btn-secondary" type="button">→</button>
           </div>
+
+          <div class="calendar-weekdays">
+            <div>Lun</div>
+            <div>Mar</div>
+            <div>Mié</div>
+            <div>Jue</div>
+            <div>Vie</div>
+            <div>Sáb</div>
+            <div>Dom</div>
+          </div>
+
+          <div id="calendarGrid" class="calendar-grid"></div>
         </div>
 
-        <div class="calendar-panel">
-          <h3>Próximos eventos</h3>
-          <div id="upcomingEvents" class="calendar-events-list">
-            <div class="empty-state-card">
-              <h3>Cargando</h3>
-              <p>Estamos consultando los próximos eventos.</p>
+        <div class="calendar-side-panel">
+          <div class="calendar-panel">
+            <h3 id="selectedDayTitle">Selecciona un día</h3>
+            <div id="selectedDayEvents" class="calendar-events-list">
+              <div class="empty-state-card">
+                <h3>Sin selección</h3>
+                <p>Haz clic en un día del calendario para ver los eventos.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="calendar-panel" style="margin-top: 1.5rem;">
+            <h3>Próximos eventos</h3>
+            <div id="upcomingEvents" class="calendar-events-list">
+              <div class="empty-state-card">
+                <h3>Cargando</h3>
+                <p>Estamos consultando los próximos eventos.</p>
+              </div>
             </div>
           </div>
         </div>
