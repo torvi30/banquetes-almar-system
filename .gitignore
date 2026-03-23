@@ -24,3 +24,7 @@ build/
 # OS files
 *.swp
 *.swo
+node_modules/
+.env
+uploads/
+.DS_Store
