@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
+const inventoryRoutes = require("./routes/inventory.routes");
 const authRoutes = require("./routes/auth.routes");
 const quoteRoutes = require("./routes/quotes.routes");
 const galleryRoutes = require("./routes/gallery.routes");
@@ -25,6 +26,11 @@ app.get("/", (req, res) => {
   res.send("Backend Banquetes Almar funcionando 🚀");
 });
 
+app.get("/api/test-inventory", (req, res) => {
+  res.send("inventory ok");
+});
+
+app.use("/api/inventory", inventoryRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/quotes", quoteRoutes);
 app.use("/api/gallery", galleryRoutes);

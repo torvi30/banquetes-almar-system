@@ -1574,3 +1574,57 @@
     max-height: 90vh;
     overflow-y: auto;
   }
+  .service-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(230, 199, 123, 0.15);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  
+  .service-image-wrap {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+  }
+  
+  .service-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .service-content {
+    padding: 1.2rem;
+  }
+  
+  .service-content h3 {
+    margin: 0 0 0.7rem;
+  }
+  
+  .gallery-filter {
+    background: transparent;
+    border: 1px solid rgba(230, 199, 123, 0.35);
+    color: #f5f1e8;
+    padding: 0.7rem 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  
+  .gallery-filter.active {
+    background: #e6c77b;
+    color: #1a1a1a;
+  }
+  
+  .gallery-overlay {
+    padding-top: 0.7rem;
+  }
+  
+  .gallery-overlay h3 {
+    margin: 0 0 0.25rem;
+  }
+  
+  .gallery-overlay p {
+    margin: 0;
+    opacity: 0.8;
+  }

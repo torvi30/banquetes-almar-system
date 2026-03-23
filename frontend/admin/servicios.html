@@ -1,63 +1,58 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Servicios Admin | Banquetes Almar</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
+  <section class="section admin-panel">
+    <div class="container">
+      <div class="section-heading">
+        <p class="section-label">Panel Admin</p>
+        <h2>Administrar servicios</h2>
+        <p>Agrega, edita y elimina servicios para la página principal.</p>
+      </div>
 
-<section class="section admin-panel">
-  <div class="container">
+      <div class="admin-menu">
+        <a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
+        <a href="./galeria.html" class="btn btn-secondary">Galería</a>
+        <a href="./servicios.html" class="btn btn-secondary">Servicios</a>
+        <a href="./eventos.html" class="btn btn-secondary">Eventos</a>
+        <a href="./calendario.html" class="btn btn-secondary">Calendario</a>
+        <a href="./inventario.html" class="btn btn-secondary">Inventario</a>
+        <button id="logoutBtn" class="btn btn-secondary" type="button">Cerrar sesión</button>
+      </div>
 
-    <div class="section-heading">
-      <p class="section-label">Panel Admin</p>
-      <h2>Administrar servicios</h2>
-      <p>Agrega, edita o elimina servicios del sitio web.</p>
+      <form id="serviceForm" class="quote-form" enctype="multipart/form-data">
+        <input type="hidden" id="serviceId" />
+
+        <div class="form-group">
+          <label for="titulo">Título</label>
+          <input type="text" id="titulo" placeholder="Ej: Fiesta" required />
+        </div>
+
+        <div class="form-group">
+          <label for="imagen">Imagen</label>
+          <input type="file" id="imagen" accept="image/*" />
+        </div>
+
+        <div class="form-group full-width">
+          <label for="descripcion">Descripción</label>
+          <textarea id="descripcion" placeholder="Describe el servicio..." rows="4" required></textarea>
+        </div>
+
+        <div class="form-group full-width event-form-actions">
+          <button type="submit" class="btn btn-primary" id="saveServiceBtn">Guardar servicio</button>
+          <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
+        </div>
+      </form>
+
+      <div id="servicesGrid" class="quotes-grid" style="margin-top: 2rem;"></div>
     </div>
+  </section>
 
-    <div class="admin-menu">
-      <a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
-      <a href="./galeria.html" class="btn btn-secondary">Galería</a>
-      <a href="./servicios.html" class="btn btn-secondary">Servicios</a>
-      <a href="./eventos.html" class="btn btn-secondary">Eventos</a>
-      <a href="./calendario.html" class="btn btn-secondary">Calendario</a>
-      <button id="logoutBtn" class="btn btn-secondary" type="button">Cerrar sesión</button>
-    </div>
-
-    <form id="serviceForm" class="quote-form" enctype="multipart/form-data">
-
-      <input type="hidden" id="serviceId">
-
-      <div class="form-group">
-        <label for="titulo">Título</label>
-        <input type="text" id="titulo" required>
-      </div>
-
-      <div class="form-group">
-        <label for="imagen">Imagen</label>
-        <input type="file" id="imagen" accept="image/*">
-      </div>
-
-      <div class="form-group full-width">
-        <label for="descripcion">Descripción</label>
-        <textarea id="descripcion" rows="4" required></textarea>
-      </div>
-
-      <div class="form-group full-width event-form-actions">
-        <button type="submit" class="btn btn-primary" id="saveServiceBtn">Crear servicio</button>
-        <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
-      </div>
-
-    </form>
-
-    <div id="servicesGrid" class="quotes-grid" style="margin-top:2rem;"></div>
-
-  </div>
-</section>
-
-<script src="../js/servicios-admin.js"></script>
-
+  <script src="../js/servicios-admin.js"></script>
 </body>
 </html>

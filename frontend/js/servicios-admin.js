@@ -1,4 +1,6 @@
+const API_URL = "http://localhost:3001/api/services";
 const token = localStorage.getItem("token");
+
 const form = document.getElementById("serviceForm");
 const grid = document.getElementById("servicesGrid");
 const logoutBtn = document.getElementById("logoutBtn");
@@ -9,11 +11,6 @@ const serviceIdInput = document.getElementById("serviceId");
 const tituloInput = document.getElementById("titulo");
 const descripcionInput = document.getElementById("descripcion");
 const imagenInput = document.getElementById("imagen");
-
-if (!token) {
-  alert("Debes iniciar sesión primero.");
-  window.location.href = "./login.html";
-}
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
@@ -28,7 +25,7 @@ function limpiarFormulario() {
   tituloInput.value = "";
   descripcionInput.value = "";
   imagenInput.value = "";
-  saveServiceBtn.textContent = "Crear servicio";
+  saveServiceBtn.textContent = "Guardar servicio";
 }
 
 if (cancelEditBtn) {
@@ -37,105 +34,91 @@ if (cancelEditBtn) {
   });
 }
 
-async function cargarServicios() {
+async function cargarServiciosAdmin() {
   try {
-    const res = await fetch("http://localhost:3001/api/services");
+    const res = await fetch(API_URL);
     const data = await res.json();
 
     grid.innerHTML = "";
 
-    if (!Array.isArray(data) || !data.length) {
+    if (!Array.isArray(data) || data.length === 0) {
       grid.innerHTML = `
         <div class="empty-state-card">
-          <h3>No hay servicios aún</h3>
-          <p>Crea el primer servicio para mostrarlo en la página principal.</p>
+          <h3>No hay servicios</h3>
+          <p>Crea el primer servicio.</p>
         </div>
       `;
       return;
     }
 
-    data.forEach((service) => {
+    data.forEach((servicio) => {
       const card = document.createElement("article");
       card.className = "quote-card";
 
       card.innerHTML = `
-        <img 
-          src="http://localhost:3001/uploads/${service.imagen}" 
-          alt="${service.titulo}"
+        <img
+          src="http://localhost:3001/uploads/${servicio.imagen}"
+          alt="${servicio.titulo}"
           style="width:100%; height:220px; object-fit:cover; border-radius:16px; margin-bottom:1rem;"
         >
-        <h3>${service.titulo}</h3>
-        <p>${service.descripcion}</p>
+        <h3>${servicio.titulo}</h3>
+        <p>${servicio.descripcion || ""}</p>
 
         <div class="quote-card-actions">
-          <button class="btn btn-success edit-service-btn" data-id="${service.id}">
-            Editar
-          </button>
-          <button class="btn btn-danger delete-service-btn" data-id="${service.id}">
-            Eliminar
-          </button>
+          <button class="btn btn-success edit-btn" data-id="${servicio.id}">Editar</button>
+          <button class="btn btn-danger delete-btn" data-id="${servicio.id}">Eliminar</button>
         </div>
       `;
 
       grid.appendChild(card);
     });
 
-    document.querySelectorAll(".delete-service-btn").forEach((button) => {
-      button.addEventListener("click", async () => {
-        await eliminarServicio(button.dataset.id);
+    document.querySelectorAll(".edit-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const servicio = data.find((s) => String(s.id) === String(btn.dataset.id));
+        if (!servicio) return;
+
+        serviceIdInput.value = servicio.id;
+        tituloInput.value = servicio.titulo || "";
+        descripcionInput.value = servicio.descripcion || "";
+        saveServiceBtn.textContent = "Actualizar servicio";
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
       });
     });
 
-    document.querySelectorAll(".edit-service-btn").forEach((button) => {
-      button.addEventListener("click", () => {
-        const servicio = data.find(s => String(s.id) === String(button.dataset.id));
-        if (servicio) {
-          cargarServicioEnFormulario(servicio);
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const confirmar = confirm("¿Eliminar servicio?");
+        if (!confirmar) return;
+
+        try {
+          const res = await fetch(`${API_URL}/${btn.dataset.id}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+
+          const result = await res.json();
+
+          if (!res.ok) {
+            throw new Error(result.message || "No se pudo eliminar");
+          }
+
+          await cargarServiciosAdmin();
+        } catch (error) {
+          console.error("ERROR ELIMINANDO SERVICIO:", error);
+          alert(error.message);
         }
       });
     });
-
   } catch (error) {
-    console.error("ERROR CARGAR SERVICIOS:", error);
-    alert("No se pudieron cargar los servicios.");
-  }
-}
-
-function cargarServicioEnFormulario(servicio) {
-  serviceIdInput.value = servicio.id;
-  tituloInput.value = servicio.titulo || "";
-  descripcionInput.value = servicio.descripcion || "";
-  saveServiceBtn.textContent = "Actualizar servicio";
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-}
-
-async function eliminarServicio(id) {
-  const confirmar = confirm("¿Eliminar servicio?");
-  if (!confirmar) return;
-
-  try {
-    const res = await fetch(`http://localhost:3001/api/services/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "Error al eliminar servicio");
-    }
-
-    alert("Servicio eliminado correctamente.");
-    await cargarServicios();
-  } catch (error) {
-    console.error("ERROR ELIMINAR SERVICIO:", error);
-    alert(error.message);
+    console.error("ERROR CARGANDO SERVICIOS ADMIN:", error);
+    grid.innerHTML = `<p>Error cargando servicios.</p>`;
   }
 }
 
@@ -143,55 +126,49 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const id = serviceIdInput.value;
-  const imagenFile = imagenInput.files[0];
-
   const formData = new FormData();
+
   formData.append("titulo", tituloInput.value);
   formData.append("descripcion", descripcionInput.value);
 
-  if (imagenFile) {
-    formData.append("imagen", imagenFile);
+  if (imagenInput.files[0]) {
+    formData.append("imagen", imagenInput.files[0]);
   }
 
   try {
     let res;
 
     if (id) {
-      res = await fetch(`http://localhost:3001/api/services/${id}`, {
+      res = await fetch(`${API_URL}/${id}`, {
         method: "PUT",
         headers: {
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
         body: formData
       });
     } else {
-      if (!imagenFile) {
-        alert("Debes seleccionar una imagen.");
-        return;
-      }
-
-      res = await fetch("http://localhost:3001/api/services", {
+      res = await fetch(API_URL, {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
         body: formData
       });
     }
 
-    const data = await res.json();
+    const result = await res.json();
 
     if (!res.ok) {
-      throw new Error(data.message || "Error al guardar servicio");
+      throw new Error(result.message || "Error guardando servicio");
     }
 
-    alert(id ? "Servicio actualizado correctamente." : "Servicio creado correctamente.");
+    alert(id ? "Servicio actualizado correctamente" : "Servicio creado correctamente");
     limpiarFormulario();
-    await cargarServicios();
+    await cargarServiciosAdmin();
   } catch (error) {
-    console.error("ERROR GUARDAR SERVICIO:", error);
+    console.error("ERROR GUARDANDO SERVICIO:", error);
     alert(error.message);
   }
 });
 
-cargarServicios();
+cargarServiciosAdmin();

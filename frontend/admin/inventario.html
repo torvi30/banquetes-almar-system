@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventario Admin | Banquetes Almar</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <section class="section admin-panel">
+    <div class="container">
+      <div class="section-heading">
+        <p class="section-label">Panel Admin</p>
+        <h2>Administrar inventario</h2>
+        <p>Gestiona sillas, carpas, mesas, vajilla y más.</p>
+      </div>
+
+      <div class="admin-menu">
+        <a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
+        <a href="./galeria.html" class="btn btn-secondary">Galería</a>
+        <a href="./servicios.html" class="btn btn-secondary">Servicios</a>
+        <a href="./eventos.html" class="btn btn-secondary">Eventos</a>
+        <a href="./calendario.html" class="btn btn-secondary">Calendario</a>
+        <a href="./inventario.html" class="btn btn-secondary">Inventario</a>
+        <button id="logoutBtn" class="btn btn-secondary" type="button">Cerrar sesión</button>
+      </div>
+
+      <div class="calendar-panel" style="margin-bottom: 1.5rem;">
+        <h3>Crear categoría</h3>
+        <form id="categoryForm" class="quote-form">
+          <div class="form-group">
+            <label for="newCategoryName">Nombre de la categoría</label>
+            <input type="text" id="newCategoryName" placeholder="Ej: Sillas, Carpas, Vajilla" required />
+          </div>
+
+          <div class="form-group full-width">
+            <button type="submit" class="btn btn-primary">Crear categoría</button>
+          </div>
+        </form>
+      </div>
+
+      <form id="inventoryForm" class="quote-form" enctype="multipart/form-data">
+        <input type="hidden" id="inventoryId" />
+
+        <div class="form-group">
+          <label for="nombre">Nombre del item</label>
+          <input type="text" id="nombre" placeholder="Ej: Silla Tiffany Dorada" required />
+        </div>
+
+        <div class="form-group">
+          <label for="categoria_id">Categoría</label>
+          <select id="categoria_id" required>
+            <option value="">Cargando categorías...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="cantidad_total">Cantidad total</label>
+          <input type="number" id="cantidad_total" min="0" required />
+        </div>
+
+        <div class="form-group">
+          <label for="cantidad_disponible">Cantidad disponible</label>
+          <input type="number" id="cantidad_disponible" min="0" required />
+        </div>
+
+        <div class="form-group full-width">
+          <label for="descripcion">Descripción</label>
+          <textarea id="descripcion" rows="4" placeholder="Describe este item..."></textarea>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="imagen">Imagen</label>
+          <input type="file" id="imagen" accept="image/*" />
+        </div>
+
+        <div class="form-group full-width event-form-actions">
+          <button type="submit" class="btn btn-primary" id="saveInventoryBtn">Guardar item</button>
+          <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
+        </div>
+      </form>
+
+      <div id="inventoryGrid" class="quotes-grid" style="margin-top: 2rem;"></div>
+    </div>
+  </section>
+
+  <script src="../js/inventario-admin.js"></script>
+</body>
+</html>
