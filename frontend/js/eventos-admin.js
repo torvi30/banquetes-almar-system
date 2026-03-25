@@ -1,10 +1,18 @@
 const API_URL = "http://localhost:3001/api/events";
+const CLIENTS_API = "http://localhost:3001/api/clients";
+const token = localStorage.getItem("token");
 
 const form = document.getElementById("eventForm");
-const grid = document.getElementById("eventsGrid");
+const grid =
+  document.getElementById("eventsGrid") ||
+  document.getElementById("eventosGrid");
+
 const logoutBtn = document.getElementById("logoutBtn");
+const cancelEditBtn = document.getElementById("cancelEditBtn");
+const saveEventBtn = document.getElementById("saveEventBtn");
 
 const eventIdInput = document.getElementById("eventId");
+const clienteIdInput = document.getElementById("cliente_id");
 const clienteInput = document.getElementById("cliente");
 const telefonoInput = document.getElementById("telefono");
 const tipoEventoInput = document.getElementById("tipo_evento");
@@ -16,14 +24,20 @@ const abonoInput = document.getElementById("abono");
 const imagenInput = document.getElementById("imagen");
 const observacionesInput = document.getElementById("observaciones");
 
-const saveBtn = document.getElementById("saveEventBtn");
-const cancelBtn = document.getElementById("cancelEditBtn");
+let clientesCache = [];
+let eventosCache = [];
 
-let enviando = false;
+window.irPagos = function (id) {
+  const eventoId = String(id || "").trim();
 
-function formatearDinero(valor) {
-  return "$" + Number(valor || 0).toLocaleString("es-CO");
-}
+  if (!eventoId) {
+    alert("No se pudo obtener el ID del evento.");
+    return;
+  }
+
+  localStorage.setItem("eventoIdPago", eventoId);
+  window.location.href = `./pagos.html?evento_id=${eventoId}`;
+};
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
@@ -34,38 +48,70 @@ if (logoutBtn) {
 }
 
 function limpiarFormulario() {
-  eventIdInput.value = "";
-  clienteInput.value = "";
-  telefonoInput.value = "";
-  tipoEventoInput.value = "";
-  fechaEventoInput.value = "";
-  lugarInput.value = "";
-  personasInput.value = "";
-  valorTotalInput.value = "";
-  abonoInput.value = "";
-  imagenInput.value = "";
-  observacionesInput.value = "";
-  saveBtn.textContent = "Crear evento";
+  if (eventIdInput) eventIdInput.value = "";
+  if (clienteIdInput) clienteIdInput.value = "";
+  if (clienteInput) clienteInput.value = "";
+  if (telefonoInput) telefonoInput.value = "";
+  if (tipoEventoInput) tipoEventoInput.value = "";
+  if (fechaEventoInput) fechaEventoInput.value = "";
+  if (lugarInput) lugarInput.value = "";
+  if (personasInput) personasInput.value = "";
+  if (valorTotalInput) valorTotalInput.value = "";
+  if (abonoInput) abonoInput.value = "";
+  if (imagenInput) imagenInput.value = "";
+  if (observacionesInput) observacionesInput.value = "";
+  if (saveEventBtn) saveEventBtn.textContent = "Guardar evento";
 }
 
-if (cancelBtn) {
-  cancelBtn.addEventListener("click", () => {
-    limpiarFormulario();
+if (cancelEditBtn) {
+  cancelEditBtn.addEventListener("click", limpiarFormulario);
+}
+
+async function cargarClientes() {
+  try {
+    const res = await fetch(CLIENTS_API);
+    const data = await res.json();
+    clientesCache = Array.isArray(data) ? data : [];
+
+    if (clienteIdInput) {
+      clienteIdInput.innerHTML = `<option value="">Selecciona un cliente</option>`;
+
+      clientesCache.forEach((cliente) => {
+        clienteIdInput.innerHTML += `
+          <option value="${cliente.id}">
+            ${cliente.nombre} - ${cliente.telefono || ""}
+          </option>
+        `;
+      });
+    }
+  } catch (error) {
+    console.error("ERROR CARGANDO CLIENTES:", error);
+  }
+}
+
+if (clienteIdInput) {
+  clienteIdInput.addEventListener("change", () => {
+    const id = clienteIdInput.value;
+    const cliente = clientesCache.find((c) => String(c.id) === String(id));
+
+    if (!cliente) return;
+
+    if (clienteInput) clienteInput.value = cliente.nombre || "";
+    if (telefonoInput) telefonoInput.value = cliente.telefono || "";
   });
 }
 
 async function cargarEventos() {
+  if (!grid) return;
+
   try {
     const res = await fetch(API_URL);
     const data = await res.json();
 
+    eventosCache = Array.isArray(data) ? data : [];
     grid.innerHTML = "";
 
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudieron cargar los eventos");
-    }
-
-    if (!Array.isArray(data) || !data.length) {
+    if (!eventosCache.length) {
       grid.innerHTML = `
         <div class="empty-state-card">
           <h3>No hay eventos</h3>
@@ -75,7 +121,10 @@ async function cargarEventos() {
       return;
     }
 
-    data.forEach((evento) => {
+    eventosCache.forEach((evento) => {
+      const saldo = Number(evento.saldo || 0);
+      const estado = evento.estado || "Pendiente";
+
       const card = document.createElement("article");
       card.className = "quote-card";
 
@@ -91,24 +140,19 @@ async function cargarEventos() {
         <h3>${evento.cliente || "Sin cliente"}</h3>
         <p><strong>Teléfono:</strong> ${evento.telefono || "No definido"}</p>
         <p><strong>Tipo:</strong> ${evento.tipo_evento || "Sin tipo"}</p>
-        <p><strong>Fecha:</strong> ${evento.fecha_evento || "Sin fecha"}</p>
+        <p><strong>Fecha:</strong> ${String(evento.fecha_evento || "").slice(0, 10)}</p>
         <p><strong>Lugar:</strong> ${evento.lugar || "Sin lugar"}</p>
         <p><strong>Personas:</strong> ${evento.personas || 0}</p>
-        <p><strong>Total:</strong> ${formatearDinero(evento.valor_total)}</p>
-        <p><strong>Abono:</strong> ${formatearDinero(evento.abono)}</p>
-        <p><strong>Saldo:</strong> ${formatearDinero(evento.saldo)}</p>
-        <p><strong>Estado:</strong> ${evento.estado || "Pendiente"}</p>
-        <p style="margin-top: 0.8rem; opacity: 0.9;">
-          <strong>Observaciones:</strong> ${evento.observaciones || "Sin observaciones"}
-        </p>
+        <p><strong>Total:</strong> $${Number(evento.valor_total || 0).toLocaleString("es-CO")}</p>
+        <p><strong>Abono:</strong> $${Number(evento.abono || 0).toLocaleString("es-CO")}</p>
+        <p><strong>Saldo:</strong> $${saldo.toLocaleString("es-CO")}</p>
+        <p><strong>Estado:</strong> ${estado}</p>
+        <p><strong>Observaciones:</strong> ${evento.observaciones || "Sin observaciones"}</p>
 
         <div class="quote-card-actions">
-          <button class="btn btn-success edit-btn" data-id="${evento.id}">
-            Editar
-          </button>
-          <button class="btn btn-danger delete-btn" data-id="${evento.id}">
-            Eliminar
-          </button>
+          <button type="button" class="btn btn-secondary" onclick="irPagos(${evento.id})">Pagos</button>
+          <button type="button" class="btn btn-success edit-btn" data-id="${evento.id}">Editar</button>
+          <button type="button" class="btn btn-danger delete-btn" data-id="${evento.id}">Eliminar</button>
         </div>
       `;
 
@@ -117,21 +161,22 @@ async function cargarEventos() {
 
     document.querySelectorAll(".edit-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const evento = data.find((e) => String(e.id) === String(btn.dataset.id));
+        const evento = eventosCache.find((e) => String(e.id) === String(btn.dataset.id));
         if (!evento) return;
 
-        eventIdInput.value = evento.id;
-        clienteInput.value = evento.cliente || "";
-        telefonoInput.value = evento.telefono || "";
-        tipoEventoInput.value = evento.tipo_evento || "";
-        fechaEventoInput.value = evento.fecha_evento || "";
-        lugarInput.value = evento.lugar || "";
-        personasInput.value = evento.personas || "";
-        valorTotalInput.value = evento.valor_total || "";
-        abonoInput.value = evento.abono || "";
-        observacionesInput.value = evento.observaciones || "";
+        if (eventIdInput) eventIdInput.value = evento.id;
+        if (clienteIdInput) clienteIdInput.value = evento.cliente_id || "";
+        if (clienteInput) clienteInput.value = evento.cliente || "";
+        if (telefonoInput) telefonoInput.value = evento.telefono || "";
+        if (tipoEventoInput) tipoEventoInput.value = evento.tipo_evento || "";
+        if (fechaEventoInput) fechaEventoInput.value = String(evento.fecha_evento || "").slice(0, 10);
+        if (lugarInput) lugarInput.value = evento.lugar || "";
+        if (personasInput) personasInput.value = evento.personas || "";
+        if (valorTotalInput) valorTotalInput.value = evento.valor_total || "";
+        if (abonoInput) abonoInput.value = evento.abono || "";
+        if (observacionesInput) observacionesInput.value = evento.observaciones || "";
 
-        saveBtn.textContent = "Actualizar evento";
+        if (saveEventBtn) saveEventBtn.textContent = "Actualizar evento";
 
         window.scrollTo({
           top: 0,
@@ -145,75 +190,100 @@ async function cargarEventos() {
         const confirmar = confirm("¿Eliminar evento?");
         if (!confirmar) return;
 
-        await fetch(`${API_URL}/${btn.dataset.id}`, {
-          method: "DELETE"
-        });
+        try {
+          const res = await fetch(`${API_URL}/${btn.dataset.id}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
 
-        await cargarEventos();
+          const result = await res.json();
+
+          if (!res.ok) {
+            throw new Error(result.message || "No se pudo eliminar");
+          }
+
+          await cargarEventos();
+        } catch (error) {
+          console.error("ERROR ELIMINANDO EVENTO:", error);
+          alert(error.message);
+        }
       });
     });
-
   } catch (error) {
     console.error("ERROR CARGANDO EVENTOS:", error);
-    alert(error.message);
+    grid.innerHTML = `<p>Error cargando eventos.</p>`;
   }
 }
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+if (form) {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  if (enviando) return;
-  enviando = true;
+    const id = eventIdInput ? eventIdInput.value : "";
+    const total = Number(valorTotalInput?.value || 0);
+    const abono = Number(abonoInput?.value || 0);
 
-  const id = eventIdInput.value;
-
-  const formData = new FormData();
-  formData.append("cliente", clienteInput.value);
-  formData.append("telefono", telefonoInput.value);
-  formData.append("tipo_evento", tipoEventoInput.value);
-  formData.append("fecha_evento", fechaEventoInput.value);
-  formData.append("lugar", lugarInput.value);
-  formData.append("personas", Number(personasInput.value || 0));
-  formData.append("valor_total", Number(valorTotalInput.value || 0));
-  formData.append("abono", Number(abonoInput.value || 0));
-  formData.append("observaciones", observacionesInput.value);
-
-  if (imagenInput.files[0]) {
-    formData.append("imagen", imagenInput.files[0]);
-  }
-
-  try {
-    let res;
-
-    if (id) {
-      res = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        body: formData
-      });
-    } else {
-      res = await fetch(API_URL, {
-        method: "POST",
-        body: formData
-      });
+    if (abono > total) {
+      alert("El abono no puede ser mayor que el valor total.");
+      return;
     }
 
-    const result = await res.json();
+    const formData = new FormData();
+    formData.append("cliente_id", clienteIdInput ? (clienteIdInput.value || "") : "");
+    formData.append("cliente", clienteInput?.value || "");
+    formData.append("telefono", telefonoInput?.value || "");
+    formData.append("tipo_evento", tipoEventoInput?.value || "");
+    formData.append("fecha_evento", fechaEventoInput?.value || "");
+    formData.append("lugar", lugarInput?.value || "");
+    formData.append("personas", personasInput?.value || 0);
+    formData.append("valor_total", total);
+    formData.append("abono", abono);
+    formData.append("observaciones", observacionesInput?.value || "");
 
-    if (!res.ok) {
-      throw new Error(result.message || "Error guardando evento");
+    if (imagenInput && imagenInput.files[0]) {
+      formData.append("imagen", imagenInput.files[0]);
     }
 
-    alert(id ? "Evento actualizado correctamente" : "Evento creado correctamente");
+    try {
+      let res;
 
-    limpiarFormulario();
-    await cargarEventos();
+      if (id) {
+        res = await fetch(`${API_URL}/${id}`, {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          body: formData
+        });
+      } else {
+        res = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          body: formData
+        });
+      }
 
-  } catch (error) {
-    console.error("ERROR GUARDANDO EVENTO:", error);
-    alert(error.message);
-  }
+      const result = await res.json();
 
-  enviando = false;
-});
+      if (!res.ok) {
+        throw new Error(result.message || "Error guardando evento");
+      }
 
-cargarEventos();
+      alert(id ? "Evento actualizado correctamente" : "Evento creado correctamente");
+      limpiarFormulario();
+      await cargarEventos();
+    } catch (error) {
+      console.error("ERROR GUARDANDO EVENTO:", error);
+      alert(error.message);
+    }
+  });
+}
+
+(async function init() {
+  await cargarClientes();
+  await cargarEventos();
+})();

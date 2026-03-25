@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pagos Admin | Banquetes Almar</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <section class="section admin-panel">
+    <div class="container">
+      <div class="section-heading">
+        <p class="section-label">Panel Admin</p>
+        <h2>Pagos del evento</h2>
+        <p>Registra abonos y controla el saldo pendiente.</p>
+      </div>
+
+      <div class="admin-menu">
+        <a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
+        <a href="./galeria.html" class="btn btn-secondary">Galería</a>
+        <a href="./servicios.html" class="btn btn-secondary">Servicios</a>
+        <a href="./eventos.html" class="btn btn-secondary">Eventos</a>
+        <a href="./calendario.html" class="btn btn-secondary">Calendario</a>
+        <a href="./inventario.html" class="btn btn-secondary">Inventario</a>
+        <a href="./clientes.html" class="btn btn-secondary">Clientes</a>
+        <button id="logoutBtn" class="btn btn-secondary" type="button">Cerrar sesión</button>
+      </div>
+
+      <div class="quote-form" style="margin-bottom: 1.5rem;">
+        <div class="form-group">
+          <label for="eventoIdManual">ID del evento</label>
+          <input type="number" id="eventoIdManual" min="1" placeholder="Ej: 1" />
+        </div>
+
+        <div class="form-group">
+          <label>&nbsp;</label>
+          <button type="button" id="loadEventBtn" class="btn btn-primary">Cargar evento</button>
+        </div>
+      </div>
+
+      <div id="eventSummary" class="calendar-panel" style="margin-bottom: 1.5rem;"></div>
+
+      <form id="paymentForm" class="quote-form">
+        <input type="hidden" id="paymentId" />
+
+        <div class="form-group">
+          <label for="monto">Monto</label>
+          <input type="number" id="monto" min="1" required />
+        </div>
+
+        <div class="form-group">
+          <label for="metodo">Método de pago</label>
+          <select id="metodo">
+            <option value="Efectivo">Efectivo</option>
+            <option value="Transferencia">Transferencia</option>
+            <option value="Nequi">Nequi</option>
+            <option value="Daviplata">Daviplata</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="nota">Nota</label>
+          <textarea id="nota" rows="3" placeholder="Detalle del pago..."></textarea>
+        </div>
+
+        <div class="form-group full-width event-form-actions">
+          <button type="submit" class="btn btn-primary" id="savePaymentBtn">Registrar pago</button>
+          <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
+        </div>
+      </form>
+
+      <div id="paymentsGrid" class="quotes-grid" style="margin-top: 2rem;"></div>
+    </div>
+  </section>
+
+  <script src="../js/pagos-admin.js?v=900"></script>
+</body>
+</html>

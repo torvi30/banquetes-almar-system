@@ -5,12 +5,14 @@ const cors = require("cors");
 const path = require("path");
 
 const inventoryRoutes = require("./routes/inventory.routes");
+const clientsRoutes = require("./routes/clients.routes");
 const authRoutes = require("./routes/auth.routes");
 const quoteRoutes = require("./routes/quotes.routes");
 const galleryRoutes = require("./routes/gallery.routes");
 const servicesRoutes = require("./routes/services.routes");
 const eventsRoutes = require("./routes/events.routes");
 const statsRoutes = require("./routes/stats.routes");
+const paymentsRoutes = require("./routes/payments.routes");
 
 const app = express();
 
@@ -26,17 +28,15 @@ app.get("/", (req, res) => {
   res.send("Backend Banquetes Almar funcionando 🚀");
 });
 
-app.get("/api/test-inventory", (req, res) => {
-  res.send("inventory ok");
-});
-
 app.use("/api/inventory", inventoryRoutes);
+app.use("/api/clients", clientsRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/quotes", quoteRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/services", servicesRoutes);
 app.use("/api/events", eventsRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/payments", paymentsRoutes);
 
 const PORT = process.env.PORT || 3001;
 
