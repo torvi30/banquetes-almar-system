@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clientes Admin | Banquetes Almar</title>
+  <title>Clientes | Banquetes Almar</title>
   <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
         <p class="section-label">Panel Admin</p>
-        <h2>Administrar clientes</h2>
-        <p>Registra y organiza la información de tus clientes.</p>
+        <h2>Clientes</h2>
+        <p>Administra y busca clientes por id, nombre o teléfono.</p>
       </div>
 
       <div class="admin-menu">
@@ -23,8 +24,14 @@
         <a href="./calendario.html" class="btn btn-secondary">Calendario</a>
         <a href="./inventario.html" class="btn btn-secondary">Inventario</a>
         <a href="./clientes.html" class="btn btn-secondary">Clientes</a>
-        <a href="./pagos.html?evento_id=${evento.id}" class="btn btn-secondary">Pagos</a>
+        <a href="./pagos.html" class="btn btn-secondary">Pagos</a>
         <button id="logoutBtn" class="btn btn-secondary" type="button">Cerrar sesión</button>
+      </div>
+
+      <div style="display:flex; justify-content:center; margin: 1.5rem 0 2rem 0;">
+        <button id="btnBuscarCliente" class="btn btn-primary" type="button">
+          🔎 Buscar cliente
+        </button>
       </div>
 
       <form id="clientForm" class="quote-form">
@@ -36,8 +43,8 @@
         </div>
 
         <div class="form-group">
-          <label for="telefono">Teléfono</label>
-          <input type="text" id="telefono" required />
+          <label for="telefono">Teléfono / celular</label>
+          <input type="text" id="telefono" />
         </div>
 
         <div class="form-group">
@@ -56,16 +63,8 @@
         </div>
 
         <div class="form-group">
-          <label for="tipo_cliente">Tipo de cliente</label>
-          <select id="tipo_cliente">
-            <option value="Persona">Persona</option>
-            <option value="Empresa">Empresa</option>
-          </select>
-        </div>
-
-        <div class="form-group full-width">
-          <label for="observaciones">Observaciones</label>
-          <textarea id="observaciones" rows="4" placeholder="Notas del cliente..."></textarea>
+          <label for="tipo_cliente">Tipo</label>
+          <input type="text" id="tipo_cliente" value="Cliente" />
         </div>
 
         <div class="form-group full-width event-form-actions">
@@ -74,7 +73,12 @@
         </div>
       </form>
 
-      <div id="clientsGrid" class="quotes-grid" style="margin-top: 2rem;"></div>
+      <div class="section-heading" style="margin-top: 2.5rem;">
+        <h2>Listado de clientes</h2>
+        <p>Aquí puedes ver todos los clientes registrados.</p>
+      </div>
+
+      <div id="clientsGrid" class="quotes-grid" style="margin-top: 1.5rem;"></div>
     </div>
   </section>
 

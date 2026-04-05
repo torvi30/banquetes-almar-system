@@ -1,264 +1,31 @@
+const QUOTES_API = "http://localhost:3001/api/quotes";
+const STATS_API = "http://localhost:3001/api/stats";
+
+const token = localStorage.getItem("token");
+
 const quotesContainer = document.getElementById("quotesContainer");
-const adminWelcome = document.getElementById("adminWelcome");
-const logoutBtn = document.getElementById("logoutBtn");
 const totalQuotes = document.getElementById("totalQuotes");
 const totalEventos = document.getElementById("totalEventos");
 const confirmados = document.getElementById("confirmados");
 const ingresos = document.getElementById("ingresos");
 const pendiente = document.getElementById("pendiente");
+const adminWelcome = document.getElementById("adminWelcome");
+const logoutBtn = document.getElementById("logoutBtn");
 
-const token = localStorage.getItem("token");
-const adminNombre = localStorage.getItem("adminNombre");
+const adminNombre = localStorage.getItem("adminNombre") || "Administrador";
 
 if (!token) {
-  alert("Debes iniciar sesión primero.");
-  window.location.href = "./login.html";
+  Swal.fire({
+    icon: "warning",
+    title: "Sesión expirada",
+    text: "Debes iniciar sesión de nuevo."
+  }).then(() => {
+    window.location.href = "./login.html";
+  });
 }
 
 if (adminWelcome) {
-  adminWelcome.textContent = `Bienvenido, ${adminNombre || "Administrador"}`;
-}
-
-function formatearFecha(fecha) {
-  if (!fecha) return "Sin fecha";
-  return new Date(fecha).toLocaleString("es-CO");
-}
-
-function formatearDinero(valor) {
-  return "$" + Number(valor || 0).toLocaleString("es-CO");
-}
-
-function construirWhatsappLink(quote) {
-  const telefonoLimpio = String(quote.telefono || "").replace(/\D/g, "");
-  const mensaje = `Hola ${quote.nombre}, recibimos tu solicitud para ${quote.evento} en Banquetes Almar. Queremos ayudarte con tu cotización.`;
-  return `https://wa.me/57${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
-}
-
-function obtenerClaseEstado(estado) {
-  const estadoNormalizado = String(estado || "Nuevo").toLowerCase();
-
-  if (estadoNormalizado === "nuevo") return "estado-nuevo";
-  if (estadoNormalizado === "contactado") return "estado-contactado";
-  if (estadoNormalizado === "confirmado") return "estado-confirmado";
-  if (estadoNormalizado === "cancelado") return "estado-cancelado";
-  if (estadoNormalizado === "convertido") return "estado-convertido";
-
-  return "estado-nuevo";
-}
-
-async function cargarStats() {
-  try {
-    const res = await fetch("http://localhost:3001/api/stats", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      }
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudieron cargar las estadísticas.");
-    }
-
-    if (totalEventos) totalEventos.textContent = data.totalEventos;
-    if (confirmados) confirmados.textContent = data.confirmados;
-    if (ingresos) ingresos.textContent = formatearDinero(data.ingresos);
-    if (pendiente) pendiente.textContent = formatearDinero(data.pendiente);
-  } catch (error) {
-    console.error("ERROR STATS:", error);
-  }
-}
-
-async function eliminarCotizacion(id) {
-  const confirmar = confirm("¿Deseas eliminar esta cotización?");
-  if (!confirmar) return;
-
-  try {
-    const res = await fetch(`http://localhost:3001/api/quotes/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      }
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudo eliminar la cotización.");
-    }
-
-    await cargarCotizaciones();
-    await cargarStats();
-  } catch (error) {
-    console.error("ERROR DELETE:", error);
-    alert(error.message);
-  }
-}
-
-async function cambiarEstado(id, estado) {
-  try {
-    const res = await fetch(`http://localhost:3001/api/quotes/${id}/status`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      body: JSON.stringify({ estado })
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudo actualizar el estado.");
-    }
-
-    await cargarCotizaciones();
-    await cargarStats();
-  } catch (error) {
-    console.error("ERROR STATUS:", error);
-    alert(error.message);
-  }
-}
-
-async function convertirCotizacion(id) {
-  const confirmar = confirm("¿Convertir esta cotización en evento?");
-  if (!confirmar) return;
-
-  try {
-    const res = await fetch(`http://localhost:3001/api/quotes/${id}/convert`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudo convertir la cotización.");
-    }
-
-    alert("Cotización convertida a evento correctamente.");
-    await cargarCotizaciones();
-    await cargarStats();
-  } catch (error) {
-    console.error("ERROR CONVERT:", error);
-    alert(error.message);
-  }
-}
-
-async function cargarCotizaciones() {
-  try {
-    const res = await fetch("http://localhost:3001/api/quotes", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      }
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "Error al obtener cotizaciones");
-    }
-
-    if (quotesContainer) quotesContainer.innerHTML = "";
-    if (totalQuotes) totalQuotes.textContent = data.length;
-
-    if (!data.length) {
-      if (quotesContainer) {
-        quotesContainer.innerHTML = `
-          <div class="empty-state-card">
-            <h3>No hay cotizaciones aún</h3>
-            <p>Cuando lleguen solicitudes aparecerán aquí organizadas automáticamente.</p>
-          </div>
-        `;
-      }
-      await cargarStats();
-      return;
-    }
-
-    data.forEach((quote) => {
-      const card = document.createElement("article");
-      card.className = "quote-card";
-
-      const whatsappLink = construirWhatsappLink(quote);
-      const claseEstado = obtenerClaseEstado(quote.estado);
-
-      card.innerHTML = `
-        <div class="quote-card-header">
-          <div>
-            <h3>${quote.nombre}</h3>
-            <span class="quote-date">${formatearFecha(quote.fecha || quote.created_at)}</span>
-          </div>
-          <span class="quote-badge">${quote.evento}</span>
-        </div>
-
-        <div class="quote-card-body">
-          <p><strong>Teléfono:</strong> ${quote.telefono}</p>
-          <p><strong>Personas:</strong> ${quote.personas}</p>
-          <p>
-            <strong>Estado:</strong>
-            <span class="estado-badge ${claseEstado}">
-              ${quote.estado || "Nuevo"}
-            </span>
-          </p>
-          <p><strong>Mensaje:</strong> ${quote.mensaje ? quote.mensaje : "Sin detalles adicionales."}</p>
-        </div>
-
-        <div class="quote-card-actions">
-          <a href="${whatsappLink}" target="_blank" class="btn btn-primary">
-            Responder por WhatsApp
-          </a>
-
-          <select class="status-select" data-id="${quote.id}">
-            <option value="Nuevo" ${quote.estado === "Nuevo" ? "selected" : ""}>Nuevo</option>
-            <option value="Contactado" ${quote.estado === "Contactado" ? "selected" : ""}>Contactado</option>
-            <option value="Confirmado" ${quote.estado === "Confirmado" ? "selected" : ""}>Confirmado</option>
-            <option value="Cancelado" ${quote.estado === "Cancelado" ? "selected" : ""}>Cancelado</option>
-            <option value="Convertido" ${quote.estado === "Convertido" ? "selected" : ""}>Convertido</option>
-          </select>
-
-          <button class="btn btn-success convert-btn" data-id="${quote.id}">
-            Convertir a evento
-          </button>
-
-          <button class="btn btn-danger delete-btn" data-id="${quote.id}">
-            Eliminar
-          </button>
-        </div>
-      `;
-
-      quotesContainer.appendChild(card);
-    });
-
-    document.querySelectorAll(".delete-btn").forEach((button) => {
-      button.addEventListener("click", () => {
-        eliminarCotizacion(button.dataset.id);
-      });
-    });
-
-    document.querySelectorAll(".status-select").forEach((select) => {
-      select.addEventListener("change", () => {
-        cambiarEstado(select.dataset.id, select.value);
-      });
-    });
-
-    document.querySelectorAll(".convert-btn").forEach((button) => {
-      button.addEventListener("click", () => {
-        convertirCotizacion(button.dataset.id);
-      });
-    });
-
-    await cargarStats();
-  } catch (error) {
-    console.error("ERROR DASHBOARD:", error);
-    alert(error.message);
-  }
+  adminWelcome.textContent = `Bienvenido, ${adminNombre}`;
 }
 
 if (logoutBtn) {
@@ -269,4 +36,347 @@ if (logoutBtn) {
   });
 }
 
-cargarCotizaciones();
+function authHeaders(extra = {}) {
+  return {
+    Authorization: `Bearer ${token}`,
+    ...extra
+  };
+}
+
+function normalizarEstado(estado) {
+  const valor = String(estado || "").toLowerCase().trim();
+
+  if (valor === "nuevo") return "Contactado";
+  if (valor === "contactado") return "Contactado";
+  if (valor === "confirmado") return "Confirmado";
+  if (valor === "cancelado") return "Cancelado";
+  if (valor === "convertido") return "Convertido";
+
+  return "Contactado";
+}
+
+function textoEstado(estado) {
+  const value = normalizarEstado(estado);
+
+  if (value === "Contactado") return "Contactado";
+  if (value === "Confirmado") return "Confirmado";
+  if (value === "Cancelado") return "Cancelado";
+  if (value === "Convertido") return "Convertido";
+
+  return "Contactado";
+}
+
+function claseEstado(estado) {
+  const value = normalizarEstado(estado);
+
+  if (value === "Contactado") return "estado-contactado";
+  if (value === "Confirmado") return "estado-confirmado";
+  if (value === "Cancelado") return "estado-cancelado";
+  if (value === "Convertido") return "estado-convertido";
+
+  return "estado-contactado";
+}
+
+function formatearDinero(valor) {
+  return `$${Number(valor || 0).toLocaleString("es-CO")}`;
+}
+
+function formatearFecha(fecha) {
+  if (!fecha) return "Sin fecha";
+
+  const d = new Date(fecha);
+  if (Number.isNaN(d.getTime())) return fecha;
+
+  return d.toLocaleString("es-CO", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+}
+
+async function leerRespuestaJSON(res) {
+  const text = await res.text();
+
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    console.error("Respuesta no JSON:", text);
+    throw new Error("El servidor devolvió HTML o una respuesta inválida.");
+  }
+}
+
+async function cargarResumen() {
+  try {
+    const res = await fetch(STATS_API, {
+      headers: authHeaders()
+    });
+
+    const data = await leerRespuestaJSON(res);
+
+    if (!res.ok) {
+      throw new Error(data.message || "Error cargando estadísticas");
+    }
+
+    if (totalQuotes) totalQuotes.textContent = data.totalQuotes ?? 0;
+    if (totalEventos) totalEventos.textContent = data.totalEventos ?? 0;
+    if (confirmados) confirmados.textContent = data.confirmados ?? 0;
+    if (ingresos) ingresos.textContent = formatearDinero(data.ingresos ?? 0);
+    if (pendiente) pendiente.textContent = formatearDinero(data.pendiente ?? 0);
+  } catch (error) {
+    console.error("ERROR CARGANDO RESUMEN:", error);
+  }
+}
+
+async function actualizarEstado(id, estado) {
+  try {
+    const res = await fetch(`${QUOTES_API}/${id}/status`, {
+      method: "PUT",
+      headers: authHeaders({
+        "Content-Type": "application/json"
+      }),
+      body: JSON.stringify({
+        estado: normalizarEstado(estado)
+      })
+    });
+
+    const data = await leerRespuestaJSON(res);
+
+    if (!res.ok) {
+      throw new Error(data.message || "No se pudo actualizar el estado");
+    }
+
+    await Swal.fire({
+      icon: "success",
+      title: "Estado actualizado",
+      text: "La cotización fue actualizada correctamente.",
+      timer: 1200,
+      showConfirmButton: false
+    });
+
+    await cargarCotizaciones();
+    await cargarResumen();
+  } catch (error) {
+    console.error("ERROR ACTUALIZANDO ESTADO:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.message || "No se pudo actualizar el estado"
+    });
+  }
+}
+
+async function eliminarCotizacion(id) {
+  const resultado = await Swal.fire({
+    icon: "warning",
+    title: "¿Eliminar cotización?",
+    text: "Esta acción no se puede deshacer.",
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#6c757d"
+  });
+
+  if (!resultado.isConfirmed) return;
+
+  try {
+    const res = await fetch(`${QUOTES_API}/${id}`, {
+      method: "DELETE",
+      headers: authHeaders()
+    });
+
+    const data = await leerRespuestaJSON(res);
+
+    if (!res.ok) {
+      throw new Error(data.message || "No se pudo eliminar");
+    }
+
+    await Swal.fire({
+      icon: "success",
+      title: "Eliminado",
+      text: "La cotización fue eliminada correctamente.",
+      timer: 1200,
+      showConfirmButton: false
+    });
+
+    await cargarCotizaciones();
+    await cargarResumen();
+  } catch (error) {
+    console.error("ERROR ELIMINANDO COTIZACIÓN:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.message || "No se pudo eliminar la cotización"
+    });
+  }
+}
+
+function responderWhatsapp(quote) {
+  const telefono = String(quote.telefono || "").replace(/\D/g, "");
+
+  if (!telefono) {
+    Swal.fire({
+      icon: "warning",
+      title: "Sin teléfono",
+      text: "Esta cotización no tiene teléfono."
+    });
+    return;
+  }
+
+  const tipoEvento = quote.evento || "evento";
+  const mensaje = `Hola ${quote.nombre || ""}, te escribimos desde Banquetes Almar sobre tu solicitud de ${tipoEvento}.`;
+  const url = `https://wa.me/57${telefono}?text=${encodeURIComponent(mensaje)}`;
+  window.open(url, "_blank");
+}
+
+async function convertirAEvento(id) {
+  const resultado = await Swal.fire({
+    icon: "question",
+    title: "¿Convertir a evento?",
+    text: "Esto creará un nuevo evento basado en la cotización.",
+    showCancelButton: true,
+    confirmButtonText: "Sí, convertir",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#28a745",
+    cancelButtonColor: "#6c757d"
+  });
+
+  if (!resultado.isConfirmed) return;
+
+  try {
+    const res = await fetch(`${QUOTES_API}/${id}/convert`, {
+      method: "POST",
+      headers: authHeaders()
+    });
+
+    const data = await leerRespuestaJSON(res);
+
+    if (!res.ok) {
+      throw new Error(data.message || "No se pudo convertir la cotización");
+    }
+
+    await Swal.fire({
+      icon: "success",
+      title: "Convertido",
+      text: "La cotización fue convertida a evento correctamente.",
+      timer: 1400,
+      showConfirmButton: false
+    });
+
+    await cargarCotizaciones();
+    await cargarResumen();
+  } catch (error) {
+    console.error("ERROR CONVIRTIENDO COTIZACIÓN:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.message || "No se pudo convertir la cotización"
+    });
+  }
+}
+
+function crearTarjetaCotizacion(quote) {
+  const estado = normalizarEstado(quote.estado);
+  const badgeClass = claseEstado(estado);
+
+  const card = document.createElement("article");
+  card.className = "quote-card";
+
+  card.innerHTML = `
+    <div class="quote-card-top">
+      <div>
+        <h3>${quote.nombre || "Sin nombre"}</h3>
+        <p><strong>Fecha:</strong> ${formatearFecha(quote.created_at)}</p>
+        <p><strong>Teléfono:</strong> ${quote.telefono || "No definido"}</p>
+        <p><strong>Personas:</strong> ${quote.personas || 0}</p>
+      </div>
+
+      <span class="event-chip">
+        ${quote.evento || "Evento"}
+      </span>
+    </div>
+
+    <div class="quote-status-row">
+      <span class="status-badge ${badgeClass}">
+        ${textoEstado(estado)}
+      </span>
+
+      <select class="status-select-pro" data-id="${quote.id}">
+        <option value="Contactado" ${estado === "Contactado" ? "selected" : ""}>Contactado</option>
+        <option value="Confirmado" ${estado === "Confirmado" ? "selected" : ""}>Confirmado</option>
+        <option value="Cancelado" ${estado === "Cancelado" ? "selected" : ""}>Cancelado</option>
+        <option value="Convertido" ${estado === "Convertido" ? "selected" : ""}>Convertido</option>
+      </select>
+    </div>
+
+    <p><strong>Observaciones:</strong> ${quote.mensaje || "Sin mensaje"}</p>
+
+    <div class="quote-card-actions">
+      <button class="btn btn-primary whatsapp-btn" data-id="${quote.id}">Responder por WhatsApp</button>
+      <button class="btn btn-success convertir-btn" data-id="${quote.id}">Convertir a evento</button>
+      <button class="btn btn-danger eliminar-btn" data-id="${quote.id}">Eliminar</button>
+    </div>
+  `;
+
+  const select = card.querySelector(".status-select-pro");
+  const whatsappBtn = card.querySelector(".whatsapp-btn");
+  const convertirBtn = card.querySelector(".convertir-btn");
+  const eliminarBtn = card.querySelector(".eliminar-btn");
+
+  select.addEventListener("change", async (e) => {
+    const nuevoEstado = e.target.value;
+    await actualizarEstado(quote.id, nuevoEstado);
+  });
+
+  whatsappBtn.addEventListener("click", () => responderWhatsapp(quote));
+  convertirBtn.addEventListener("click", () => convertirAEvento(quote.id));
+  eliminarBtn.addEventListener("click", () => eliminarCotizacion(quote.id));
+
+  return card;
+}
+
+async function cargarCotizaciones() {
+  try {
+    const res = await fetch(QUOTES_API, {
+      headers: authHeaders()
+    });
+
+    const data = await leerRespuestaJSON(res);
+
+    if (!res.ok) {
+      throw new Error(data.message || "No se pudieron cargar las cotizaciones");
+    }
+
+    quotesContainer.innerHTML = "";
+
+    if (!Array.isArray(data) || data.length === 0) {
+      quotesContainer.innerHTML = `
+        <div class="empty-state-card">
+          <h3>No hay cotizaciones</h3>
+          <p>Aún no se han registrado solicitudes.</p>
+        </div>
+      `;
+      return;
+    }
+
+    data.forEach((quote) => {
+      const card = crearTarjetaCotizacion(quote);
+      quotesContainer.appendChild(card);
+    });
+  } catch (error) {
+    console.error("ERROR CARGANDO COTIZACIONES:", error);
+    quotesContainer.innerHTML = `
+      <div class="empty-state-card">
+        <h3>Error</h3>
+        <p>No se pudieron cargar las cotizaciones.</p>
+      </div>
+    `;
+  }
+}
+
+(async function init() {
+  await cargarResumen();
+  await cargarCotizaciones();
+})();

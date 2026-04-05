@@ -4,22 +4,57 @@ const verifyToken = require("../middleware/auth");
 
 const router = express.Router();
 
-// Obtener todos los clientes
-router.get("/", async (req, res) => {
+// LISTAR / BUSCAR CLIENTES
+router.get("/", verifyToken, async (req, res) => {
   try {
-    const [rows] = await db.query(
-      "SELECT * FROM clientes ORDER BY id DESC"
-    );
+    const q = String(req.query.q || "").trim();
+
+    if (!q) {
+      const [rows] = await db.query(`
+        SELECT *
+        FROM clientes
+        ORDER BY id DESC
+      `);
+
+      return res.json(rows);
+    }
+
+    const like = `%${q}%`;
+    const idNumero = Number(q);
+    const esNumero = !Number.isNaN(idNumero) && q !== "";
+
+    let sql = `
+      SELECT *
+      FROM clientes
+      WHERE
+        nombre LIKE ?
+        OR telefono LIKE ?
+        OR email LIKE ?
+        OR documento LIKE ?
+    `;
+
+    const params = [like, like, like, like];
+
+    if (esNumero) {
+      sql += ` OR id = ?`;
+      params.push(idNumero);
+    }
+
+    sql += ` ORDER BY id DESC`;
+
+    const [rows] = await db.query(sql, params);
 
     res.json(rows);
   } catch (error) {
     console.log("ERROR GET CLIENTES:", error);
-    res.status(500).json({ message: "Error al obtener clientes" });
+    res.status(500).json({
+      message: "Error al obtener clientes"
+    });
   }
 });
 
-// Obtener un cliente por ID
-router.get("/:id", async (req, res) => {
+// OBTENER UN CLIENTE
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -29,17 +64,21 @@ router.get("/:id", async (req, res) => {
     );
 
     if (!rows.length) {
-      return res.status(404).json({ message: "Cliente no encontrado" });
+      return res.status(404).json({
+        message: "Cliente no encontrado"
+      });
     }
 
     res.json(rows[0]);
   } catch (error) {
     console.log("ERROR GET CLIENTE:", error);
-    res.status(500).json({ message: "Error al obtener cliente" });
+    res.status(500).json({
+      message: "Error al obtener cliente"
+    });
   }
 });
 
-// Crear cliente
+// CREAR CLIENTE
 router.post("/", verifyToken, async (req, res) => {
   try {
     const {
@@ -48,41 +87,43 @@ router.post("/", verifyToken, async (req, res) => {
       email,
       documento,
       direccion,
-      tipo_cliente,
-      observaciones
+      tipo_cliente
     } = req.body;
 
     if (!nombre || !nombre.trim()) {
-      return res.status(400).json({ message: "El nombre es obligatorio" });
-    }
-
-    if (!telefono || !telefono.trim()) {
-      return res.status(400).json({ message: "El teléfono es obligatorio" });
+      return res.status(400).json({
+        message: "El nombre es obligatorio"
+      });
     }
 
     await db.query(
-      `INSERT INTO clientes
-      (nombre, telefono, email, documento, direccion, tipo_cliente, observaciones)
-      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      `
+      INSERT INTO clientes
+      (nombre, telefono, email, documento, direccion, tipo_cliente)
+      VALUES (?, ?, ?, ?, ?, ?)
+      `,
       [
         nombre.trim(),
-        telefono.trim(),
-        email || "",
-        documento || "",
-        direccion || "",
-        tipo_cliente || "Persona",
-        observaciones || ""
+        telefono ? telefono.trim() : "",
+        email ? email.trim() : "",
+        documento ? documento.trim() : "",
+        direccion ? direccion.trim() : "",
+        tipo_cliente ? tipo_cliente.trim() : "Cliente"
       ]
     );
 
-    res.json({ message: "Cliente creado correctamente" });
+    res.json({
+      message: "Cliente creado correctamente"
+    });
   } catch (error) {
     console.log("ERROR POST CLIENTE:", error);
-    res.status(500).json({ message: "Error al crear cliente" });
+    res.status(500).json({
+      message: "Error al crear cliente"
+    });
   }
 });
 
-// Editar cliente
+// ACTUALIZAR CLIENTE
 router.put("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
@@ -92,16 +133,13 @@ router.put("/:id", verifyToken, async (req, res) => {
       email,
       documento,
       direccion,
-      tipo_cliente,
-      observaciones
+      tipo_cliente
     } = req.body;
 
     if (!nombre || !nombre.trim()) {
-      return res.status(400).json({ message: "El nombre es obligatorio" });
-    }
-
-    if (!telefono || !telefono.trim()) {
-      return res.status(400).json({ message: "El teléfono es obligatorio" });
+      return res.status(400).json({
+        message: "El nombre es obligatorio"
+      });
     }
 
     const [rows] = await db.query(
@@ -110,39 +148,46 @@ router.put("/:id", verifyToken, async (req, res) => {
     );
 
     if (!rows.length) {
-      return res.status(404).json({ message: "Cliente no encontrado" });
+      return res.status(404).json({
+        message: "Cliente no encontrado"
+      });
     }
 
     await db.query(
-      `UPDATE clientes SET
+      `
+      UPDATE clientes
+      SET
         nombre = ?,
         telefono = ?,
         email = ?,
         documento = ?,
         direccion = ?,
-        tipo_cliente = ?,
-        observaciones = ?
-      WHERE id = ?`,
+        tipo_cliente = ?
+      WHERE id = ?
+      `,
       [
         nombre.trim(),
-        telefono.trim(),
-        email || "",
-        documento || "",
-        direccion || "",
-        tipo_cliente || "Persona",
-        observaciones || "",
+        telefono ? telefono.trim() : "",
+        email ? email.trim() : "",
+        documento ? documento.trim() : "",
+        direccion ? direccion.trim() : "",
+        tipo_cliente ? tipo_cliente.trim() : "Cliente",
         id
       ]
     );
 
-    res.json({ message: "Cliente actualizado correctamente" });
+    res.json({
+      message: "Cliente actualizado correctamente"
+    });
   } catch (error) {
     console.log("ERROR PUT CLIENTE:", error);
-    res.status(500).json({ message: "Error al actualizar cliente" });
+    res.status(500).json({
+      message: "Error al actualizar cliente"
+    });
   }
 });
 
-// Eliminar cliente
+// ELIMINAR CLIENTE
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
@@ -153,7 +198,9 @@ router.delete("/:id", verifyToken, async (req, res) => {
     );
 
     if (!rows.length) {
-      return res.status(404).json({ message: "Cliente no encontrado" });
+      return res.status(404).json({
+        message: "Cliente no encontrado"
+      });
     }
 
     await db.query(
@@ -161,10 +208,14 @@ router.delete("/:id", verifyToken, async (req, res) => {
       [id]
     );
 
-    res.json({ message: "Cliente eliminado correctamente" });
+    res.json({
+      message: "Cliente eliminado correctamente"
+    });
   } catch (error) {
     console.log("ERROR DELETE CLIENTE:", error);
-    res.status(500).json({ message: "Error al eliminar cliente" });
+    res.status(500).json({
+      message: "Error al eliminar cliente"
+    });
   }
 });
 

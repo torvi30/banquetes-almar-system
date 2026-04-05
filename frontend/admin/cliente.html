@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cliente | Banquetes Almar</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <section class="section admin-panel">
+    <div class="container">
+      <div class="section-heading">
+        <p class="section-label">Ficha de cliente</p>
+        <h2>Detalle del cliente</h2>
+        <p>Historial de eventos, pagos y resumen general.</p>
+      </div>
+
+      <div class="admin-menu">
+        <a href="./dashboard.html" class="btn btn-secondary">Cotizaciones</a>
+        <a href="./galeria.html" class="btn btn-secondary">Galería</a>
+        <a href="./servicios.html" class="btn btn-secondary">Servicios</a>
+        <a href="./eventos.html" class="btn btn-secondary">Eventos</a>
+        <a href="./calendario.html" class="btn btn-secondary">Calendario</a>
+        <a href="./inventario.html" class="btn btn-secondary">Inventario</a>
+        <a href="./clientes.html" class="btn btn-secondary">Clientes</a>
+        <a href="./pagos.html" class="btn btn-secondary">Pagos</a>
+        <button id="logoutBtn" class="btn btn-secondary" type="button">Cerrar sesión</button>
+      </div>
+
+      <div class="quote-card-actions" style="margin: 1.5rem 0 2rem 0;">
+        <a href="./clientes.html" class="btn btn-secondary">← Volver a clientes</a>
+        <a href="./eventos.html" class="btn btn-primary">Ir a eventos</a>
+      </div>
+
+      <div id="clienteInfo" class="calendar-panel" style="margin-bottom: 1.5rem;">
+        <p>Cargando cliente...</p>
+      </div>
+
+      <div id="resumenCards" class="admin-summary" style="margin-bottom: 2rem;"></div>
+
+      <div class="section-heading" style="margin-top: 2rem;">
+        <h2>Eventos del cliente</h2>
+        <p>Todos los eventos asociados a este cliente.</p>
+      </div>
+      <div id="eventosCliente" class="quotes-grid"></div>
+
+      <div class="section-heading" style="margin-top: 2rem;">
+        <h2>Pagos del cliente</h2>
+        <p>Todos los pagos realizados por este cliente.</p>
+      </div>
+      <div id="pagosCliente" class="quotes-grid"></div>
+    </div>
+  </section>
+
+  <script src="../js/cliente-admin.js"></script>
+</body>
+</html>

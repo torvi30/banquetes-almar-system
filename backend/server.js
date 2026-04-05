@@ -13,6 +13,7 @@ const servicesRoutes = require("./routes/services.routes");
 const eventsRoutes = require("./routes/events.routes");
 const statsRoutes = require("./routes/stats.routes");
 const paymentsRoutes = require("./routes/payments.routes");
+const clientDetailRoutes = require("./routes/clientDetail.routes");
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use("/api/services", servicesRoutes);
 app.use("/api/events", eventsRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/payments", paymentsRoutes);
+app.use("/api/client-detail", clientDetailRoutes);
 
 const PORT = process.env.PORT || 3001;
 
