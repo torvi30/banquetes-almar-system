@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Eventos Admin | Banquetes Almar</title>
+  <title>Reservas | Banquetes Almar</title>
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
@@ -11,8 +11,8 @@
     <div class="container">
       <div class="section-heading">
         <p class="section-label">Panel Admin</p>
-        <h2>Administrar eventos</h2>
-        <p>Registra, organiza y controla pagos del evento.</p>
+        <h2>Reservas / Disponibilidad</h2>
+        <p>Gestiona reservas pendientes antes de convertirlas en eventos.</p>
       </div>
 
       <div class="admin-menu admin-menu-grid">
@@ -29,14 +29,12 @@
         <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">Cerrar sesión</button>
       </div>
 
-      <form id="eventForm" class="quote-form" enctype="multipart/form-data">
-        <input type="hidden" id="eventId" />
+      <form id="reservationForm" class="quote-form">
+        <input type="hidden" id="reservationId" />
 
         <div class="form-group">
-          <label for="cliente_id">Cliente registrado</label>
-          <select id="cliente_id">
-            <option value="">Selecciona un cliente</option>
-          </select>
+          <label for="cliente_id">ID cliente</label>
+          <input type="number" id="cliente_id" />
         </div>
 
         <div class="form-group">
@@ -70,35 +68,58 @@
         </div>
 
         <div class="form-group">
-          <label for="valor_total">Valor total</label>
-          <input type="number" id="valor_total" min="0" />
-        </div>
-
-        <div class="form-group">
-          <label for="abono">Abono</label>
-          <input type="number" id="abono" min="0" />
-        </div>
-
-        <div class="form-group full-width">
-          <label for="imagen">Imagen de referencia</label>
-          <input type="file" id="imagen" accept="image/*" />
+          <label for="estado">Estado</label>
+          <select id="estado">
+            <option value="Pendiente">Pendiente</option>
+            <option value="Confirmada">Confirmada</option>
+            <option value="Cancelada">Cancelada</option>
+            <option value="Convertida">Convertida</option>
+          </select>
         </div>
 
         <div class="form-group full-width">
-          <label for="observaciones">Observaciones / detalles</label>
-          <textarea id="observaciones" rows="4" placeholder="Describe cómo quiere el evento..."></textarea>
+          <label for="observaciones">Observaciones</label>
+          <textarea id="observaciones" rows="3"></textarea>
         </div>
 
         <div class="form-group full-width event-form-actions">
-          <button type="submit" class="btn btn-primary" id="saveEventBtn">Guardar evento</button>
+          <button type="submit" class="btn btn-primary" id="saveReservationBtn">Guardar reserva</button>
           <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
         </div>
       </form>
 
-      <div id="eventsGrid" class="quotes-grid" style="margin-top: 2rem;"></div>
+      <div class="quote-form" style="margin-top: 2rem;">
+        <div class="form-group">
+          <label for="filterFecha">Filtrar por fecha</label>
+          <input type="date" id="filterFecha" />
+        </div>
+
+        <div class="form-group">
+          <label for="filterEstado">Filtrar por estado</label>
+          <select id="filterEstado">
+            <option value="">Todos</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="Confirmada">Confirmada</option>
+            <option value="Cancelada">Cancelada</option>
+            <option value="Convertida">Convertida</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="filterSearch">Buscar</label>
+          <input type="text" id="filterSearch" placeholder="Cliente, teléfono, tipo de evento..." />
+        </div>
+
+        <div class="form-group">
+          <label>&nbsp;</label>
+          <button type="button" class="btn btn-secondary" id="btnFiltrar">Filtrar</button>
+        </div>
+      </div>
+
+      <div id="reservationsGrid" class="quotes-grid" style="margin-top: 2rem;"></div>
     </div>
   </section>
-
-  <script src="../js/eventos-admin.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../js/reservas-admin.js"></script>
 </body>
 </html>

@@ -1,9 +1,9 @@
 const QUOTES_API = "http://localhost:3001/api/quotes";
 const STATS_API = "http://localhost:3001/api/stats";
+const EVENTS_API = "http://localhost:3001/api/events";
 
 const token = localStorage.getItem("token");
 
-const quotesContainer = document.getElementById("quotesContainer");
 const totalQuotes = document.getElementById("totalQuotes");
 const totalEventos = document.getElementById("totalEventos");
 const confirmados = document.getElementById("confirmados");
@@ -11,6 +11,10 @@ const ingresos = document.getElementById("ingresos");
 const pendiente = document.getElementById("pendiente");
 const adminWelcome = document.getElementById("adminWelcome");
 const logoutBtn = document.getElementById("logoutBtn");
+
+const latestQuotes = document.getElementById("latestQuotes");
+const latestReservas = document.getElementById("latestReservas");
+const upcomingEvents = document.getElementById("upcomingEvents");
 
 const adminNombre = localStorage.getItem("adminNombre") || "Administrador";
 
@@ -43,40 +47,6 @@ function authHeaders(extra = {}) {
   };
 }
 
-function normalizarEstado(estado) {
-  const valor = String(estado || "").toLowerCase().trim();
-
-  if (valor === "nuevo") return "Contactado";
-  if (valor === "contactado") return "Contactado";
-  if (valor === "confirmado") return "Confirmado";
-  if (valor === "cancelado") return "Cancelado";
-  if (valor === "convertido") return "Convertido";
-
-  return "Contactado";
-}
-
-function textoEstado(estado) {
-  const value = normalizarEstado(estado);
-
-  if (value === "Contactado") return "Contactado";
-  if (value === "Confirmado") return "Confirmado";
-  if (value === "Cancelado") return "Cancelado";
-  if (value === "Convertido") return "Convertido";
-
-  return "Contactado";
-}
-
-function claseEstado(estado) {
-  const value = normalizarEstado(estado);
-
-  if (value === "Contactado") return "estado-contactado";
-  if (value === "Confirmado") return "estado-confirmado";
-  if (value === "Cancelado") return "estado-cancelado";
-  if (value === "Convertido") return "estado-convertido";
-
-  return "estado-contactado";
-}
-
 function formatearDinero(valor) {
   return `$${Number(valor || 0).toLocaleString("es-CO")}`;
 }
@@ -85,12 +55,52 @@ function formatearFecha(fecha) {
   if (!fecha) return "Sin fecha";
 
   const d = new Date(fecha);
-  if (Number.isNaN(d.getTime())) return fecha;
+  if (Number.isNaN(d.getTime())) return String(fecha).slice(0, 10);
 
   return d.toLocaleString("es-CO", {
     dateStyle: "medium",
     timeStyle: "short"
   });
+}
+
+function normalizarTextoEstado(estado) {
+  const valor = String(estado || "").toLowerCase().trim();
+
+  if (valor === "nuevo") return "Nuevo";
+  if (valor === "contactado") return "Contactado";
+  if (valor === "confirmado") return "Confirmado";
+  if (valor === "cancelado") return "Cancelado";
+  if (valor === "convertido") return "Convertido";
+  if (valor === "pendiente") return "Pendiente";
+  if (valor === "confirmada") return "Confirmada";
+  if (valor === "cancelada") return "Cancelada";
+  if (valor === "convertida") return "Convertida";
+  if (valor === "en_proceso") return "En proceso";
+  if (valor === "finalizado") return "Finalizado";
+
+  return estado || "Sin estado";
+}
+
+function claseEstado(estado) {
+  const valor = String(estado || "").toLowerCase().trim();
+
+  if (valor === "nuevo" || valor === "contactado" || valor === "pendiente") {
+    return "estado-contactado";
+  }
+
+  if (valor === "confirmado" || valor === "confirmada" || valor === "finalizado") {
+    return "estado-confirmado";
+  }
+
+  if (valor === "cancelado" || valor === "cancelada") {
+    return "estado-cancelado";
+  }
+
+  if (valor === "convertido" || valor === "convertida" || valor === "en_proceso") {
+    return "estado-convertido";
+  }
+
+  return "estado-contactado";
 }
 
 async function leerRespuestaJSON(res) {
@@ -100,8 +110,39 @@ async function leerRespuestaJSON(res) {
     return JSON.parse(text);
   } catch (error) {
     console.error("Respuesta no JSON:", text);
-    throw new Error("El servidor devolvió HTML o una respuesta inválida.");
+    throw new Error("El servidor devolvió una respuesta inválida.");
   }
+}
+
+function renderEmpty(container, titulo, texto) {
+  container.innerHTML = `
+    <div class="dashboard-empty">
+      <h4>${titulo}</h4>
+      <p>${texto}</p>
+    </div>
+  `;
+}
+
+function crearItemDashboard({ titulo, subtitulo, fecha, estado, badgeTexto, link, linkTexto }) {
+  return `
+    <article class="dashboard-item">
+      <div class="dashboard-item-top">
+        <div>
+          <h4>${titulo}</h4>
+          <p>${subtitulo}</p>
+        </div>
+
+        <span class="status-badge ${claseEstado(estado)}">
+          ${badgeTexto || normalizarTextoEstado(estado)}
+        </span>
+      </div>
+
+      <div class="dashboard-item-bottom">
+        <span class="dashboard-date">${fecha}</span>
+        ${link ? `<a href="${link}" class="dashboard-inline-link">${linkTexto || "Ver más"}</a>` : ""}
+      </div>
+    </article>
+  `;
 }
 
 async function cargarResumen() {
@@ -126,218 +167,7 @@ async function cargarResumen() {
   }
 }
 
-async function actualizarEstado(id, estado) {
-  try {
-    const res = await fetch(`${QUOTES_API}/${id}/status`, {
-      method: "PUT",
-      headers: authHeaders({
-        "Content-Type": "application/json"
-      }),
-      body: JSON.stringify({
-        estado: normalizarEstado(estado)
-      })
-    });
-
-    const data = await leerRespuestaJSON(res);
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudo actualizar el estado");
-    }
-
-    await Swal.fire({
-      icon: "success",
-      title: "Estado actualizado",
-      text: "La cotización fue actualizada correctamente.",
-      timer: 1200,
-      showConfirmButton: false
-    });
-
-    await cargarCotizaciones();
-    await cargarResumen();
-  } catch (error) {
-    console.error("ERROR ACTUALIZANDO ESTADO:", error);
-
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: error.message || "No se pudo actualizar el estado"
-    });
-  }
-}
-
-async function eliminarCotizacion(id) {
-  const resultado = await Swal.fire({
-    icon: "warning",
-    title: "¿Eliminar cotización?",
-    text: "Esta acción no se puede deshacer.",
-    showCancelButton: true,
-    confirmButtonText: "Sí, eliminar",
-    cancelButtonText: "Cancelar",
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#6c757d"
-  });
-
-  if (!resultado.isConfirmed) return;
-
-  try {
-    const res = await fetch(`${QUOTES_API}/${id}`, {
-      method: "DELETE",
-      headers: authHeaders()
-    });
-
-    const data = await leerRespuestaJSON(res);
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudo eliminar");
-    }
-
-    await Swal.fire({
-      icon: "success",
-      title: "Eliminado",
-      text: "La cotización fue eliminada correctamente.",
-      timer: 1200,
-      showConfirmButton: false
-    });
-
-    await cargarCotizaciones();
-    await cargarResumen();
-  } catch (error) {
-    console.error("ERROR ELIMINANDO COTIZACIÓN:", error);
-
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: error.message || "No se pudo eliminar la cotización"
-    });
-  }
-}
-
-function responderWhatsapp(quote) {
-  const telefono = String(quote.telefono || "").replace(/\D/g, "");
-
-  if (!telefono) {
-    Swal.fire({
-      icon: "warning",
-      title: "Sin teléfono",
-      text: "Esta cotización no tiene teléfono."
-    });
-    return;
-  }
-
-  const tipoEvento = quote.evento || "evento";
-  const mensaje = `Hola ${quote.nombre || ""}, te escribimos desde Banquetes Almar sobre tu solicitud de ${tipoEvento}.`;
-  const url = `https://wa.me/57${telefono}?text=${encodeURIComponent(mensaje)}`;
-  window.open(url, "_blank");
-}
-
-async function convertirAEvento(id) {
-  const resultado = await Swal.fire({
-    icon: "question",
-    title: "¿Convertir a evento?",
-    text: "Esto creará un nuevo evento basado en la cotización.",
-    showCancelButton: true,
-    confirmButtonText: "Sí, convertir",
-    cancelButtonText: "Cancelar",
-    confirmButtonColor: "#28a745",
-    cancelButtonColor: "#6c757d"
-  });
-
-  if (!resultado.isConfirmed) return;
-
-  try {
-    const res = await fetch(`${QUOTES_API}/${id}/convert`, {
-      method: "POST",
-      headers: authHeaders()
-    });
-
-    const data = await leerRespuestaJSON(res);
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudo convertir la cotización");
-    }
-
-    await Swal.fire({
-      icon: "success",
-      title: "Convertido",
-      text: "La cotización fue convertida a evento correctamente.",
-      timer: 1400,
-      showConfirmButton: false
-    });
-
-    await cargarCotizaciones();
-    await cargarResumen();
-  } catch (error) {
-    console.error("ERROR CONVIRTIENDO COTIZACIÓN:", error);
-
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: error.message || "No se pudo convertir la cotización"
-    });
-  }
-}
-
-function crearTarjetaCotizacion(quote) {
-  const estado = normalizarEstado(quote.estado);
-  const badgeClass = claseEstado(estado);
-
-  const card = document.createElement("article");
-  card.className = "quote-card";
-
-  card.innerHTML = `
-    <div class="quote-card-top">
-      <div>
-        <h3>${quote.nombre || "Sin nombre"}</h3>
-        <p><strong>Fecha:</strong> ${formatearFecha(quote.created_at)}</p>
-        <p><strong>Teléfono:</strong> ${quote.telefono || "No definido"}</p>
-        <p><strong>Personas:</strong> ${quote.personas || 0}</p>
-      </div>
-
-      <span class="event-chip">
-        ${quote.evento || "Evento"}
-      </span>
-    </div>
-
-    <div class="quote-status-row">
-      <span class="status-badge ${badgeClass}">
-        ${textoEstado(estado)}
-      </span>
-
-      <select class="status-select-pro" data-id="${quote.id}">
-        <option value="Contactado" ${estado === "Contactado" ? "selected" : ""}>Contactado</option>
-        <option value="Confirmado" ${estado === "Confirmado" ? "selected" : ""}>Confirmado</option>
-        <option value="Cancelado" ${estado === "Cancelado" ? "selected" : ""}>Cancelado</option>
-        <option value="Convertido" ${estado === "Convertido" ? "selected" : ""}>Convertido</option>
-      </select>
-    </div>
-
-    <p><strong>Observaciones:</strong> ${quote.mensaje || "Sin mensaje"}</p>
-
-    <div class="quote-card-actions">
-      <button class="btn btn-primary whatsapp-btn" data-id="${quote.id}">Responder por WhatsApp</button>
-      <button class="btn btn-success convertir-btn" data-id="${quote.id}">Convertir a evento</button>
-      <button class="btn btn-danger eliminar-btn" data-id="${quote.id}">Eliminar</button>
-    </div>
-  `;
-
-  const select = card.querySelector(".status-select-pro");
-  const whatsappBtn = card.querySelector(".whatsapp-btn");
-  const convertirBtn = card.querySelector(".convertir-btn");
-  const eliminarBtn = card.querySelector(".eliminar-btn");
-
-  select.addEventListener("change", async (e) => {
-    const nuevoEstado = e.target.value;
-    await actualizarEstado(quote.id, nuevoEstado);
-  });
-
-  whatsappBtn.addEventListener("click", () => responderWhatsapp(quote));
-  convertirBtn.addEventListener("click", () => convertirAEvento(quote.id));
-  eliminarBtn.addEventListener("click", () => eliminarCotizacion(quote.id));
-
-  return card;
-}
-
-async function cargarCotizaciones() {
+async function cargarCotizacionesYReservas() {
   try {
     const res = await fetch(QUOTES_API, {
       headers: authHeaders()
@@ -346,37 +176,112 @@ async function cargarCotizaciones() {
     const data = await leerRespuestaJSON(res);
 
     if (!res.ok) {
-      throw new Error(data.message || "No se pudieron cargar las cotizaciones");
+      throw new Error(data.message || "No se pudieron cargar cotizaciones y reservas");
     }
 
-    quotesContainer.innerHTML = "";
+    const lista = Array.isArray(data) ? data : [];
 
-    if (!Array.isArray(data) || data.length === 0) {
-      quotesContainer.innerHTML = `
-        <div class="empty-state-card">
-          <h3>No hay cotizaciones</h3>
-          <p>Aún no se han registrado solicitudes.</p>
-        </div>
-      `;
+    const quotes = lista.filter(item => item.origen === "cotizacion").slice(0, 5);
+    const reservas = lista.filter(item => item.origen === "reserva").slice(0, 5);
+
+    if (!quotes.length) {
+      renderEmpty(latestQuotes, "Sin cotizaciones", "No hay cotizaciones recientes.");
+    } else {
+      latestQuotes.innerHTML = quotes.map(item => {
+        return crearItemDashboard({
+          titulo: item.nombre || "Sin nombre",
+          subtitulo: `${item.tipo_evento || "Evento"} · ${item.telefono || "Sin teléfono"}`,
+          fecha: formatearFecha(item.created_at),
+          estado: item.estado,
+          badgeTexto: normalizarTextoEstado(item.estado),
+          link: "./cotizaciones.html",
+          linkTexto: "Gestionar"
+        });
+      }).join("");
+    }
+
+    if (!reservas.length) {
+      renderEmpty(latestReservas, "Sin reservas", "No hay reservas recientes.");
+    } else {
+      latestReservas.innerHTML = reservas.map(item => {
+        return crearItemDashboard({
+          titulo: item.nombre || "Sin cliente",
+          subtitulo: `${item.tipo_evento || "Reserva"} · ${item.telefono || "Sin teléfono"}`,
+          fecha: formatearFecha(item.created_at),
+          estado: item.estado,
+          badgeTexto: normalizarTextoEstado(item.estado),
+          link: "./reservas.html",
+          linkTexto: "Ver reservas"
+        });
+      }).join("");
+    }
+  } catch (error) {
+    console.error("ERROR CARGANDO DASHBOARD:", error);
+    renderEmpty(latestQuotes, "Error", "No se pudieron cargar las cotizaciones.");
+    renderEmpty(latestReservas, "Error", "No se pudieron cargar las reservas.");
+  }
+}
+
+function obtenerFechaEvento(item) {
+  return item.fecha_evento || item.fecha || item.created_at || null;
+}
+
+async function cargarEventosProximos() {
+  try {
+    const res = await fetch(EVENTS_API, {
+      headers: authHeaders()
+    });
+
+    const data = await leerRespuestaJSON(res);
+
+    if (!res.ok) {
+      throw new Error(data.message || "No se pudieron cargar los eventos");
+    }
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    const eventos = (Array.isArray(data) ? data : [])
+      .filter(evento => {
+        const fecha = obtenerFechaEvento(evento);
+        if (!fecha) return true;
+
+        const d = new Date(fecha);
+        if (Number.isNaN(d.getTime())) return true;
+
+        return d >= hoy;
+      })
+      .sort((a, b) => {
+        const fechaA = new Date(obtenerFechaEvento(a) || 0);
+        const fechaB = new Date(obtenerFechaEvento(b) || 0);
+        return fechaA - fechaB;
+      })
+      .slice(0, 5);
+
+    if (!eventos.length) {
+      renderEmpty(upcomingEvents, "Sin próximos eventos", "No hay eventos próximos registrados.");
       return;
     }
 
-    data.forEach((quote) => {
-      const card = crearTarjetaCotizacion(quote);
-      quotesContainer.appendChild(card);
-    });
+    upcomingEvents.innerHTML = eventos.map(evento => {
+      return crearItemDashboard({
+        titulo: evento.cliente || "Sin cliente",
+        subtitulo: `${evento.tipo_evento || "Evento"} · ${evento.lugar || "Lugar por definir"}`,
+        fecha: formatearFecha(obtenerFechaEvento(evento)),
+        estado: evento.estado || "Pendiente",
+        badgeTexto: normalizarTextoEstado(evento.estado || "Pendiente"),
+        link: "./eventos.html",
+        linkTexto: "Ver eventos"
+      });
+    }).join("");
   } catch (error) {
-    console.error("ERROR CARGANDO COTIZACIONES:", error);
-    quotesContainer.innerHTML = `
-      <div class="empty-state-card">
-        <h3>Error</h3>
-        <p>No se pudieron cargar las cotizaciones.</p>
-      </div>
-    `;
+    console.error("ERROR CARGANDO EVENTOS:", error);
+    renderEmpty(upcomingEvents, "Error", "No se pudieron cargar los eventos.");
   }
 }
 
 (async function init() {
   await cargarResumen();
-  await cargarCotizaciones();
+  await cargarCotizacionesYReservas();
+  await cargarEventosProximos();
 })();

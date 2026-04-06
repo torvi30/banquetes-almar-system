@@ -1,22 +1,31 @@
-const API_URL = "http://localhost:3001/api/events";
+const API_URL = "http://localhost:3001/api/reservations";
+const token = localStorage.getItem("token");
 
 const calendarGrid = document.getElementById("calendarGrid");
-const calendarTitle = document.getElementById("calendarTitle");
-const prevMonthBtn = document.getElementById("prevMonthBtn");
-const nextMonthBtn = document.getElementById("nextMonthBtn");
-const selectedDayTitle = document.getElementById("selectedDayTitle");
-const selectedDayEvents = document.getElementById("selectedDayEvents");
-const upcomingEvents = document.getElementById("upcomingEvents");
+const monthTitle = document.getElementById("monthTitle");
+const prevMonthBtn = document.getElementById("prevMonth");
+const nextMonthBtn = document.getElementById("nextMonth");
 const logoutBtn = document.getElementById("logoutBtn");
 
-let eventos = [];
 let currentDate = new Date();
-let selectedDateStr = "";
+let reservas = [];
 
-const meses = [
-  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-];
+if (!token) {
+  Swal.fire({
+    icon: "warning",
+    title: "Sesión expirada",
+    text: "Debes iniciar sesión nuevamente."
+  }).then(() => {
+    window.location.href = "./login.html";
+  });
+}
+
+function authHeaders(extra = {}) {
+  return {
+    Authorization: `Bearer ${token}`,
+    ...extra
+  };
+}
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
@@ -26,357 +35,178 @@ if (logoutBtn) {
   });
 }
 
-function normalizarFechaTexto(fechaStr) {
-  if (!fechaStr) return "";
-  return String(fechaStr).slice(0, 10);
+function formatearFechaISO(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
-function formatMoney(value) {
-  return "$" + Number(value || 0).toLocaleString("es-CO");
+function normalizarFechaTexto(fecha) {
+  if (!fecha) return "";
+  return String(fecha).slice(0, 10);
 }
 
-function parseLocalDate(dateStr) {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day);
+function obtenerClaseEstado(estado) {
+  const valor = String(estado || "").toLowerCase().trim();
+
+  if (valor === "pendiente") return "badge-pendiente";
+  if (valor === "confirmada") return "badge-confirmada";
+  if (valor === "cancelada") return "badge-cancelada";
+  if (valor === "convertida") return "badge-convertida";
+
+  return "badge-pendiente";
 }
 
-function formatLongDate(dateStr) {
-  if (!dateStr) return "Sin fecha";
-  const date = parseLocalDate(dateStr);
-  return date.toLocaleDateString("es-CO", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric"
-  });
+function obtenerConteoPorEstado(lista) {
+  return {
+    pendiente: lista.filter(r => String(r.estado).toLowerCase() === "pendiente").length,
+    confirmada: lista.filter(r => String(r.estado).toLowerCase() === "confirmada").length,
+    cancelada: lista.filter(r => String(r.estado).toLowerCase() === "cancelada").length,
+    convertida: lista.filter(r => String(r.estado).toLowerCase() === "convertida").length
+  };
 }
 
-function getEventsByDate(dateStr) {
-  return eventos.filter(ev => normalizarFechaTexto(ev.fecha_evento) === dateStr);
-}
+async function cargarReservas() {
+  try {
+    const res = await fetch(API_URL, {
+      headers: authHeaders()
+    });
 
-function getUpcomingEvents() {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+    const data = await res.json();
 
-  return [...eventos]
-    .filter(ev => {
-      const fecha = normalizarFechaTexto(ev.fecha_evento);
-      if (!fecha) return false;
-      return parseLocalDate(fecha) >= today;
-    })
-    .sort((a, b) => normalizarFechaTexto(a.fecha_evento).localeCompare(normalizarFechaTexto(b.fecha_evento)))
-    .slice(0, 8);
-}
+    if (!res.ok) {
+      throw new Error(data.message || "No se pudieron cargar las reservas");
+    }
 
-function construirWhatsappUrl(ev) {
-  const telefonoLimpio = String(ev.telefono || "").replace(/\D/g, "");
-  if (!telefonoLimpio) return "";
-
-  const mensaje = `Hola ${ev.cliente || ""}, te escribimos de Banquetes Almar sobre tu evento ${ev.tipo_evento || ""} del ${normalizarFechaTexto(ev.fecha_evento) || ""}. Estado: ${ev.estado || "Pendiente"}. Saldo pendiente: ${formatMoney(ev.saldo)}.`;
-  return `https://wa.me/57${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
-}
-
-function renderUpcomingEvents() {
-  const list = getUpcomingEvents();
-
-  if (!list.length) {
-    upcomingEvents.innerHTML = `
-      <div class="empty-state-card">
-        <h3>Sin próximos eventos</h3>
-        <p>Aún no hay eventos programados.</p>
-      </div>
-    `;
-    return;
+    reservas = Array.isArray(data) ? data : [];
+    renderCalendar();
+  } catch (error) {
+    console.error("ERROR CARGANDO RESERVAS:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.message || "No se pudieron cargar las reservas"
+    });
   }
-
-  upcomingEvents.innerHTML = list.map(ev => `
-    <article class="event-row-card">
-      <div class="event-row-main">
-        <strong>${ev.cliente || "Sin cliente"}</strong>
-        <p>${ev.tipo_evento || "Sin tipo"} · ${formatLongDate(normalizarFechaTexto(ev.fecha_evento))}</p>
-      </div>
-
-      <div class="event-row-side">
-        <span class="event-status-text">${ev.estado || "Pendiente"}</span>
-        <small>${formatMoney(ev.saldo)}</small>
-      </div>
-    </article>
-  `).join("");
-}
-
-function renderSelectedDay(dateStr) {
-  selectedDateStr = dateStr;
-  const list = getEventsByDate(dateStr);
-
-  selectedDayTitle.textContent = formatLongDate(dateStr);
-
-  if (!list.length) {
-    selectedDayEvents.innerHTML = `
-      <div class="empty-state-card">
-        <h3>Sin eventos este día</h3>
-        <p>No hay reservas registradas para esta fecha.</p>
-      </div>
-    `;
-    return;
-  }
-
-  selectedDayEvents.innerHTML = list.map(ev => `
-    <article class="event-row-card event-row-card-large">
-      <div class="event-row-main">
-        <strong>${ev.cliente || "Sin cliente"}</strong>
-        <p>${ev.tipo_evento || "Sin tipo"} · ${ev.lugar || "Sin lugar"}</p>
-        <p>Tel: ${ev.telefono || "No definido"}</p>
-        <p>Personas: ${ev.personas || 0}</p>
-        <p>Total: ${formatMoney(ev.valor_total)} · Abono: ${formatMoney(ev.abono)} · Saldo: ${formatMoney(ev.saldo)}</p>
-        <p>Obs: ${ev.observaciones || "Sin observaciones"}</p>
-      </div>
-
-      <div class="event-row-side">
-        <span class="event-status-text">${ev.estado || "Pendiente"}</span>
-
-        <div class="event-actions-stack">
-          <button class="btn btn-primary" onclick="abrirEditar(${ev.id})">Editar</button>
-          <button class="btn btn-success" onclick="marcarPagado(${ev.id})">Marcar pagado</button>
-          ${ev.telefono ? `
-            <a class="btn btn-secondary" target="_blank" href="${construirWhatsappUrl(ev)}">WhatsApp</a>
-          ` : ""}
-        </div>
-      </div>
-    </article>
-  `).join("");
 }
 
 function renderCalendar() {
+  calendarGrid.innerHTML = "";
+
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-
-  calendarTitle.textContent = `${meses[month]} ${year}`;
-  calendarGrid.innerHTML = "";
 
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
 
-  let firstWeekday = firstDay.getDay();
-  firstWeekday = firstWeekday === 0 ? 6 : firstWeekday - 1;
-
+  const startDay = firstDay.getDay();
   const totalDays = lastDay.getDate();
 
-  for (let i = 0; i < firstWeekday; i++) {
+  monthTitle.textContent = firstDay.toLocaleString("es-CO", {
+    month: "long",
+    year: "numeric"
+  });
+
+  for (let i = 0; i < startDay; i++) {
     const emptyCell = document.createElement("div");
-    emptyCell.className = "calendar-cell empty";
+    emptyCell.className = "calendar-day-card calendar-day-empty";
     calendarGrid.appendChild(emptyCell);
   }
 
   for (let day = 1; day <= totalDays; day++) {
-    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-    const dayEvents = getEventsByDate(dateStr);
+    const date = new Date(year, month, day);
+    const fechaStr = formatearFechaISO(date);
 
-    const cell = document.createElement("button");
-    cell.type = "button";
-    cell.className = "calendar-cell";
-    if (dayEvents.length) cell.classList.add("has-events");
-    if (selectedDateStr === dateStr) cell.classList.add("selected");
+    const reservasDia = reservas.filter(r => normalizarFechaTexto(r.fecha_evento) === fechaStr);
+    const conteos = obtenerConteoPorEstado(reservasDia);
 
-    cell.innerHTML = `
-      <span class="calendar-day-number">${day}</span>
-      ${dayEvents.length ? `<span class="calendar-day-badge">${dayEvents.length}</span>` : ""}
+    const dayCard = document.createElement("div");
+    dayCard.className = "calendar-day-card";
+
+    const reservasPreview = reservasDia.slice(0, 3).map(r => `
+      <span class="calendar-event-badge ${obtenerClaseEstado(r.estado)}">
+        ${r.tipo_evento || "Reserva"}
+      </span>
+    `).join("");
+
+    const extraCount = reservasDia.length > 3
+      ? `<span class="calendar-more">+${reservasDia.length - 3} más</span>`
+      : "";
+
+    dayCard.innerHTML = `
+      <div class="calendar-day-top">
+        <span class="calendar-day-number">${day}</span>
+        <span class="calendar-day-total">${reservasDia.length} reserva${reservasDia.length === 1 ? "" : "s"}</span>
+      </div>
+
+      <div class="calendar-day-events">
+        ${reservasPreview || `<span class="calendar-empty-label">Disponible</span>`}
+        ${extraCount}
+      </div>
     `;
 
-    cell.addEventListener("click", () => {
-      renderSelectedDay(dateStr);
-      renderCalendar();
+    if (reservasDia.length > 0) {
+      dayCard.classList.add("calendar-day-has-events");
+    }
+
+    dayCard.addEventListener("click", () => {
+      mostrarReservasDia(fechaStr, reservasDia, conteos);
     });
 
-    calendarGrid.appendChild(cell);
+    calendarGrid.appendChild(dayCard);
   }
 }
 
-async function cargarEventos() {
-  try {
-    const res = await fetch(API_URL);
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudieron cargar los eventos");
-    }
-
-    eventos = Array.isArray(data) ? data : [];
-
-    if (!selectedDateStr) {
-      const today = new Date();
-      selectedDateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-    }
-
-    renderCalendar();
-    renderSelectedDay(selectedDateStr);
-    renderUpcomingEvents();
-  } catch (error) {
-    console.error("ERROR CALENDARIO:", error);
-    calendarGrid.innerHTML = `
-      <div class="empty-state-card" style="grid-column:1/-1;">
-        <h3>Error cargando calendario</h3>
-        <p>${error.message}</p>
-      </div>
-    `;
-  }
-}
-
-window.abrirEditar = function(id) {
-  const ev = eventos.find(e => Number(e.id) === Number(id));
-  if (!ev) return;
-
-  const modalHTML = `
-    <div class="modal-edit" id="modalEditarEvento">
-      <div class="modal-content">
-        <h3>Editar evento</h3>
-
-        <input id="editCliente" value="${ev.cliente || ""}" placeholder="Cliente" />
-        <input id="editTelefono" value="${ev.telefono || ""}" placeholder="Teléfono" />
-        <input id="editTipoEvento" value="${ev.tipo_evento || ""}" placeholder="Tipo de evento" />
-        <input id="editFechaEvento" type="date" value="${normalizarFechaTexto(ev.fecha_evento) || ""}" />
-        <input id="editLugar" value="${ev.lugar || ""}" placeholder="Lugar" />
-        <input id="editPersonas" type="number" value="${ev.personas || 0}" placeholder="Personas" />
-        <input id="editValorTotal" type="number" value="${ev.valor_total || 0}" placeholder="Valor total" />
-        <input id="editAbono" type="number" value="${ev.abono || 0}" placeholder="Abono" />
-        <textarea id="editObservaciones" rows="4" placeholder="Observaciones">${ev.observaciones || ""}</textarea>
-
-        <div class="modal-current-image">
-          ${ev.imagen ? `
-            <img src="http://localhost:3001/uploads/${ev.imagen}" alt="${ev.cliente || "Evento"}" class="modal-preview-image">
-          ` : `<p>Este evento no tiene imagen.</p>`}
+function mostrarReservasDia(fecha, lista, conteos) {
+  if (!lista.length) {
+    Swal.fire({
+      icon: "info",
+      title: `Sin reservas`,
+      html: `
+        <p>No hay reservas registradas para <strong>${fecha}</strong>.</p>
+        <div style="margin-top:16px;">
+          <a href="./reservas.html" class="swal2-confirm swal2-styled" style="text-decoration:none;">
+            Ir a reservas
+          </a>
         </div>
-
-        <label class="modal-file-label" for="editImagen">Cambiar imagen</label>
-        <input id="editImagen" type="file" accept="image/*" />
-
-        <div class="event-form-actions">
-          <button class="btn btn-primary" onclick="guardarEdicion(${ev.id})">Guardar</button>
-          <button class="btn btn-success" onclick="marcarPagado(${ev.id})">Marcar pagado</button>
-          ${ev.telefono ? `
-            <a class="btn btn-secondary" target="_blank" href="${construirWhatsappUrl(ev)}">WhatsApp</a>
-          ` : ""}
-          <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  document.body.insertAdjacentHTML("beforeend", modalHTML);
-};
-
-window.guardarEdicion = async function(id) {
-  const valorTotal = Number(document.getElementById("editValorTotal").value || 0);
-  const abono = Number(document.getElementById("editAbono").value || 0);
-
-  if (abono > valorTotal) {
-    alert("El abono no puede ser mayor que el valor total.");
+      `,
+      showConfirmButton: false
+    });
     return;
   }
 
-  const data = {
-    cliente: document.getElementById("editCliente").value,
-    telefono: document.getElementById("editTelefono").value,
-    tipo_evento: document.getElementById("editTipoEvento").value,
-    fecha_evento: document.getElementById("editFechaEvento").value,
-    lugar: document.getElementById("editLugar").value,
-    personas: document.getElementById("editPersonas").value,
-    valor_total: valorTotal,
-    abono: abono,
-    observaciones: document.getElementById("editObservaciones").value
-  };
+  const html = `
+    <div style="text-align:left;">
+      <div style="margin-bottom:14px;">
+        <strong>Fecha:</strong> ${fecha}<br>
+        <strong>Pendientes:</strong> ${conteos.pendiente}<br>
+        <strong>Confirmadas:</strong> ${conteos.confirmada}<br>
+        <strong>Canceladas:</strong> ${conteos.cancelada}<br>
+        <strong>Convertidas:</strong> ${conteos.convertida}
+      </div>
 
-  try {
-    const res = await fetch(`${API_URL}/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
+      ${lista.map(r => `
+        <div style="padding:12px; border:1px solid #333; border-radius:10px; margin-bottom:10px;">
+          <strong>${r.cliente || "Sin cliente"}</strong><br>
+          <span>${r.tipo_evento || "Reserva"}</span><br>
+          <span>Tel: ${r.telefono || "No definido"}</span><br>
+          <span>Estado: ${r.estado || "Pendiente"}</span><br>
+          <span>Personas: ${r.personas || 0}</span><br>
+          <span>Lugar: ${r.lugar || "Por definir"}</span>
+        </div>
+      `).join("")}
+    </div>
+  `;
 
-    const result = await res.json();
-
-    if (!res.ok) {
-      throw new Error(result.message || "Error al actualizar evento");
-    }
-
-    const imagenFile = document.getElementById("editImagen").files[0];
-
-    if (imagenFile) {
-      const formData = new FormData();
-      formData.append("imagen", imagenFile);
-
-      const imagenRes = await fetch(`${API_URL}/${id}/imagen`, {
-        method: "PUT",
-        body: formData
-      });
-
-      const imagenResult = await imagenRes.json();
-
-      if (!imagenRes.ok) {
-        throw new Error(imagenResult.message || "Error al actualizar imagen");
-      }
-    }
-
-    alert("Evento actualizado correctamente");
-    cerrarModal();
-    await cargarEventos();
-  } catch (error) {
-    console.error("ERROR ACTUALIZANDO EVENTO:", error);
-    alert(error.message);
-  }
-};
-
-window.marcarPagado = async function(id) {
-  const ev = eventos.find(e => Number(e.id) === Number(id));
-  if (!ev) return;
-
-  const confirmar = confirm("¿Marcar este evento como pagado?");
-  if (!confirmar) return;
-
-  const valorTotal = Number(ev.valor_total || 0);
-
-  const data = {
-    cliente: ev.cliente,
-    telefono: ev.telefono,
-    tipo_evento: ev.tipo_evento,
-    fecha_evento: normalizarFechaTexto(ev.fecha_evento),
-    lugar: ev.lugar,
-    personas: ev.personas,
-    valor_total: valorTotal,
-    abono: valorTotal,
-    observaciones: ev.observaciones
-  };
-
-  try {
-    const res = await fetch(`${API_URL}/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
-
-    const result = await res.json();
-
-    if (!res.ok) {
-      throw new Error(result.message || "No se pudo marcar como pagado");
-    }
-
-    alert("Evento marcado como pagado");
-    cerrarModal();
-    await cargarEventos();
-  } catch (error) {
-    console.error("ERROR MARCAR PAGADO:", error);
-    alert(error.message);
-  }
-};
-
-window.cerrarModal = function() {
-  const modal = document.getElementById("modalEditarEvento");
-  if (modal) modal.remove();
-};
+  Swal.fire({
+    title: `Reservas del ${fecha}`,
+    html,
+    width: 650,
+    confirmButtonText: "Cerrar",
+    footer: `<a href="./reservas.html" style="text-decoration:none;">Ir a Reservas</a>`
+  });
+}
 
 prevMonthBtn.addEventListener("click", () => {
   currentDate.setMonth(currentDate.getMonth() - 1);
@@ -388,4 +218,4 @@ nextMonthBtn.addEventListener("click", () => {
   renderCalendar();
 });
 
-cargarEventos();
+cargarReservas();

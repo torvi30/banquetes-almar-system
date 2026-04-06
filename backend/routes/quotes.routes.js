@@ -4,34 +4,59 @@ const verifyToken = require("../middleware/auth");
 
 const router = express.Router();
 
+// 🔥 DASHBOARD (cotizaciones + reservas)
 router.get("/", verifyToken, async (req, res) => {
   try {
-    const [rows] = await db.query(
-      "SELECT * FROM cotizaciones ORDER BY id DESC"
+    const [quotes] = await db.query(`
+      SELECT 
+        id,
+        nombre,
+        telefono,
+        evento AS tipo_evento,
+        personas,
+        mensaje,
+        estado,
+        id AS created_at,
+        'cotizacion' AS origen
+      FROM cotizaciones
+    `);
+
+    const [reservas] = await db.query(`
+      SELECT 
+        id,
+        cliente AS nombre,
+        telefono,
+        tipo_evento,
+        personas,
+        observaciones AS mensaje,
+        estado,
+        fecha_evento AS created_at,
+        'reserva' AS origen
+      FROM reservas
+    `);
+
+    const data = [...quotes, ...reservas].sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
     );
 
-    res.json(rows);
+    res.json(data);
+
   } catch (error) {
     console.log("ERROR GET QUOTES:", error);
     res.status(500).json({
-      message: "Error al obtener cotizaciones"
+      message: "Error cargando datos"
     });
   }
 });
 
+// CREAR COTIZACIÓN
 router.post("/", async (req, res) => {
   try {
     const { nombre, telefono, evento, personas, mensaje } = req.body;
 
     if (!nombre || !telefono || !evento || !personas) {
       return res.status(400).json({
-        message: "Nombre, teléfono, evento y personas son obligatorios"
-      });
-    }
-
-    if (Number(personas) <= 0) {
-      return res.status(400).json({
-        message: "La cantidad de personas debe ser mayor a 0"
+        message: "Datos obligatorios faltantes"
       });
     }
 
@@ -39,11 +64,11 @@ router.post("/", async (req, res) => {
       `INSERT INTO cotizaciones (nombre, telefono, evento, personas, mensaje, estado)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [
-        nombre.trim(),
-        telefono.trim(),
-        evento.trim(),
-        Number(personas),
-        mensaje ? mensaje.trim() : "",
+        nombre,
+        telefono,
+        evento,
+        personas,
+        mensaje || "",
         "Nuevo"
       ]
     );
@@ -51,26 +76,20 @@ router.post("/", async (req, res) => {
     res.json({
       message: "Cotización guardada"
     });
+
   } catch (error) {
-    console.log("ERROR POST QUOTE:", error);
+    console.log("ERROR POST:", error);
     res.status(500).json({
-      message: "Error al guardar cotización"
+      message: "Error al guardar"
     });
   }
 });
 
+// ACTUALIZAR ESTADO
 router.put("/:id/status", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
     const { estado } = req.body;
-
-    const estadosValidos = ["Nuevo", "Contactado", "Confirmado", "Cancelado", "Convertido"];
-
-    if (!estadosValidos.includes(estado)) {
-      return res.status(400).json({
-        message: "Estado no válido"
-      });
-    }
 
     await db.query(
       "UPDATE cotizaciones SET estado = ? WHERE id = ?",
@@ -78,68 +97,18 @@ router.put("/:id/status", verifyToken, async (req, res) => {
     );
 
     res.json({
-      message: "Estado actualizado correctamente"
+      message: "Estado actualizado"
     });
+
   } catch (error) {
-    console.log("ERROR UPDATE STATUS:", error);
+    console.log("ERROR UPDATE:", error);
     res.status(500).json({
-      message: "Error al actualizar estado"
+      message: "Error al actualizar"
     });
   }
 });
 
-router.post("/:id/convert", verifyToken, async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const [rows] = await db.query(
-      "SELECT * FROM cotizaciones WHERE id = ?",
-      [id]
-    );
-
-    if (!rows.length) {
-      return res.status(404).json({
-        message: "Cotización no encontrada"
-      });
-    }
-
-    const cotizacion = rows[0];
-
-    await db.query(
-      `INSERT INTO eventos
-      (cliente, telefono, tipo_evento, fecha_evento, lugar, personas, valor_total, abono, saldo, estado, observaciones)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        cotizacion.nombre,
-        cotizacion.telefono,
-        cotizacion.evento,
-        null,
-        "Por definir",
-        cotizacion.personas || 0,
-        0,
-        0,
-        0,
-        "Nuevo",
-        cotizacion.mensaje || ""
-      ]
-    );
-
-    await db.query(
-      "UPDATE cotizaciones SET estado = 'Convertido' WHERE id = ?",
-      [id]
-    );
-
-    res.json({
-      message: "Cotización convertida a evento"
-    });
-  } catch (error) {
-    console.log("ERROR CONVERT QUOTE:", error);
-    res.status(500).json({
-      message: "Error al convertir cotización en evento"
-    });
-  }
-});
-
+// ELIMINAR
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
@@ -150,12 +119,13 @@ router.delete("/:id", verifyToken, async (req, res) => {
     );
 
     res.json({
-      message: "Cotización eliminada"
+      message: "Eliminado"
     });
+
   } catch (error) {
-    console.log("ERROR DELETE QUOTE:", error);
+    console.log("ERROR DELETE:", error);
     res.status(500).json({
-      message: "Error al eliminar cotización"
+      message: "Error al eliminar"
     });
   }
 });

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cotizaciones | Banquetes Almar</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <section class="section admin-panel">
+    <div class="container">
+      <div class="section-heading">
+        <p class="section-label">Panel Admin</p>
+        <h2>Tablero de cotizaciones</h2>
+        <p>Gestiona cotizaciones y reservas sin llenar el dashboard principal.</p>
+      </div>
+
+      <div class="admin-menu admin-menu-grid">
+        <a href="./dashboard.html" class="btn btn-secondary menu-btn">Dashboard</a>
+        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">Cotizaciones</a>
+        <a href="./galeria.html" class="btn btn-secondary menu-btn">Galería</a>
+        <a href="./servicios.html" class="btn btn-secondary menu-btn">Servicios</a>
+        <a href="./reservas.html" class="btn btn-secondary menu-btn">Reservas</a>
+        <a href="./eventos.html" class="btn btn-secondary menu-btn">Eventos</a>
+        <a href="./calendario.html" class="btn btn-secondary menu-btn">Calendario</a>
+        <a href="./inventario.html" class="btn btn-secondary menu-btn">Inventario</a>
+        <a href="./clientes.html" class="btn btn-secondary menu-btn">Clientes</a>
+        <a href="./pagos.html" class="btn btn-secondary menu-btn">Pagos</a>
+        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">Cerrar sesión</button>
+      </div>
+
+      <div class="cotizaciones-toolbar">
+        <div class="form-group">
+          <label for="searchInput">Buscar</label>
+          <input type="text" id="searchInput" placeholder="Nombre, teléfono, tipo de evento..." />
+        </div>
+
+        <div class="form-group">
+          <label for="filterOrigen">Origen</label>
+          <select id="filterOrigen">
+            <option value="">Todos</option>
+            <option value="cotizacion">Cotizaciones</option>
+            <option value="reserva">Reservas</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pipeline-board">
+        <section class="pipeline-column">
+          <div class="pipeline-column-head">
+            <h3>Nuevos / Pendientes</h3>
+            <span id="countNuevos" class="pipeline-count">0</span>
+          </div>
+          <div id="colNuevos" class="pipeline-list"></div>
+        </section>
+
+        <section class="pipeline-column">
+          <div class="pipeline-column-head">
+            <h3>Contactados / Confirmadas</h3>
+            <span id="countContactados" class="pipeline-count">0</span>
+          </div>
+          <div id="colContactados" class="pipeline-list"></div>
+        </section>
+
+        <section class="pipeline-column">
+          <div class="pipeline-column-head">
+            <h3>Cancelados</h3>
+            <span id="countCancelados" class="pipeline-count">0</span>
+          </div>
+          <div id="colCancelados" class="pipeline-list"></div>
+        </section>
+
+        <section class="pipeline-column">
+          <div class="pipeline-column-head">
+            <h3>Convertidos</h3>
+            <span id="countConvertidos" class="pipeline-count">0</span>
+          </div>
+          <div id="colConvertidos" class="pipeline-list"></div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../js/cotizaciones-admin.js"></script>
+</body>
+</html>
