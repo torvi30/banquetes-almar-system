@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Eventos Admin | Banquetes Almar</title>
+  <title>Eventos | Banquetes Almar</title>
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
@@ -12,7 +12,7 @@
       <div class="section-heading">
         <p class="section-label">Panel Admin</p>
         <h2>Administrar eventos</h2>
-        <p>Registra, organiza y controla pagos del evento.</p>
+        <p>Crea, edita y elimina eventos de Banquetes Almar.</p>
       </div>
 
       <div class="admin-menu admin-menu-grid">
@@ -33,25 +33,25 @@
         <input type="hidden" id="eventId" />
 
         <div class="form-group">
-          <label for="cliente_id">Cliente registrado</label>
+          <label for="cliente_id">Cliente</label>
           <select id="cliente_id">
             <option value="">Selecciona un cliente</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="cliente">Cliente</label>
-          <input type="text" id="cliente" required />
+          <label for="cliente">Nombre cliente</label>
+          <input type="text" id="cliente" placeholder="Nombre del cliente" />
         </div>
 
         <div class="form-group">
           <label for="telefono">Teléfono</label>
-          <input type="text" id="telefono" />
+          <input type="text" id="telefono" placeholder="Teléfono" />
         </div>
 
         <div class="form-group">
           <label for="tipo_evento">Tipo de evento</label>
-          <input type="text" id="tipo_evento" required />
+          <input type="text" id="tipo_evento" placeholder="Ej: Cumpleaños" required />
         </div>
 
         <div class="form-group">
@@ -61,37 +61,37 @@
 
         <div class="form-group">
           <label for="lugar">Lugar</label>
-          <input type="text" id="lugar" />
+          <input type="text" id="lugar" placeholder="Lugar del evento" />
         </div>
 
         <div class="form-group">
           <label for="personas">Personas</label>
-          <input type="number" id="personas" min="0" />
+          <input type="number" id="personas" min="0" placeholder="Cantidad de personas" />
         </div>
 
         <div class="form-group">
           <label for="valor_total">Valor total</label>
-          <input type="number" id="valor_total" min="0" />
+          <input type="number" id="valor_total" min="0" placeholder="Ej: 500000" />
         </div>
 
         <div class="form-group">
           <label for="abono">Abono</label>
-          <input type="number" id="abono" min="0" />
+          <input type="number" id="abono" min="0" placeholder="Ej: 100000" />
         </div>
 
-        <div class="form-group full-width">
-          <label for="imagen">Imagen de referencia</label>
+        <div class="form-group">
+          <label for="imagen">Imagen</label>
           <input type="file" id="imagen" accept="image/*" />
         </div>
 
         <div class="form-group full-width">
-          <label for="observaciones">Observaciones / detalles</label>
-          <textarea id="observaciones" rows="4" placeholder="Describe cómo quiere el evento..."></textarea>
+          <label for="observaciones">Observaciones</label>
+          <textarea id="observaciones" rows="4" placeholder="Observaciones del evento..."></textarea>
         </div>
 
         <div class="form-group full-width event-form-actions">
-          <button type="submit" class="btn btn-primary" id="saveEventBtn">Guardar evento</button>
-          <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
+          <button id="saveEventBtn" class="btn btn-primary" type="submit">Guardar evento</button>
+          <button id="cancelEditBtn" class="btn btn-secondary" type="button">Cancelar edición</button>
         </div>
       </form>
 
@@ -99,6 +99,7 @@
     </div>
   </section>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="../js/eventos-admin.js"></script>
 </body>
 </html>

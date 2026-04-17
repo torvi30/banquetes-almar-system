@@ -27,11 +27,25 @@ const observacionesInput = document.getElementById("observaciones");
 let clientesCache = [];
 let eventosCache = [];
 
+if (!token) {
+  Swal.fire({
+    icon: "warning",
+    title: "Sesión expirada",
+    text: "Debes iniciar sesión nuevamente."
+  }).then(() => {
+    window.location.href = "./login.html";
+  });
+}
+
 window.irPagos = function (id) {
   const eventoId = String(id || "").trim();
 
   if (!eventoId) {
-    alert("No se pudo obtener el ID del evento.");
+    Swal.fire({
+      icon: "warning",
+      title: "Sin ID de evento",
+      text: "No se pudo obtener el ID del evento."
+    });
     return;
   }
 
@@ -64,12 +78,31 @@ function limpiarFormulario() {
 }
 
 if (cancelEditBtn) {
-  cancelEditBtn.addEventListener("click", limpiarFormulario);
+  cancelEditBtn.addEventListener("click", async () => {
+    limpiarFormulario();
+
+    await Swal.fire({
+      icon: "info",
+      title: "Edición cancelada",
+      timer: 900,
+      showConfirmButton: false
+    });
+  });
+}
+
+function authHeaders(extra = {}) {
+  return {
+    Authorization: `Bearer ${token}`,
+    ...extra
+  };
 }
 
 async function cargarClientes() {
   try {
-    const res = await fetch(CLIENTS_API);
+    const res = await fetch(CLIENTS_API, {
+      headers: authHeaders()
+    });
+
     const data = await res.json();
     clientesCache = Array.isArray(data) ? data : [];
 
@@ -86,6 +119,12 @@ async function cargarClientes() {
     }
   } catch (error) {
     console.error("ERROR CARGANDO CLIENTES:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "No se pudieron cargar los clientes."
+    });
   }
 }
 
@@ -105,7 +144,10 @@ async function cargarEventos() {
   if (!grid) return;
 
   try {
-    const res = await fetch(API_URL);
+    const res = await fetch(API_URL, {
+      headers: authHeaders()
+    });
+
     const data = await res.json();
 
     eventosCache = Array.isArray(data) ? data : [];
@@ -150,7 +192,7 @@ async function cargarEventos() {
         <p><strong>Observaciones:</strong> ${evento.observaciones || "Sin observaciones"}</p>
 
         <div class="quote-card-actions">
-          <button type="button" class="btn btn-secondary" onclick="irPagos(${evento.id})">Pagos</button>
+          <button type="button" class="btn btn-secondary pagos-btn" data-id="${evento.id}">Pagos</button>
           <button type="button" class="btn btn-success edit-btn" data-id="${evento.id}">Editar</button>
           <button type="button" class="btn btn-danger delete-btn" data-id="${evento.id}">Eliminar</button>
         </div>
@@ -159,8 +201,14 @@ async function cargarEventos() {
       grid.appendChild(card);
     });
 
-    document.querySelectorAll(".edit-btn").forEach((btn) => {
+    document.querySelectorAll(".pagos-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
+        window.irPagos(btn.dataset.id);
+      });
+    });
+
+    document.querySelectorAll(".edit-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
         const evento = eventosCache.find((e) => String(e.id) === String(btn.dataset.id));
         if (!evento) return;
 
@@ -182,20 +230,36 @@ async function cargarEventos() {
           top: 0,
           behavior: "smooth"
         });
+
+        await Swal.fire({
+          icon: "info",
+          title: "Evento cargado",
+          text: "Ya puedes editar el evento.",
+          timer: 1100,
+          showConfirmButton: false
+        });
       });
     });
 
     document.querySelectorAll(".delete-btn").forEach((btn) => {
       btn.addEventListener("click", async () => {
-        const confirmar = confirm("¿Eliminar evento?");
-        if (!confirmar) return;
+        const confirmar = await Swal.fire({
+          icon: "warning",
+          title: "¿Eliminar evento?",
+          text: "Esta acción no se puede deshacer.",
+          showCancelButton: true,
+          confirmButtonText: "Sí, eliminar",
+          cancelButtonText: "Cancelar",
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#6c757d"
+        });
+
+        if (!confirmar.isConfirmed) return;
 
         try {
           const res = await fetch(`${API_URL}/${btn.dataset.id}`, {
             method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+            headers: authHeaders()
           });
 
           const result = await res.json();
@@ -204,16 +268,34 @@ async function cargarEventos() {
             throw new Error(result.message || "No se pudo eliminar");
           }
 
+          await Swal.fire({
+            icon: "success",
+            title: "Evento eliminado",
+            timer: 1200,
+            showConfirmButton: false
+          });
+
           await cargarEventos();
         } catch (error) {
           console.error("ERROR ELIMINANDO EVENTO:", error);
-          alert(error.message);
+
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.message
+          });
         }
       });
     });
   } catch (error) {
     console.error("ERROR CARGANDO EVENTOS:", error);
     grid.innerHTML = `<p>Error cargando eventos.</p>`;
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "No se pudieron cargar los eventos."
+    });
   }
 }
 
@@ -226,7 +308,11 @@ if (form) {
     const abono = Number(abonoInput?.value || 0);
 
     if (abono > total) {
-      alert("El abono no puede ser mayor que el valor total.");
+      Swal.fire({
+        icon: "warning",
+        title: "Abono inválido",
+        text: "El abono no puede ser mayor que el valor total."
+      });
       return;
     }
 
@@ -273,12 +359,26 @@ if (form) {
         throw new Error(result.message || "Error guardando evento");
       }
 
-      alert(id ? "Evento actualizado correctamente" : "Evento creado correctamente");
+      await Swal.fire({
+        icon: "success",
+        title: id ? "Evento actualizado" : "Evento creado",
+        text: id
+          ? "El evento se actualizó correctamente."
+          : "El evento se creó correctamente.",
+        timer: 1300,
+        showConfirmButton: false
+      });
+
       limpiarFormulario();
       await cargarEventos();
     } catch (error) {
       console.error("ERROR GUARDANDO EVENTO:", error);
-      alert(error.message);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message
+      });
     }
   });
 }

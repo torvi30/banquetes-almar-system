@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventario Pro | Banquetes Almar</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <section class="section admin-panel">
+    <div class="container">
+      <div class="section-heading">
+        <p class="section-label">Panel Admin</p>
+        <h2>Inventario Pro</h2>
+        <p>Categorías, items y cantidades disponibles para reservas.</p>
+      </div>
+
+      <div class="admin-menu admin-menu-grid">
+        <a href="./dashboard.html" class="btn btn-secondary menu-btn">Dashboard</a>
+        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">Cotizaciones</a>
+        <a href="./galeria.html" class="btn btn-secondary menu-btn">Galería</a>
+        <a href="./servicios.html" class="btn btn-secondary menu-btn">Servicios</a>
+        <a href="./reservas.html" class="btn btn-secondary menu-btn">Reservas</a>
+        <a href="./eventos.html" class="btn btn-secondary menu-btn">Eventos</a>
+        <a href="./calendario.html" class="btn btn-secondary menu-btn">Calendario</a>
+        <a href="./inventario.html" class="btn btn-secondary menu-btn">Inventario</a>
+        <a href="./inventario-pro.html" class="btn btn-secondary menu-btn active-menu">Inventario Pro</a>
+        <a href="./clientes.html" class="btn btn-secondary menu-btn">Clientes</a>
+        <a href="./pagos.html" class="btn btn-secondary menu-btn">Pagos</a>
+        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">Cerrar sesión</button>
+      </div>
+
+      <div class="dashboard-panels">
+        <section class="dashboard-panel">
+          <div class="dashboard-panel-head">
+            <div>
+              <p class="dashboard-mini-label">Categorías</p>
+              <h3>Nueva categoría</h3>
+            </div>
+          </div>
+
+          <form id="categoryForm" class="quote-form">
+            <div class="form-group full-width">
+              <label for="categoryName">Nombre</label>
+              <input type="text" id="categoryName" placeholder="Ej: Sillas" required />
+            </div>
+
+            <div class="form-group full-width event-form-actions">
+              <button type="submit" class="btn btn-primary">Guardar categoría</button>
+            </div>
+          </form>
+
+          <div id="categoriesList" class="dashboard-list"></div>
+        </section>
+
+        <section class="dashboard-panel">
+          <div class="dashboard-panel-head">
+            <div>
+              <p class="dashboard-mini-label">Items</p>
+              <h3>Nuevo item</h3>
+            </div>
+          </div>
+
+          <form id="itemForm" class="quote-form">
+            <input type="hidden" id="itemId" />
+
+            <div class="form-group">
+              <label for="categoriaId">Categoría</label>
+              <select id="categoriaId"></select>
+            </div>
+
+            <div class="form-group">
+              <label for="itemNombre">Nombre</label>
+              <input type="text" id="itemNombre" required />
+            </div>
+
+            <div class="form-group">
+              <label for="itemCantidad">Cantidad total</label>
+              <input type="number" id="itemCantidad" min="0" required />
+            </div>
+
+            <div class="form-group">
+              <label for="itemActivo">Activo</label>
+              <select id="itemActivo">
+                <option value="1">Sí</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="itemDescripcion">Descripción</label>
+              <textarea id="itemDescripcion" rows="3"></textarea>
+            </div>
+
+            <div class="form-group full-width event-form-actions">
+              <button type="submit" class="btn btn-primary" id="saveItemBtn">Guardar item</button>
+              <button type="button" class="btn btn-secondary" id="cancelItemEditBtn">Cancelar</button>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <div class="section-heading" style="margin-top: 2rem;">
+        <h2>Listado de inventario</h2>
+        <p>Administra cantidades y disponibilidad general.</p>
+      </div>
+
+      <div id="itemsGrid" class="quotes-grid"></div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../js/inventario-pro-admin.js"></script>
+</body>
+</html>

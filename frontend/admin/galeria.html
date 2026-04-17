@@ -1,80 +1,124 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Galería Admin | Banquetes Almar</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galería | Banquetes Almar</title>
+  <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
+  <section class="section admin-panel">
+    <div class="container">
+      <div class="section-heading">
+        <p class="section-label">Panel Admin</p>
+        <h2>Administrar galería</h2>
+        <p>Crea categorías y sube imágenes organizadas profesionalmente.</p>
+      </div>
 
-<section class="section admin-panel">
-  <div class="container">
+      <div class="admin-menu admin-menu-grid">
+        <a href="./dashboard.html" class="btn btn-secondary menu-btn">Dashboard</a>
+        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">Cotizaciones</a>
+        <a href="./galeria.html" class="btn btn-secondary menu-btn active-menu">Galería</a>
+        <a href="./servicios.html" class="btn btn-secondary menu-btn">Servicios</a>
+        <a href="./reservas.html" class="btn btn-secondary menu-btn">Reservas</a>
+        <a href="./eventos.html" class="btn btn-secondary menu-btn">Eventos</a>
+        <a href="./calendario.html" class="btn btn-secondary menu-btn">Calendario</a>
+        <a href="./inventario.html" class="btn btn-secondary menu-btn">Inventario</a>
+        <a href="./inventario-pro.html" class="btn btn-secondary menu-btn">Inventario Pro</a>
+        <a href="./clientes.html" class="btn btn-secondary menu-btn">Clientes</a>
+        <a href="./pagos.html" class="btn btn-secondary menu-btn">Pagos</a>
+        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">Cerrar sesión</button>
+      </div>
 
-    <div class="section-heading">
-      <p class="section-label">Panel Admin</p>
-      <h2>Administrar galería</h2>
-      <p>Crea categorías y sube imágenes organizadas profesionalmente.</p>
-    </div>
+      <div class="gallery-admin-layout">
+        <section class="dashboard-panel gallery-admin-sidebar">
+          <div class="dashboard-panel-head">
+            <div>
+              <p class="dashboard-mini-label">Categorías</p>
+              <h3>Crear categoría</h3>
+            </div>
+          </div>
 
-    <div class="admin-menu admin-menu-grid">
-      <a href="./dashboard.html" class="btn btn-secondary menu-btn">Dashboard</a>
-      <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">Cotizaciones</a>
-      <a href="./galeria.html" class="btn btn-secondary menu-btn">Galería</a>
-      <a href="./servicios.html" class="btn btn-secondary menu-btn">Servicios</a>
-      <a href="./reservas.html" class="btn btn-secondary menu-btn">Reservas</a>
-      <a href="./eventos.html" class="btn btn-secondary menu-btn">Eventos</a>
-      <a href="./calendario.html" class="btn btn-secondary menu-btn">Calendario</a>
-      <a href="./inventario.html" class="btn btn-secondary menu-btn">Inventario</a>
-      <a href="./clientes.html" class="btn btn-secondary menu-btn">Clientes</a>
-      <a href="./pagos.html" class="btn btn-secondary menu-btn">Pagos</a>
-      <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">Cerrar sesión</button>
-    </div>
+          <form id="categoryForm" class="gallery-admin-form-simple">
+            <div class="form-group full-width">
+              <label for="categoryName">Nombre de la categoría</label>
+              <input type="text" id="categoryName" placeholder="Ej: Sillas, Carpas, Almuerzos" required />
+            </div>
 
-    <div class="calendar-panel" style="margin-bottom: 1.5rem;">
-      <h3>Crear categoría</h3>
-      <form id="categoryForm" class="quote-form">
+            <div class="form-group full-width">
+              <button type="submit" class="btn btn-primary">Crear categoría</button>
+            </div>
+          </form>
+
+          <div id="categoriesList" class="dashboard-list"></div>
+        </section>
+
+        <section class="dashboard-panel gallery-admin-main">
+          <div class="dashboard-panel-head">
+            <div>
+              <p class="dashboard-mini-label">Subida</p>
+              <h3>Subir imagen</h3>
+            </div>
+          </div>
+
+          <form id="galleryForm" class="gallery-admin-form" enctype="multipart/form-data">
+            <input type="hidden" id="galleryId" />
+
+            <div class="form-group">
+              <label for="categoriaId">Categoría</label>
+              <select id="categoriaId"></select>
+            </div>
+
+            <div class="form-group">
+              <label for="galleryTitle">Título</label>
+              <input type="text" id="galleryTitle" placeholder="Ej: Montaje boda campestre" required />
+            </div>
+
+            <div class="form-group full-width">
+              <label for="galleryDescription">Descripción</label>
+              <textarea id="galleryDescription" rows="4" placeholder="Descripción breve de la imagen..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="galleryImage">Imagen</label>
+              <input type="file" id="galleryImage" accept="image/*" />
+            </div>
+
+            <div class="form-group">
+              <label>Vista previa</label>
+              <div class="gallery-preview-box admin-preview-box">
+                <img id="imagePreview" alt="Vista previa" style="display:none;" />
+                <span id="previewPlaceholder">Sin imagen seleccionada</span>
+              </div>
+            </div>
+
+            <div class="form-group full-width gallery-admin-actions">
+              <button type="submit" class="btn btn-primary" id="saveGalleryBtn">Guardar imagen</button>
+              <button type="button" class="btn btn-secondary" id="cancelGalleryEditBtn">Cancelar edición</button>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <div class="gallery-toolbar-pro">
         <div class="form-group">
-          <label for="newCategoryName">Nombre de la categoría</label>
-          <input type="text" id="newCategoryName" placeholder="Ej: Sillas, Carpas, Almuerzos" required>
+          <label for="filterCategory">Filtrar por categoría</label>
+          <select id="filterCategory">
+            <option value="">Todas</option>
+          </select>
         </div>
-        <div class="form-group full-width">
-          <button type="submit" class="btn btn-primary">Crear categoría</button>
+
+        <div class="form-group">
+          <label for="searchGallery">Buscar</label>
+          <input type="text" id="searchGallery" placeholder="Título o descripción..." />
         </div>
-      </form>
+      </div>
+
+      <div id="galleryGrid" class="gallery-grid-pro"></div>
     </div>
+  </section>
 
-    <form id="galleryForm" class="quote-form" enctype="multipart/form-data">
-      <input type="hidden" id="galleryId">
-
-      <div class="form-group">
-        <label for="titulo">Título de la imagen</label>
-        <input type="text" id="titulo" placeholder="Ej: Silla Tiffany dorada" required>
-      </div>
-
-      <div class="form-group">
-        <label for="categoria_id">Categoría</label>
-        <select id="categoria_id" required>
-          <option value="">Cargando categorías...</option>
-        </select>
-      </div>
-
-      <div class="form-group full-width">
-        <label for="imagen">Seleccionar imagen</label>
-        <input type="file" id="imagen" accept="image/*">
-      </div>
-
-      <div class="form-group full-width event-form-actions">
-        <button type="submit" class="btn btn-primary" id="saveGalleryBtn">Subir imagen</button>
-        <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
-      </div>
-    </form>
-
-    <div id="galleryGrid" class="quotes-grid" style="margin-top:2rem;"></div>
-
-  </div>
-</section>
-
-<script src="../js/galeria-admin.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../js/galeria-admin.js"></script>
 </body>
 </html>

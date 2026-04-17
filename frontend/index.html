@@ -3,38 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Banquetes Almar | Banquetes y Recepciones</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
-
-  <link rel="stylesheet" href="css/style.css" />
+  <title>Banquetes Almar</title>
+  <link rel="stylesheet" href="./css/style.css" />
 </head>
 <body>
-
   <!-- HEADER -->
   <header class="header" id="header">
     <nav class="navbar container">
       <a href="#inicio" class="brand">
-        <img src="images/logo-almar.png" alt="Logo Banquetes Almar" class="brand-logo" />
+        <img src="./images/logo-almar.png" alt="Logo Banquetes Almar" class="brand-logo" />
         <div class="brand-text">
           <span class="logo-main">Banquetes Almar</span>
-          <span class="logo-sub">Banquetes y Recepciones</span>
+          <span class="logo-sub">Banquetes y recepciones</span>
         </div>
       </a>
 
-      <button class="menu-toggle" id="menuToggle">☰</button>
+      <button class="menu-toggle" id="menuToggle" type="button">☰</button>
 
       <ul class="nav-links" id="navLinks">
         <li><a href="#inicio">Inicio</a></li>
         <li><a href="#servicios">Servicios</a></li>
         <li><a href="#razones">Por qué elegirnos</a></li>
-        <li><a href="#galeria">Galería</a></li>
+        <li><a href="./portafolio-servicios.html">Galería</a></li>
         <li><a href="#cotizacion">Cotización</a></li>
         <li><a href="#ubicacion">Ubicación</a></li>
         <li><a href="#contacto">Contacto</a></li>
@@ -43,49 +33,48 @@
   </header>
 
   <main>
-
     <!-- HERO -->
     <section class="hero" id="inicio">
       <div class="hero-overlay"></div>
-
-      <div class="hero-content container reveal">
-        <p class="hero-tag">Eventos sociales y empresariales</p>
-        <h1>Banquetes Almar</h1>
-        <h2>Banquetes y Recepciones</h2>
-        <p class="hero-text">
-          Hacemos parte de tus momentos más especiales con montaje elegante,
-          catering, decoración, mobiliario y atención profesional.
+      <div class="container hero-content">
+        <p class="hero-tag">Banquetes y recepciones</p>
+        <h1>Haz de tu evento un momento inolvidable</h1>
+        <p>
+          Organización, montaje, decoración y atención profesional para bodas,
+          cumpleaños, eventos empresariales y celebraciones especiales.
         </p>
 
-        <div class="hero-buttons">
-          <a href="#cotizacion" class="btn btn-primary">Cotizar evento</a>
-          <a href="#galeria" class="btn btn-secondary">Ver galería</a>
+        <div class="hero-actions">
+          <a href="#cotizacion" class="btn btn-primary">Solicitar cotización</a>
+          <a href="./portafolio-servicios.html" class="btn btn-secondary">Ver galería</a>
         </div>
       </div>
     </section>
 
-    <!-- ABOUT -->
-    <section class="section about">
-      <div class="container section-heading reveal">
-        <p class="section-label">Nuestra esencia</p>
-        <h2>Elegancia, experiencia y atención al detalle</h2>
-        <p>
-          Organizamos eventos completos con decoración, catering, mobiliario
-          y atención personalizada para cada celebración.
-        </p>
-      </div>
-    </section>
-
-    <!-- SERVICIOS DINÁMICOS -->
-    <section class="section services" id="servicios">
+    <!-- SERVICIOS -->
+    <section class="section" id="servicios">
       <div class="container">
         <div class="section-heading reveal">
           <p class="section-label">Servicios</p>
-          <h2>Soluciones completas para tu celebración</h2>
+          <h2>Todo lo que necesitas para tu evento</h2>
+          <p>Montajes, mobiliario, decoración, atención y soluciones completas.</p>
         </div>
 
-        <div class="service-grid">
-          <p>Cargando servicios...</p>
+        <div class="services-grid" id="servicesGrid">
+          <article class="service-card reveal">
+            <h3>Decoración</h3>
+            <p>Ambientación elegante y personalizada para cada ocasión.</p>
+          </article>
+
+          <article class="service-card reveal">
+            <h3>Mobiliario</h3>
+            <p>Sillas, mesas, carpas y elementos para eventos de diferentes tamaños.</p>
+          </article>
+
+          <article class="service-card reveal">
+            <h3>Recepciones</h3>
+            <p>Atención profesional y organización de eventos sociales y corporativos.</p>
+          </article>
         </div>
       </div>
     </section>
@@ -95,136 +84,109 @@
       <div class="container">
         <div class="section-heading reveal">
           <p class="section-label">Por qué elegirnos</p>
-          <h2>Una marca pensada para celebrar a lo grande</h2>
+          <h2>Experiencia, elegancia y confianza</h2>
+          <p>Nos enfocamos en cada detalle para que disfrutes sin estrés.</p>
         </div>
 
         <div class="reasons-grid">
           <article class="reason-card reveal">
-            <div class="reason-icon">✦</div>
-            <h3>Elegancia</h3>
-            <p>Montajes finos y profesionales.</p>
+            <h3>Montajes elegantes</h3>
+            <p>Diseños visuales que hacen lucir tu evento de forma profesional.</p>
           </article>
 
           <article class="reason-card reveal">
-            <div class="reason-icon">✦</div>
-            <h3>Personalización</h3>
-            <p>Adaptamos cada evento a tu necesidad.</p>
+            <h3>Atención personalizada</h3>
+            <p>Adaptamos cada servicio a tu necesidad, presupuesto y estilo.</p>
           </article>
 
           <article class="reason-card reveal">
-            <div class="reason-icon">✦</div>
-            <h3>Todo en uno</h3>
-            <p>Sin estrés, nosotros nos encargamos.</p>
+            <h3>Compromiso real</h3>
+            <p>Responsabilidad y acompañamiento desde la planeación hasta el evento.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- GALERÍA PRO -->
-    <section class="section gallery" id="galeria">
+    <!-- CTA GALERIA -->
+    <section class="section public-gallery-cta-section">
       <div class="container">
-        <div class="section-heading reveal">
-          <p class="section-label">Galería</p>
-          <h2>Eventos reales</h2>
-          <p>Explora por tipo de evento</p>
-        </div>
+        <div class="public-gallery-cta-card">
+          <div>
+            <p class="section-label">Galería</p>
+            <h3>Conoce nuestros montajes y servicios</h3>
+            <p>Explora fotos reales organizadas por secciones.</p>
+          </div>
 
-        <div class="gallery-filters" id="galleryFilters"></div>
-
-        <div class="gallery-grid-real" id="galleryGrid">
-          <p>Cargando galería...</p>
+          <a href="./portafolio-servicios.html" class="btn btn-primary">Ver galería</a>
         </div>
       </div>
     </section>
 
-    <!-- FORMULARIO -->
+    <!-- COTIZACION -->
     <section class="section quote" id="cotizacion">
       <div class="container">
         <div class="section-heading reveal">
           <p class="section-label">Cotización</p>
           <h2>Cuéntanos tu evento</h2>
+          <p>Déjanos tus datos y te contactamos.</p>
         </div>
 
         <form class="quote-form" id="quoteForm">
-
           <div class="form-group">
-            <input type="text" id="nombre" placeholder="Nombre" required />
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" required />
           </div>
 
           <div class="form-group">
-            <input type="tel" id="telefono" placeholder="Teléfono" required />
+            <label for="telefono">Teléfono</label>
+            <input type="text" id="telefono" required />
           </div>
 
           <div class="form-group">
-            <select id="evento" required>
-              <option value="">Tipo de evento</option>
-              <option>Matrimonio</option>
-              <option>Cumpleaños</option>
-              <option>Quince años</option>
-              <option>Empresarial</option>
-            </select>
+            <label for="evento">Tipo de evento</label>
+            <input type="text" id="evento" required />
           </div>
 
           <div class="form-group">
-            <input type="number" id="personas" placeholder="Personas" required />
+            <label for="personas">Cantidad de personas</label>
+            <input type="number" id="personas" min="1" required />
           </div>
 
           <div class="form-group full-width">
-            <textarea id="mensaje" placeholder="Describe tu evento..." required></textarea>
+            <label for="mensaje">Mensaje</label>
+            <textarea id="mensaje" rows="4"></textarea>
           </div>
 
           <div class="form-group full-width">
-            <button class="btn btn-primary" type="submit">
-              Enviar por WhatsApp
-            </button>
+            <button type="submit" class="btn btn-primary">Enviar solicitud</button>
           </div>
-
         </form>
       </div>
     </section>
 
-    <!-- UBICACIÓN -->
-    <section class="section location" id="ubicacion">
+    <!-- UBICACION -->
+    <section class="section" id="ubicacion">
       <div class="container">
         <div class="section-heading reveal">
           <p class="section-label">Ubicación</p>
-          <h2>Marinilla, Antioquia</h2>
-        </div>
-
-        <div class="map-wrapper">
-          <iframe
-            src="https://www.google.com/maps?q=Marinilla,Antioquia&output=embed">
-          </iframe>
+          <h2>Estamos para atenderte</h2>
+          <p>Contáctanos y agenda tu evento con nosotros.</p>
         </div>
       </div>
     </section>
 
+    <!-- CONTACTO -->
+    <section class="section" id="contacto">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="section-label">Contacto</p>
+          <h2>Hablemos</h2>
+          <p>Escríbenos y con gusto te ayudamos.</p>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="footer" id="contacto">
-    <div class="container footer-content">
-      <div>
-        <h3>Banquetes Almar</h3>
-        <p>Banquetes y Recepciones</p>
-      </div>
-
-      <div>
-        <h4>Contacto</h4>
-        <p>WhatsApp: 314 884 9011</p>
-        <p>Marinilla, Antioquia</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- BOTÓN WHATSAPP -->
-  <a class="whatsapp-float"
-     href="https://wa.me/573148849011"
-     target="_blank">
-    WhatsApp
-  </a>
-
-  <script src="js/main.js"></script>
-
+  <script src="./js/main.js"></script>
 </body>
 </html>
