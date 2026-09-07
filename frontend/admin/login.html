@@ -3,34 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login Admin | Banquetes Almar</title>
+  <title>Acceso Administrativo | Banquetes Almar</title>
   <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/ecommerce.css" />
 </head>
-<body>
-  <section class="section">
-    <div class="container" style="max-width: 500px;">
-      <div class="section-heading">
-        <p class="section-label">Administrador</p>
-        <h2>Iniciar sesión</h2>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: radial-gradient(circle at center, #1c1810 0%, #080808 100%);">
+  <div class="container" style="max-width: 460px; width: 90%;">
+    <div style="background: rgba(22, 22, 22, 0.95); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 2.8rem 2.2rem; box-shadow: 0 20px 50px rgba(0,0,0,0.8), var(--gold-glow); backdrop-filter: blur(12px);">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <span class="section-label">Panel de Control</span>
+        <h2 style="font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 2rem; margin-top: 0.3rem;">Banquetes Almar</h2>
+        <p style="color: var(--text-soft); font-size: 0.9rem; margin-top: 0.4rem;">Gestión de Cotizaciones, Reservas y Mobiliario</p>
       </div>
 
-      <form id="loginForm" class="quote-form" style="grid-template-columns: 1fr;">
+      <form id="loginForm" style="display: flex; flex-direction: column; gap: 1.2rem;">
         <div class="form-group">
-          <label for="email">Correo</label>
-          <input type="email" id="email" placeholder="admin@almar.com" required />
+          <label for="email" style="display: block; font-weight: 600; margin-bottom: 0.4rem; color: #eee;">Correo Administrador</label>
+          <input type="email" id="email" value="victortamayopine@gmail.com" placeholder="victortamayopine@gmail.com" required style="width: 100%; padding: 0.85rem; background: #111; color: #fff; border: 1px solid var(--border-glass); border-radius: 8px;" />
         </div>
 
         <div class="form-group">
-          <label for="password">Contraseña</label>
-          <input type="password" id="password" placeholder="Tu contraseña" required />
+          <label for="password" style="display: block; font-weight: 600; margin-bottom: 0.4rem; color: #eee;">Contraseña</label>
+          <input type="password" id="password" value="admin123" placeholder="Tu contraseña" required style="width: 100%; padding: 0.85rem; background: #111; color: #fff; border: 1px solid var(--border-glass); border-radius: 8px;" />
         </div>
 
-        <div class="form-group">
-          <button type="submit" class="btn btn-primary">Ingresar</button>
+        <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; padding: 0.95rem; font-size: 1rem; margin-top: 0.6rem;">
+          Ingresar al Panel
+        </button>
+
+        <div style="background: rgba(200, 155, 60, 0.08); border: 1px dashed var(--border-glass); padding: 0.9rem; border-radius: 8px; font-size: 0.8rem; color: var(--text-soft); text-align: center;">
+          🔑 <strong>Cuenta Administrador Firebase Activa:</strong><br />
+          <code style="color: var(--gold-light);">victortamayopine@gmail.com</code>
+        </div>
+
+        <div style="text-align: center; margin-top: 0.5rem;">
+          <a href="../index.html" style="font-size: 0.85rem; color: var(--gold-light); text-decoration: underline;">
+            ← Volver a la página principal
+          </a>
         </div>
       </form>
     </div>
-  </section>
-  <script src="../js/login.js"></script>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="module" src="../js/login.js"></script>
 </body>
 </html>

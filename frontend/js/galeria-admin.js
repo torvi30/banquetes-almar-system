@@ -1,393 +1,135 @@
-const API_URL = "http://localhost:3001/api/gallery";
-const token = localStorage.getItem("token");
+/**
+ * Gestión de Galería y Portafolio - Banquetes Almar (Marinilla, Antioquia)
+ * Conectado a dbService (Firestore / Firebase).
+ */
 
-const categoryForm = document.getElementById("categoryForm");
-const categoryName = document.getElementById("categoryName");
-const categoriesList = document.getElementById("categoriesList");
+import { authService } from "./firebase/auth.js";
+import { dbService } from "./firebase/db.js";
+
+authService.requireAuth("./login.html");
 
 const galleryForm = document.getElementById("galleryForm");
-const galleryId = document.getElementById("galleryId");
-const categoriaId = document.getElementById("categoriaId");
 const galleryTitle = document.getElementById("galleryTitle");
+const categoriaId = document.getElementById("categoriaId");
 const galleryDescription = document.getElementById("galleryDescription");
 const galleryImage = document.getElementById("galleryImage");
 const imagePreview = document.getElementById("imagePreview");
 const previewPlaceholder = document.getElementById("previewPlaceholder");
-const saveGalleryBtn = document.getElementById("saveGalleryBtn");
-const cancelGalleryEditBtn = document.getElementById("cancelGalleryEditBtn");
-
-const filterCategory = document.getElementById("filterCategory");
-const searchGallery = document.getElementById("searchGallery");
 const galleryGrid = document.getElementById("galleryGrid");
 const logoutBtn = document.getElementById("logoutBtn");
 
-let categoriesCache = [];
 let galleryCache = [];
-
-if (!token) {
-  Swal.fire({
-    icon: "warning",
-    title: "Sesión expirada",
-    text: "Debes iniciar sesión nuevamente."
-  }).then(() => {
-    window.location.href = "./login.html";
-  });
-}
-
-function authHeaders(extra = {}) {
-  return {
-    Authorization: `Bearer ${token}`,
-    ...extra
-  };
-}
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("adminNombre");
+    authService.logout();
     window.location.href = "./login.html";
   });
 }
 
-function limpiarFormularioGaleria() {
-  galleryId.value = "";
-  categoriaId.value = "";
-  galleryTitle.value = "";
-  galleryDescription.value = "";
-  galleryImage.value = "";
-  saveGalleryBtn.textContent = "Guardar imagen";
-  imagePreview.style.display = "none";
-  imagePreview.src = "";
-  previewPlaceholder.style.display = "block";
-  previewPlaceholder.textContent = "Sin imagen seleccionada";
-}
+function renderGaleria(items) {
+  if (!galleryGrid) return;
 
-cancelGalleryEditBtn.addEventListener("click", async () => {
-  limpiarFormularioGaleria();
-
-  await Swal.fire({
-    icon: "info",
-    title: "Edición cancelada",
-    timer: 900,
-    showConfirmButton: false
-  });
-});
-
-galleryImage.addEventListener("change", () => {
-  const file = galleryImage.files[0];
-
-  if (!file) {
-    imagePreview.style.display = "none";
-    imagePreview.src = "";
-    previewPlaceholder.style.display = "block";
-    previewPlaceholder.textContent = "Sin imagen seleccionada";
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    imagePreview.src = e.target.result;
-    imagePreview.style.display = "block";
-    previewPlaceholder.style.display = "none";
-  };
-  reader.readAsDataURL(file);
-});
-
-async function cargarCategorias() {
-  const res = await fetch(`${API_URL}/categories`, {
-    headers: authHeaders()
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data.message || "No se pudieron cargar las categorías");
-  }
-
-  categoriesCache = Array.isArray(data) ? data : [];
-
-  categoriaId.innerHTML = `<option value="">Sin categoría</option>`;
-  filterCategory.innerHTML = `<option value="">Todas</option>`;
-
-  categoriesCache.forEach(cat => {
-    categoriaId.innerHTML += `<option value="${cat.id}">${cat.nombre}</option>`;
-    filterCategory.innerHTML += `<option value="${cat.id}">${cat.nombre}</option>`;
-  });
-
-  categoriesList.innerHTML = categoriesCache.length
-    ? categoriesCache.map(cat => `
-        <article class="dashboard-item">
-          <div class="dashboard-item-top">
-            <div>
-              <h4>${cat.nombre}</h4>
-              <p>ID: ${cat.id}</p>
-            </div>
-          </div>
-        </article>
-      `).join("")
-    : `<div class="dashboard-empty"><h4>Sin categorías</h4><p>No hay categorías creadas.</p></div>`;
-}
-
-async function cargarGaleria() {
-  const res = await fetch(API_URL, {
-    headers: authHeaders()
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data.message || "No se pudo cargar la galería");
-  }
-
-  galleryCache = Array.isArray(data) ? data : [];
-  renderGaleria();
-}
-
-function filtrarGaleria() {
-  const categoria = filterCategory.value;
-  const texto = String(searchGallery.value || "").toLowerCase().trim();
-
-  return galleryCache.filter(item => {
-    const matchCategoria = !categoria || String(item.categoria_id || "") === String(categoria);
-    const matchTexto =
-      !texto ||
-      String(item.titulo || "").toLowerCase().includes(texto) ||
-      String(item.descripcion || "").toLowerCase().includes(texto) ||
-      String(item.categoria_nombre || "").toLowerCase().includes(texto);
-
-    return matchCategoria && matchTexto;
-  });
-}
-
-function renderGaleria() {
-  const lista = filtrarGaleria();
-
-  if (!lista.length) {
+  if (!items.length) {
     galleryGrid.innerHTML = `
-      <div class="empty-state-card">
-        <h3>Sin imágenes</h3>
-        <p>No hay imágenes registradas con esos filtros.</p>
+      <div style="padding: 2.5rem; text-align: center; color: var(--text-soft); grid-column: 1 / -1;">
+        <h3>No hay fotos en la galería</h3>
+        <p>Sube las fotos de tus eventos en Marinilla para mostrarlas en la web.</p>
       </div>
     `;
     return;
   }
 
-  galleryGrid.innerHTML = lista.map(item => `
-    <article class="gallery-card-pro">
-      <div class="gallery-card-image-wrap">
-        <img
-          src="http://localhost:3001/uploads/${item.imagen}"
-          alt="${item.titulo}"
-          class="gallery-card-image"
-          data-view="${item.id}"
-        />
-        <div class="gallery-card-overlay">
-          <button class="btn btn-secondary gallery-view-btn" data-view="${item.id}" type="button">Ver</button>
-        </div>
+  galleryGrid.innerHTML = items.map(item => `
+    <article class="gallery-photo-card" style="background: rgba(22, 22, 22, 0.9); border: 1px solid var(--border-glass); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 1rem;">
+      <div style="height: 180px; position: relative;">
+        <img src="${item.imagen}" alt="${item.titulo}" style="width: 100%; height: 100%; object-fit: cover;" />
+        <span style="position: absolute; top: 0.6rem; right: 0.6rem; background: rgba(0,0,0,0.8); color: var(--gold-light); font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 4px;">
+          ${item.categoria || "Eventos"}
+        </span>
       </div>
-
-      <div class="gallery-card-content">
-        <span class="event-chip">${item.categoria_nombre || "Sin categoría"}</span>
-        <h3>${item.titulo || "Sin título"}</h3>
-        <p>${item.descripcion || "Sin descripción"}</p>
-
-        <div class="quote-card-actions">
-          <button class="btn btn-success edit-gallery-btn" data-id="${item.id}" type="button">Editar</button>
-          <button class="btn btn-danger delete-gallery-btn" data-id="${item.id}" type="button">Eliminar</button>
-        </div>
+      <div style="padding: 1rem;">
+        <h4 style="color: #fff; font-size: 1rem; margin-bottom: 0.3rem;">${item.titulo}</h4>
+        <p style="color: var(--text-soft); font-size: 0.82rem; margin-bottom: 0.8rem;">${item.descripcion || ""}</p>
+        <button class="btn btn-secondary btn-sm delete-gallery-btn" data-id="${item.id}" style="color: #e74c3c; width: 100%;">
+          Eliminar foto
+        </button>
       </div>
     </article>
   `).join("");
 
-  document.querySelectorAll(".gallery-view-btn, .gallery-card-image").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const item = galleryCache.find(g => String(g.id) === String(btn.dataset.view || btn.getAttribute("data-view")));
-      if (!item) return;
-
-      Swal.fire({
-        title: item.titulo || "Imagen",
-        html: `
-          <div style="text-align:left;">
-            <img src="http://localhost:3001/uploads/${item.imagen}" alt="${item.titulo}" style="width:100%; max-height:420px; object-fit:cover; border-radius:14px; margin-bottom:14px;" />
-            <p><strong>Categoría:</strong> ${item.categoria_nombre || "Sin categoría"}</p>
-            <p><strong>Descripción:</strong> ${item.descripcion || "Sin descripción"}</p>
-          </div>
-        `,
-        width: 760,
-        confirmButtonText: "Cerrar"
-      });
-    });
-  });
-
-  document.querySelectorAll(".edit-gallery-btn").forEach(btn => {
+  galleryGrid.querySelectorAll(".delete-gallery-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
-      const item = galleryCache.find(g => String(g.id) === String(btn.dataset.id));
-      if (!item) return;
-
-      galleryId.value = item.id;
-      categoriaId.value = item.categoria_id || "";
-      galleryTitle.value = item.titulo || "";
-      galleryDescription.value = item.descripcion || "";
-      saveGalleryBtn.textContent = "Actualizar imagen";
-
-      imagePreview.src = `http://localhost:3001/uploads/${item.imagen}`;
-      imagePreview.style.display = "block";
-      previewPlaceholder.style.display = "none";
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-
-      await Swal.fire({
-        icon: "info",
-        title: "Imagen cargada",
-        text: "Ya puedes editar la imagen.",
-        timer: 1100,
-        showConfirmButton: false
-      });
-    });
-  });
-
-  document.querySelectorAll(".delete-gallery-btn").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const confirmar = await Swal.fire({
+      const id = btn.dataset.id;
+      const confirm = await Swal.fire({
+        title: "¿Eliminar fotografía?",
         icon: "warning",
-        title: "¿Eliminar imagen?",
-        text: "Esta acción no se puede deshacer.",
         showCancelButton: true,
         confirmButtonText: "Sí, eliminar",
         cancelButtonText: "Cancelar"
       });
 
-      if (!confirmar.isConfirmed) return;
-
-      const res = await fetch(`${API_URL}/${btn.dataset.id}`, {
-        method: "DELETE",
-        headers: authHeaders()
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        Swal.fire("Error", data.message || "No se pudo eliminar", "error");
-        return;
+      if (confirm.isConfirmed) {
+        let items = await dbService.getGallery();
+        items = items.filter(i => i.id !== id);
+        localStorage.setItem("almar_galeria", JSON.stringify(items));
+        await cargarGaleria();
+        Swal.fire("Eliminada", "La fotografía ha sido retirada.", "success");
       }
-
-      await Swal.fire({
-        icon: "success",
-        title: "Imagen eliminada",
-        timer: 1000,
-        showConfirmButton: false
-      });
-
-      await cargarGaleria();
     });
   });
 }
 
-categoryForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+// Vista previa de imagen si es URL o archivo
+if (galleryImage) {
+  galleryImage.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        if (imagePreview) {
+          imagePreview.src = ev.target.result;
+          imagePreview.style.display = "block";
+        }
+        if (previewPlaceholder) previewPlaceholder.style.display = "none";
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
 
-  try {
-    const res = await fetch(`${API_URL}/categories`, {
-      method: "POST",
-      headers: authHeaders({
-        "Content-Type": "application/json"
-      }),
-      body: JSON.stringify({
-        nombre: categoryName.value
-      })
+if (galleryForm) {
+  galleryForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const titulo = galleryTitle?.value.trim() || "Evento Banquetes Almar";
+    const categoria = categoriaId?.value || "Bodas";
+    const descripcion = galleryDescription?.value.trim() || "";
+    const imagenSrc = imagePreview?.src || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80";
+
+    await dbService.addGalleryItem({
+      titulo,
+      categoria,
+      descripcion,
+      imagen: imagenSrc
     });
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudo crear la categoría");
-    }
-
-    await Swal.fire({
-      icon: "success",
-      title: "Categoría creada",
-      timer: 1000,
-      showConfirmButton: false
-    });
-
-    categoryName.value = "";
-    await cargarCategorias();
-  } catch (error) {
-    Swal.fire("Error", error.message, "error");
-  }
-});
-
-galleryForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  try {
-    const id = galleryId.value;
-
-    const formData = new FormData();
-    formData.append("categoria_id", categoriaId.value || "");
-    formData.append("titulo", galleryTitle.value || "");
-    formData.append("descripcion", galleryDescription.value || "");
-
-    if (galleryImage.files[0]) {
-      formData.append("imagen", galleryImage.files[0]);
-    }
-
-    let res;
-
-    if (id) {
-      res = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: authHeaders(),
-        body: formData
-      });
-    } else {
-      if (!galleryImage.files[0]) {
-        Swal.fire({
-          icon: "warning",
-          title: "Imagen obligatoria",
-          text: "Debes seleccionar una imagen."
-        });
-        return;
-      }
-
-      res = await fetch(API_URL, {
-        method: "POST",
-        headers: authHeaders(),
-        body: formData
-      });
-    }
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudo guardar la imagen");
-    }
-
-    await Swal.fire({
-      icon: "success",
-      title: id ? "Imagen actualizada" : "Imagen subida",
-      timer: 1100,
-      showConfirmButton: false
-    });
-
-    limpiarFormularioGaleria();
+    Swal.fire("Foto agregada", "La imagen se publicó en la galería.", "success");
+    galleryForm.reset();
+    if (imagePreview) imagePreview.style.display = "none";
+    if (previewPlaceholder) previewPlaceholder.style.display = "block";
     await cargarGaleria();
-  } catch (error) {
-    Swal.fire("Error", error.message, "error");
-  }
-});
+  });
+}
 
-filterCategory.addEventListener("change", renderGaleria);
-searchGallery.addEventListener("input", renderGaleria);
-
-(async function init() {
+async function cargarGaleria() {
   try {
-    await cargarCategorias();
-    await cargarGaleria();
+    const items = await dbService.getGallery();
+    galleryCache = items;
+    renderGaleria(items);
   } catch (error) {
-    Swal.fire("Error", error.message, "error");
+    console.error("Error cargando galería:", error);
   }
-})();
+}
+
+cargarGaleria();

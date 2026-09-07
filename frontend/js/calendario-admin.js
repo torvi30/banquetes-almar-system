@@ -1,5 +1,12 @@
-const API_URL = "http://localhost:3001/api/calendar";
-const token = localStorage.getItem("token");
+/**
+ * Calendario y Agenda de Eventos - Banquetes Almar (Marinilla, Antioquia)
+ * Conectado a dbService (Firestore / Firebase).
+ */
+
+import { authService } from "./firebase/auth.js";
+import { dbService } from "./firebase/db.js";
+
+authService.requireAuth("./login.html");
 
 const calendarGrid = document.getElementById("calendarGrid");
 const monthTitle = document.getElementById("monthTitle");
@@ -9,29 +16,10 @@ const logoutBtn = document.getElementById("logoutBtn");
 
 let currentDate = new Date();
 let reservas = [];
-let eventos = [];
-
-if (!token) {
-  Swal.fire({
-    icon: "warning",
-    title: "Sesión expirada",
-    text: "Debes iniciar sesión nuevamente."
-  }).then(() => {
-    window.location.href = "./login.html";
-  });
-}
-
-function authHeaders(extra = {}) {
-  return {
-    Authorization: `Bearer ${token}`,
-    ...extra
-  };
-}
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("adminNombre");
+    authService.logout();
     window.location.href = "./login.html";
   });
 }
@@ -50,207 +38,104 @@ function normalizarFechaTexto(fecha) {
 
 function obtenerClaseEstado(estado) {
   const valor = String(estado || "").toLowerCase().trim();
-
-  if (valor === "pendiente" || valor === "nuevo" || valor === "contactado") return "badge-pendiente";
+  if (valor === "pendiente" || valor === "nuevo") return "badge-pendiente";
   if (valor === "confirmada" || valor === "confirmado" || valor === "finalizado") return "badge-confirmada";
   if (valor === "cancelada" || valor === "cancelado") return "badge-cancelada";
-  if (valor === "convertida" || valor === "convertido" || valor === "en_proceso") return "badge-convertida";
-
   return "badge-pendiente";
 }
 
-function obtenerEtiquetaOrigen(item) {
-  return item.origen === "evento" ? "Evento" : "Reserva";
-}
-
-function obtenerClaseOrigen(item) {
-  return item.origen === "evento" ? "origin-evento" : "origin-reserva";
-}
-
-async function leerRespuestaJSON(res) {
-  const text = await res.text();
-
-  try {
-    return JSON.parse(text);
-  } catch (error) {
-    console.error("Respuesta no JSON:", text);
-    throw new Error("El servidor devolvió una respuesta inválida.");
-  }
-}
-
-async function cargarCalendario() {
-  try {
-    const month = currentDate.getMonth() + 1;
-    const year = currentDate.getFullYear();
-
-    const res = await fetch(`${API_URL}?month=${month}&year=${year}`, {
-      headers: authHeaders()
-    });
-
-    const data = await leerRespuestaJSON(res);
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudo cargar el calendario");
-    }
-
-    reservas = Array.isArray(data.reservas) ? data.reservas : [];
-    eventos = Array.isArray(data.eventos) ? data.eventos : [];
-
-    renderCalendar();
-  } catch (error) {
-    console.error("ERROR CARGANDO CALENDARIO:", error);
-
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: error.message || "No se pudo cargar el calendario"
-    });
-  }
-}
-
-function renderCalendar() {
-  calendarGrid.innerHTML = "";
+function renderCalendario() {
+  if (!calendarGrid || !monthTitle) return;
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
+  const meses = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
 
-  const startDay = firstDay.getDay();
-  const totalDays = lastDay.getDate();
+  monthTitle.textContent = `${meses[month]} ${year}`;
 
-  monthTitle.textContent = firstDay.toLocaleString("es-CO", {
-    month: "long",
-    year: "numeric"
-  });
+  const primerDiaMes = new Date(year, month, 1);
+  const ultimoDiaMes = new Date(year, month + 1, 0);
 
-  for (let i = 0; i < startDay; i++) {
-    const emptyCell = document.createElement("div");
-    emptyCell.className = "calendar-day-card calendar-day-empty";
-    calendarGrid.appendChild(emptyCell);
-  }
+  // Ajuste lunes (0 = Lunes, 6 = Domingo)
+  let primerDiaSemana = primerDiaMes.getDay() - 1;
+  if (primerDiaSemana === -1) primerDiaSemana = 6;
 
-  for (let day = 1; day <= totalDays; day++) {
-    const date = new Date(year, month, day);
-    const fechaStr = formatearFechaISO(date);
+  const totalDias = ultimoDiaMes.getDate();
+  const totalCeldas = Math.ceil((primerDiaSemana + totalDias) / 7) * 7;
 
-    const reservasDia = reservas.filter(r => normalizarFechaTexto(r.fecha_evento) === fechaStr);
-    const eventosDia = eventos.filter(e => normalizarFechaTexto(e.fecha_evento) === fechaStr);
+  let html = "";
 
-    const itemsDia = [...reservasDia, ...eventosDia];
+  for (let i = 0; i < totalCeldas; i++) {
+    const diaNumero = i - primerDiaSemana + 1;
+    const esDiaValido = diaNumero >= 1 && diaNumero <= totalDias;
 
-    const dayCard = document.createElement("div");
-    dayCard.className = "calendar-day-card";
+    if (!esDiaValido) {
+      html += `<div class="calendar-day empty"></div>`;
+      continue;
+    }
 
-    const preview = itemsDia.slice(0, 3).map(item => {
+    const fechaActual = new Date(year, month, diaNumero);
+    const fechaISO = formatearFechaISO(fechaActual);
+
+    const eventosDelDia = reservas.filter(item => {
+      const fechaItem = normalizarFechaTexto(item.fecha_evento || item.fecha);
+      return fechaItem === fechaISO;
+    });
+
+    const itemsHTML = eventosDelDia.map(ev => {
+      const clase = obtenerClaseEstado(ev.estado);
+      const titulo = ev.cliente || "Evento";
+      const tipo = ev.tipo_evento || "Social";
+
       return `
-        <span class="calendar-event-badge ${obtenerClaseEstado(item.estado)} ${obtenerClaseOrigen(item)}">
-          ${item.origen === "evento" ? "🎉" : "📅"} ${item.tipo_evento || "Registro"}
-        </span>
+        <div class="calendar-event-pill ${clase}" title="${titulo} - ${tipo} (${ev.estado})">
+          <strong>${titulo}</strong>
+          <span>${tipo}</span>
+        </div>
       `;
     }).join("");
 
-    const extraCount = itemsDia.length > 3
-      ? `<span class="calendar-more">+${itemsDia.length - 3} más</span>`
-      : "";
-
-    dayCard.innerHTML = `
-      <div class="calendar-day-top">
-        <span class="calendar-day-number">${day}</span>
-        <span class="calendar-day-total">${itemsDia.length} registro${itemsDia.length === 1 ? "" : "s"}</span>
-      </div>
-
-      <div class="calendar-day-events">
-        ${preview || `<span class="calendar-empty-label">Disponible</span>`}
-        ${extraCount}
+    html += `
+      <div class="calendar-day ${eventosDelDia.length > 0 ? "has-events" : ""}" data-date="${fechaISO}">
+        <div class="calendar-day-header">
+          <span class="day-number">${diaNumero}</span>
+          ${eventosDelDia.length > 0 ? `<span class="event-count-badge">${eventosDelDia.length}</span>` : ""}
+        </div>
+        <div class="calendar-day-events">
+          ${itemsHTML}
+        </div>
       </div>
     `;
-
-    if (itemsDia.length > 0) {
-      dayCard.classList.add("calendar-day-has-events");
-    }
-
-    dayCard.addEventListener("click", () => {
-      mostrarDetalleDia(fechaStr, reservasDia, eventosDia);
-    });
-
-    calendarGrid.appendChild(dayCard);
   }
+
+  calendarGrid.innerHTML = html;
 }
 
-function mostrarDetalleDia(fecha, reservasDia, eventosDia) {
-  const total = reservasDia.length + eventosDia.length;
-
-  if (!total) {
-    Swal.fire({
-      icon: "info",
-      title: `Sin actividad`,
-      html: `
-        <p>No hay reservas ni eventos para <strong>${fecha}</strong>.</p>
-      `,
-      footer: `
-        <a href="./reservas.html" style="text-decoration:none; margin-right:10px;">Ir a reservas</a>
-        <a href="./eventos.html" style="text-decoration:none;">Ir a eventos</a>
-      `
-    });
-    return;
-  }
-
-  const reservasHtml = reservasDia.length
-    ? reservasDia.map(item => `
-        <div class="calendar-modal-item">
-          <strong>📅 ${item.cliente || "Sin cliente"}</strong><br>
-          <span>${item.tipo_evento || "Reserva"}</span><br>
-          <span>Estado: ${item.estado || "Pendiente"}</span><br>
-          <span>Tel: ${item.telefono || "No definido"}</span><br>
-          <span>Personas: ${item.personas || 0}</span><br>
-          <span>Lugar: ${item.lugar || "Por definir"}</span>
-        </div>
-      `).join("")
-    : `<p style="opacity:.7;">No hay reservas este día.</p>`;
-
-  const eventosHtml = eventosDia.length
-    ? eventosDia.map(item => `
-        <div class="calendar-modal-item">
-          <strong>🎉 ${item.cliente || "Sin cliente"}</strong><br>
-          <span>${item.tipo_evento || "Evento"}</span><br>
-          <span>Estado: ${item.estado || "Pendiente"}</span><br>
-          <span>Tel: ${item.telefono || "No definido"}</span><br>
-          <span>Personas: ${item.personas || 0}</span><br>
-          <span>Lugar: ${item.lugar || "Por definir"}</span>
-        </div>
-      `).join("")
-    : `<p style="opacity:.7;">No hay eventos este día.</p>`;
-
-  Swal.fire({
-    title: `Agenda del ${fecha}`,
-    html: `
-      <div style="text-align:left;">
-        <h3 style="margin:0 0 10px 0;">Reservas</h3>
-        ${reservasHtml}
-        <hr style="margin:16px 0; border-color:rgba(255,255,255,0.08);" />
-        <h3 style="margin:0 0 10px 0;">Eventos</h3>
-        ${eventosHtml}
-      </div>
-    `,
-    width: 700,
-    confirmButtonText: "Cerrar",
-    footer: `
-      <a href="./reservas.html" style="text-decoration:none; margin-right:12px;">Ver reservas</a>
-      <a href="./eventos.html" style="text-decoration:none;">Ver eventos</a>
-    `
+if (prevMonthBtn) {
+  prevMonthBtn.addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendario();
   });
 }
 
-prevMonthBtn.addEventListener("click", () => {
-  currentDate.setMonth(currentDate.getMonth() - 1);
-  cargarCalendario();
-});
+if (nextMonthBtn) {
+  nextMonthBtn.addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendario();
+  });
+}
 
-nextMonthBtn.addEventListener("click", () => {
-  currentDate.setMonth(currentDate.getMonth() + 1);
-  cargarCalendario();
-});
+async function cargarDatosCalendario() {
+  try {
+    reservas = await dbService.getReservations();
+    renderCalendario();
+  } catch (error) {
+    console.error("Error cargando calendario:", error);
+  }
+}
 
-cargarCalendario();
+cargarDatosCalendario();

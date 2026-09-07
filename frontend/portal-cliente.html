@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal del Anfitrión VIP | Banquetes Almar</title>
+  <meta name="description" content="Portal privado para clientes de Banquetes Almar. Consulta el estado de tu evento, cuenta regresiva, historial de abonos y contrato oficial." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/ecommerce.css" />
+  <link rel="stylesheet" href="./css/apple-design.css" />
+
+  <style>
+    .portal-container {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .portal-card {
+      background: var(--apple-card);
+      border: 1px solid var(--apple-border);
+      border-radius: var(--apple-radius-card);
+      padding: 2.5rem;
+      backdrop-filter: var(--apple-blur);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+      margin-bottom: 2rem;
+    }
+
+    .portal-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .countdown-box {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    .countdown-unit {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--apple-border);
+      border-radius: 12px;
+      padding: 1.2rem 0.5rem;
+    }
+
+    .countdown-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--apple-gold-light);
+      line-height: 1;
+    }
+
+    .countdown-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--apple-text-secondary);
+      margin-top: 0.4rem;
+    }
+
+    .progress-bar-wrap {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      height: 12px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .progress-bar-fill {
+      background: var(--apple-gold-gradient);
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.8s ease;
+    }
+
+    .payment-history-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .payment-history-table th {
+      text-align: left;
+      color: var(--apple-text-secondary);
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--apple-border);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .payment-history-table td {
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+  </style>
+</head>
+<body style="background: var(--apple-canvas); min-height: 100vh;">
+
+  <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
+  <header class="header" style="position: sticky; top: 0; z-index: 100; backdrop-filter: var(--apple-blur); background: rgba(9, 9, 11, 0.85); border-bottom: 1px solid var(--apple-border);">
+    <nav class="navbar container">
+      <a href="./index.html" class="brand">
+        <img src="./images/logo-almar.png" alt="Logo Banquetes Almar" class="brand-logo" onerror="this.style.display='none'" />
+        <div class="brand-text">
+          <span class="logo-main">Banquetes Almar</span>
+          <span class="logo-sub">Portal del Anfitrión VIP</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="./index.html">← Volver al Sitio</a></li>
+        <li><a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20tengo%20una%20consulta%20sobre%20mi%20evento" target="_blank" class="btn-apple-secondary" style="padding: 0.45rem 1rem; font-size: 0.85rem;">💬 Asesor WhatsApp</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="portal-container">
+    
+    <!-- CONSULTA RÁPIDA DE EVENTO -->
+    <div class="portal-card" id="lookupCard">
+      <div class="portal-header">
+        <span class="section-label">Acceso Exclusivo para Anfitriones</span>
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-top: 0.4rem; color: #fff;">
+          Mi Celebración Banquetes Almar
+        </h1>
+        <p style="color: var(--apple-text-secondary); max-width: 600px; margin: 0.8rem auto 0;">
+          Ingresa tu número de celular o código de reserva para ver la cuenta regresiva, tus abonos registrados y tu contrato oficial.
+        </p>
+      </div>
+
+      <form id="portalLookupForm" style="display: flex; gap: 0.8rem; max-width: 500px; margin: 0 auto; flex-wrap: wrap;">
+        <input 
+          type="text" 
+          id="lookupQuery" 
+          placeholder="Ej: 311 789 2233 o código de reserva" 
+          value="3117892233"
+          required 
+          style="flex: 1; min-width: 240px; padding: 0.9rem 1.2rem; background: #151518; border: 1px solid var(--apple-border); border-radius: var(--apple-radius-pill); color: #fff; font-size: 0.95rem;" 
+        />
+        <button type="submit" class="btn-apple-primary" style="padding: 0.9rem 1.8rem;">
+          Consultar
+        </button>
+      </form>
+    </div>
+
+    <!-- VISTA PRINCIPAL DEL CLIENTE (SE MUESTRA TRAS CONSULTAR) -->
+    <div id="eventDetailsSection">
+      
+      <!-- HERO DE LA RESERVA & CUENTA REGRESIVA -->
+      <div class="portal-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <span class="tile-badge" id="clientStatusBadge" style="position: static; display: inline-block; margin-bottom: 0.8rem;">
+              Reserva Confirmada
+            </span>
+            <h2 id="clientEventTitle" style="font-family: 'Playfair Display', serif; font-size: 2rem; color: #fff;">
+              Boda Imperial • Valentina & Juan Esteban
+            </h2>
+            <p id="clientVenueText" style="color: var(--apple-gold-light); font-size: 1rem; margin-top: 0.3rem;">
+              📍 Finca Campestre Almar (El Peñol, Antioquia)
+            </p>
+          </div>
+
+          <div style="text-align: right;">
+            <span style="font-size: 0.85rem; color: var(--apple-text-secondary);">Código de Evento:</span>
+            <div id="clientCodeDisplay" style="font-family: monospace; font-size: 1.2rem; font-weight: 700; color: var(--apple-gold-light);">
+              ALM-RES201
+            </div>
+          </div>
+        </div>
+
+        <!-- RELOJ DE CUENTA REGRESIVA -->
+        <div class="countdown-box">
+          <div class="countdown-unit">
+            <div class="countdown-number" id="cdDays">89</div>
+            <div class="countdown-label">Días</div>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-number" id="cdHours">14</div>
+            <div class="countdown-label">Horas</div>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-number" id="cdMinutes">32</div>
+            <div class="countdown-label">Minutos</div>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-number" id="cdSeconds">05</div>
+            <div class="countdown-label">Segundos</div>
+          </div>
+        </div>
+
+        <div style="background: rgba(212, 175, 55, 0.08); border: 1px dashed var(--apple-gold); padding: 1rem 1.4rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;">
+          <div>
+            <strong style="color: #fff; font-size: 0.95rem;">📅 Fecha de la Celebración:</strong>
+            <span id="clientEventDate" style="color: var(--apple-gold-light); font-weight: 600; margin-left: 0.5rem;">Sábado, 05 de Diciembre de 2026</span>
+          </div>
+          <div>
+            <strong style="color: #fff; font-size: 0.95rem;">👥 Invitados:</strong>
+            <span id="clientGuestsCount" style="color: var(--apple-gold-light); font-weight: 600; margin-left: 0.5rem;">100 personas</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESTADO FINANCIERO Y ABONOS -->
+      <div class="portal-card">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #fff; margin-bottom: 0.5rem;">
+          Estado Financiero y Pagos
+        </h3>
+        <p style="font-size: 0.85rem; color: var(--apple-text-secondary); margin-bottom: 1.5rem;">
+          Control transparente de inversión, anticipo y saldo de tu evento.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--apple-border); border-radius: 12px; padding: 1.2rem;">
+            <span style="font-size: 0.8rem; color: var(--apple-text-secondary); text-transform: uppercase;">Inversión Total</span>
+            <div id="totalInversionDisplay" style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-top: 0.3rem;">
+              $11.800.000
+            </div>
+          </div>
+
+          <div style="background: rgba(39, 174, 96, 0.08); border: 1px solid rgba(39, 174, 96, 0.3); border-radius: 12px; padding: 1.2rem;">
+            <span style="font-size: 0.8rem; color: #a8d5ba; text-transform: uppercase;">Abonado a la Fecha</span>
+            <div id="totalAbonadoDisplay" style="font-size: 1.5rem; font-weight: 800; color: #2ecc71; margin-top: 0.3rem;">
+              $4.000.000
+            </div>
+          </div>
+
+          <div style="background: rgba(231, 76, 60, 0.08); border: 1px solid rgba(231, 76, 60, 0.3); border-radius: 12px; padding: 1.2rem;">
+            <span style="font-size: 0.8rem; color: #e74c3c; text-transform: uppercase;">Saldo Pendiente</span>
+            <div id="saldoPendienteDisplay" style="font-size: 1.5rem; font-weight: 800; color: #e74c3c; margin-top: 0.3rem;">
+              $7.800.000
+            </div>
+          </div>
+        </div>
+
+        <!-- BARRA DE PROGRESO DE PAGO -->
+        <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--apple-text-secondary);">
+          <span>Progreso de Pago</span>
+          <span id="paymentPercentageText">34% Completado</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="paymentProgressBar" style="width: 34%;"></div>
+        </div>
+
+        <!-- TABLA DE HISTORIAL DE PAGOS -->
+        <h4 style="font-size: 0.95rem; color: #fff; margin-top: 2rem;">Historial de Pagos Registrados:</h4>
+        <table class="payment-history-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Concepto</th>
+              <th>Método</th>
+              <th style="text-align: right;">Valor</th>
+            </tr>
+          </thead>
+          <tbody id="paymentHistoryBody">
+            <tr>
+              <td>01/09/2026</td>
+              <td>Anticipo de separación de fecha</td>
+              <td>Transferencia Bancolombia</td>
+              <td style="text-align: right; color: #2ecc71; font-weight: 700;">+$4.000.000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ACCIONES LEGALES Y DESCARGAS -->
+      <div class="portal-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; background: linear-gradient(135deg, rgba(35,30,18,0.7) 0%, rgba(18,18,22,0.95) 100%);">
+        <div>
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff;">
+            Contrato y Documentación Legal
+          </h3>
+          <p style="font-size: 0.85rem; color: var(--apple-text-secondary); margin-top: 0.2rem;">
+            Descarga tu contrato formal vigente con el respaldo de Banquetes Almar.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+          <a href="./admin/contrato.html?id=res-201" id="btnDownloadContract" target="_blank" class="btn-apple-primary">
+            📄 Descargar Contrato Oficial (PDF)
+          </a>
+          <button type="button" id="btnOpenPaymentModal" class="btn-apple-secondary" style="cursor: pointer;">
+            💳 Realizar o Reportar Abono
+          </button>
+        </div>
+      </div>
+
+      <!-- MODAL DE MEDIOS DE PAGO Y REPORTAR ABONO -->
+      <div id="paymentModal" class="apple-modal-overlay">
+        <div class="apple-modal-content" style="max-width: 650px;">
+          <button class="apple-modal-close" id="btnClosePaymentModal">&times;</button>
+          
+          <div style="text-align: center; margin-bottom: 1.5rem;">
+            <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--apple-gold-light); font-weight: 700;">Canales Financieros Oficiales</span>
+            <h2 style="font-family: 'Playfair Display', serif; color: #fff; font-size: 1.8rem; margin-top: 0.3rem;">
+              Medios de Pago y Abonos
+            </h2>
+            <p style="font-size: 0.85rem; color: var(--apple-text-secondary); max-width: 460px; margin: 0.5rem auto 0;">
+              Realiza transferencias seguras directas a las cuentas oficiales de Banquetes Almar en Marinilla.
+            </p>
+          </div>
+
+          <!-- TARJETAS DE MÉTODOS DE PAGO -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <!-- BANCOLOMBIA -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--apple-border); border-radius: 12px; padding: 1.2rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <strong style="color: #fff; font-size: 0.95rem;">🟡 Bancolombia</strong>
+                <span style="font-size: 0.75rem; color: var(--apple-gold-light); background: rgba(212,175,55,0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">Ahorros</span>
+              </div>
+              <p style="font-size: 0.8rem; color: var(--apple-text-secondary); margin-bottom: 0.3rem;">Cuenta de Ahorros:</p>
+              <div style="display: flex; justify-content: space-between; align-items: center; background: #121214; padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                <span style="font-family: monospace; font-size: 1rem; color: #fff; font-weight: 700;" id="bancolombiaAcc">314-8849011-01</span>
+                <button type="button" class="btn-copy" onclick="navigator.clipboard.writeText('314884901101'); this.textContent='¡Copiado!'; setTimeout(()=>this.textContent='Copiar', 2000);" style="background: transparent; border: none; color: var(--apple-gold-light); font-size: 0.75rem; cursor: pointer; text-decoration: underline;">Copiar</button>
+              </div>
+              <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-top: 0.5rem;">Titular: Banquetes Almar • NIT: 901.458.320</p>
+            </div>
+
+            <!-- NEQUI / DAVIPLATA -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--apple-border); border-radius: 12px; padding: 1.2rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <strong style="color: #fff; font-size: 0.95rem;">🟣 Nequi / Daviplata / Bre-B</strong>
+                <span style="font-size: 0.75rem; color: #a855f7; background: rgba(168,85,247,0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">Digital</span>
+              </div>
+              <p style="font-size: 0.8rem; color: var(--apple-text-secondary); margin-bottom: 0.3rem;">Número de Transferencia:</p>
+              <div style="display: flex; justify-content: space-between; align-items: center; background: #121214; padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                <span style="font-family: monospace; font-size: 1rem; color: #fff; font-weight: 700;" id="nequiAcc">314 884 9011</span>
+                <button type="button" class="btn-copy" onclick="navigator.clipboard.writeText('3148849011'); this.textContent='¡Copiado!'; setTimeout(()=>this.textContent='Copiar', 2000);" style="background: transparent; border: none; color: var(--apple-gold-light); font-size: 0.75rem; cursor: pointer; text-decoration: underline;">Copiar</button>
+              </div>
+              <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-top: 0.5rem;">Acepta transferencias por Bre-B, Transfiya y Nequi</p>
+            </div>
+          </div>
+
+          <!-- FORMULARIO REPORTAR ABONO -->
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--apple-border); border-radius: 12px; padding: 1.5rem;">
+            <h4 style="font-size: 0.95rem; color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span>📝</span> Reportar Abono o Comprobante Realizado
+            </h4>
+            <form id="reportPaymentForm" style="display: flex; flex-direction: column; gap: 0.8rem;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+                <div>
+                  <label style="display: block; font-size: 0.78rem; color: #ccc; margin-bottom: 0.3rem;">Monto Abonado (COP) *</label>
+                  <input type="number" id="abonoMonto" required placeholder="Ej: 2000000" min="10000" step="50000" style="width: 100%; padding: 0.75rem 1rem; background: #121214; border: 1px solid var(--apple-border); border-radius: 8px; color: #fff; font-size: 0.9rem;" />
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.78rem; color: #ccc; margin-bottom: 0.3rem;">Canal Utilizado *</label>
+                  <select id="abonoMetodo" style="width: 100%; padding: 0.75rem 1rem; background: #121214; border: 1px solid var(--apple-border); border-radius: 8px; color: #fff; font-size: 0.9rem;">
+                    <option value="Transferencia Bancolombia">Transferencia Bancolombia</option>
+                    <option value="Nequi">Nequi</option>
+                    <option value="Daviplata">Daviplata</option>
+                    <option value="Efectivo en Salón Marinilla">Efectivo en Salón Marinilla</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.78rem; color: #ccc; margin-bottom: 0.3rem;">Número de Comprobante / Aprobación (Opcional)</label>
+                <input type="text" id="abonoReferencia" placeholder="Ej: Comprobante #1048293 o últimos 4 dígitos" style="width: 100%; padding: 0.75rem 1rem; background: #121214; border: 1px solid var(--apple-border); border-radius: 8px; color: #fff; font-size: 0.9rem;" />
+              </div>
+
+              <button type="submit" class="btn-apple-primary" style="margin-top: 0.5rem; padding: 0.9rem; justify-content: center;">
+                📲 Registrar y Enviar Soporte por WhatsApp
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module">
+    import { dbService } from "./js/firebase/db.js";
+
+    const form = document.getElementById("portalLookupForm");
+    const queryInput = document.getElementById("lookupQuery");
+
+    // Modal de Pagos
+    const paymentModal = document.getElementById("paymentModal");
+    const btnOpenPaymentModal = document.getElementById("btnOpenPaymentModal");
+    const btnClosePaymentModal = document.getElementById("btnClosePaymentModal");
+    const reportPaymentForm = document.getElementById("reportPaymentForm");
+
+    let reservaActual = null;
+
+    if (btnOpenPaymentModal && paymentModal) {
+      btnOpenPaymentModal.addEventListener("click", () => {
+        paymentModal.classList.add("open");
+      });
+    }
+
+    if (btnClosePaymentModal && paymentModal) {
+      btnClosePaymentModal.addEventListener("click", () => {
+        paymentModal.classList.remove("open");
+      });
+    }
+
+    if (paymentModal) {
+      paymentModal.addEventListener("click", (e) => {
+        if (e.target === paymentModal) paymentModal.classList.remove("open");
+      });
+    }
+
+    // Elementos del dashboard
+    const clientStatusBadge = document.getElementById("clientStatusBadge");
+    const clientEventTitle = document.getElementById("clientEventTitle");
+    const clientVenueText = document.getElementById("clientVenueText");
+    const clientCodeDisplay = document.getElementById("clientCodeDisplay");
+    const clientEventDate = document.getElementById("clientEventDate");
+    const clientGuestsCount = document.getElementById("clientGuestsCount");
+
+    const totalInversionDisplay = document.getElementById("totalInversionDisplay");
+    const totalAbonadoDisplay = document.getElementById("totalAbonadoDisplay");
+    const saldoPendienteDisplay = document.getElementById("saldoPendienteDisplay");
+    const paymentPercentageText = document.getElementById("paymentPercentageText");
+    const paymentProgressBar = document.getElementById("paymentProgressBar");
+    const paymentHistoryBody = document.getElementById("paymentHistoryBody");
+    const btnDownloadContract = document.getElementById("btnDownloadContract");
+
+    // Función de búsqueda
+    async function consultarEvento(query) {
+      const clean = String(query || "").replace(/\D/g, "");
+      const reservas = await dbService.getReservations();
+      const pagos = await dbService.getPayments();
+
+      const encontrada = reservas.find(r => 
+        String(r.telefono || "").replace(/\D/g, "").includes(clean) ||
+        String(r.id || "").toLowerCase() === query.toLowerCase() ||
+        String(r.cliente || "").toLowerCase().includes(query.toLowerCase())
+      ) || reservas[0];
+
+      if (!encontrada) return;
+      reservaActual = encontrada;
+
+      // Renderizar datos del evento
+      clientStatusBadge.textContent = encontrada.estado || "Confirmada";
+      clientEventTitle.textContent = `${encontrada.tipo_evento || "Evento"} • ${encontrada.cliente || "Cliente"}`;
+      clientVenueText.textContent = `📍 ${encontrada.locacion || encontrada.lugar || "Salón Almar Marinilla"}`;
+      clientCodeDisplay.textContent = `ALM-${encontrada.id.slice(-6).toUpperCase()}`;
+      clientEventDate.textContent = encontrada.fecha_evento || "Por definir";
+      clientGuestsCount.textContent = `${encontrada.personas || 0} personas`;
+
+      if (btnDownloadContract) {
+        btnDownloadContract.href = `./admin/contrato.html?id=${encontrada.id}`;
+      }
+
+      // Financiero
+      const total = Number(encontrada.total || 11800000);
+      const abono = Number(encontrada.anticipo || 4000000);
+      const saldo = Math.max(0, total - abono);
+      const pct = Math.min(100, Math.round((abono / total) * 100));
+
+      totalInversionDisplay.textContent = `$${total.toLocaleString("es-CO")}`;
+      totalAbonadoDisplay.textContent = `$${abono.toLocaleString("es-CO")}`;
+      saldoPendienteDisplay.textContent = `$${saldo.toLocaleString("es-CO")}`;
+      paymentPercentageText.textContent = `${pct}% Pagado`;
+      paymentProgressBar.style.width = `${pct}%`;
+
+      // Pagos de la reserva
+      const pagosReserva = pagos.filter(p => p.reservaId === encontrada.id);
+      if (pagosReserva.length > 0) {
+        paymentHistoryBody.innerHTML = pagosReserva.map(p => `
+          <tr>
+            <td>${p.fecha || new Date().toISOString().slice(0, 10)}</td>
+            <td>${p.concepto || "Abono"}</td>
+            <td>${p.metodo || "Transferencia"}</td>
+            <td style="text-align: right; color: #2ecc71; font-weight: 700;">+$${Number(p.monto).toLocaleString("es-CO")}</td>
+          </tr>
+        `).join("");
+      }
+
+      // Cuenta regresiva
+      iniciarCuentaRegresiva(encontrada.fecha_evento);
+    }
+
+    function iniciarCuentaRegresiva(fechaStr) {
+      if (!fechaStr) return;
+      const target = new Date(fechaStr + "T16:00:00").getTime();
+
+      function update() {
+        const now = new Date().getTime();
+        const diff = target - now;
+
+        if (diff <= 0) {
+          document.getElementById("cdDays").textContent = "0";
+          document.getElementById("cdHours").textContent = "0";
+          document.getElementById("cdMinutes").textContent = "0";
+          document.getElementById("cdSeconds").textContent = "0";
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById("cdDays").textContent = days;
+        document.getElementById("cdHours").textContent = hours;
+        document.getElementById("cdMinutes").textContent = minutes;
+        document.getElementById("cdSeconds").textContent = seconds;
+      }
+
+      update();
+      setInterval(update, 1000);
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      consultarEvento(queryInput.value.trim());
+    });
+
+    // Envío del Reporte de Pago
+    if (reportPaymentForm) {
+      reportPaymentForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const monto = Number(document.getElementById("abonoMonto").value || 0);
+        const metodo = document.getElementById("abonoMetodo").value;
+        const ref = document.getElementById("abonoReferencia").value.trim() || "Sin ref";
+
+        if (!reservaActual || monto <= 0) return;
+
+        // 1. Guardar en Base de Datos
+        await dbService.createPayment({
+          reservaId: reservaActual.id,
+          cliente: reservaActual.cliente,
+          monto: monto,
+          metodo: metodo,
+          concepto: `Abono reporte anfitrión (Ref: ${ref})`,
+          fecha: new Date().toISOString().slice(0, 10),
+          estado: "Pendiente Verificación"
+        });
+
+        // 2. Cerrar Modal y refrescar vista
+        paymentModal.classList.remove("open");
+        await consultarEvento(queryInput.value.trim() || reservaActual.telefono);
+
+        // 3. Abrir WhatsApp para enviar el comprobante fotográfico
+        const msg = 
+`💳 *REPORTE DE ABONO - BANQUETES ALMAR* 💳
+──────────────────────────────
+👤 *Anfitrión:* ${reservaActual.cliente}
+🔖 *Código de Evento:* ALM-${reservaActual.id.slice(-6).toUpperCase()}
+📅 *Fecha Evento:* ${reservaActual.fecha_evento}
+🏛️ *Locación:* ${reservaActual.locacion || reservaActual.lugar}
+──────────────────────────────
+💰 *Monto Abonado:* $${monto.toLocaleString("es-CO")} COP
+🏦 *Método / Canal:* ${metodo}
+🔢 *No. Comprobante:* ${ref}
+──────────────────────────────
+Adjunto en esta conversación la captura/foto del comprobante de transferencia para confirmación oficial.`;
+
+        window.open(`https://wa.me/573148849011?text=${encodeURIComponent(msg)}`, "_blank");
+      });
+    }
+
+    // Consulta inicial predeterminada
+    consultarEvento("3117892233");
+  </script>
+</body>
+</html>

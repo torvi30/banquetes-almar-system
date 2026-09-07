@@ -1,0 +1,561 @@
+/**
+ * Apple Design System & Architecture for Banquetes Almar
+ * Principles: Clarity, Fluidity, Depth, Delight, and Zero Friction.
+ */
+
+:root {
+  /* Apple Palette: Obsidian, Deep Graphite & Champagne Titanium */
+  --apple-black: #000000;
+  --apple-canvas: #09090b;
+  --apple-card: rgba(24, 24, 27, 0.72);
+  --apple-card-hover: rgba(39, 39, 42, 0.85);
+  --apple-border: rgba(255, 255, 255, 0.08);
+  --apple-border-active: rgba(212, 175, 55, 0.6);
+  
+  /* Champagne Gold & Titanium Accents */
+  --apple-gold: #d4af37;
+  --apple-gold-light: #f5e6b3;
+  --apple-gold-subtle: rgba(212, 175, 55, 0.12);
+  --apple-gold-gradient: linear-gradient(135deg, #fceec5 0%, #d4af37 50%, #aa8212 100%);
+  --apple-gold-glow: 0 0 30px rgba(212, 175, 55, 0.25);
+
+  /* Text Colors */
+  --apple-text-primary: #f4f4f5;
+  --apple-text-secondary: #a1a1aa;
+  --apple-text-tertiary: #71717a;
+
+  /* Physics & Transitions */
+  --apple-spring: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --apple-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --apple-radius-pill: 9999px;
+  --apple-radius-card: 22px;
+  --apple-radius-tile: 16px;
+  --apple-radius-sm: 10px;
+
+  /* Glassmorphism */
+  --apple-blur: blur(24px) saturate(190%);
+}
+
+/* ===================================================
+   GLOBAL CRAFTSMANSHIP & TYPOGRAPHY
+   =================================================== */
+body {
+  background-color: var(--apple-canvas);
+  color: var(--apple-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  selection-background-color: var(--apple-gold);
+}
+
+::selection {
+  background: rgba(212, 175, 55, 0.3);
+  color: #fff;
+}
+
+/* ===================================================
+   APPLE-STYLE STUDIO CONFIGURATOR
+   =================================================== */
+.studio-configurator {
+  position: relative;
+  background: radial-gradient(120% 120% at 50% 0%, rgba(35, 30, 18, 0.4) 0%, rgba(9, 9, 11, 0.95) 70%);
+  border: 1px solid var(--apple-border);
+  border-radius: var(--apple-radius-card);
+  padding: 3rem;
+  backdrop-filter: var(--apple-blur);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 768px) {
+  .studio-configurator {
+    padding: 1.5rem 1.2rem;
+    border-radius: 18px;
+  }
+}
+
+.studio-step-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 2.2rem 0 1.2rem;
+}
+
+.studio-step-header:first-of-type {
+  margin-top: 0;
+}
+
+.studio-step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--apple-gold-subtle);
+  border: 1px solid var(--apple-gold);
+  color: var(--apple-gold-light);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.studio-step-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--apple-text-primary);
+  margin: 0;
+}
+
+.studio-step-desc {
+  font-size: 0.88rem;
+  color: var(--apple-text-secondary);
+  margin-left: auto;
+}
+
+@media (max-width: 650px) {
+  .studio-step-desc {
+    display: none;
+  }
+}
+
+/* Segmented Control (Apple Pill Switch) */
+.segmented-control {
+  display: flex;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--apple-border);
+  border-radius: var(--apple-radius-pill);
+  padding: 4px;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.segmented-control::-webkit-scrollbar {
+  display: none;
+}
+
+.segment-item {
+  flex: 1;
+  min-width: 110px;
+  text-align: center;
+  padding: 0.75rem 1.2rem;
+  border-radius: var(--apple-radius-pill);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--apple-text-secondary);
+  transition: var(--apple-spring);
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.segment-item:hover {
+  color: #fff;
+}
+
+.segment-item.active {
+  background: var(--apple-gold-gradient);
+  color: #000;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+  transform: scale(1.02);
+}
+
+/* Interactive Visual Tiles (Cards with live selection state) */
+.interactive-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.selectable-tile {
+  background: var(--apple-card);
+  border: 1.5px solid var(--apple-border);
+  border-radius: var(--apple-radius-tile);
+  padding: 1.4rem;
+  cursor: pointer;
+  transition: var(--apple-spring);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  backdrop-filter: var(--apple-blur);
+}
+
+.selectable-tile:hover {
+  background: var(--apple-card-hover);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+.selectable-tile.active {
+  background: rgba(35, 30, 18, 0.85);
+  border-color: var(--apple-gold);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), var(--apple-gold-glow);
+  transform: translateY(-4px);
+}
+
+.tile-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+  display: inline-block;
+}
+
+.tile-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  background: var(--apple-gold-subtle);
+  color: var(--apple-gold-light);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.selectable-tile.active .tile-badge {
+  background: var(--apple-gold-gradient);
+  color: #000;
+  border-color: transparent;
+}
+
+.tile-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+
+.tile-desc {
+  font-size: 0.82rem;
+  color: var(--apple-text-secondary);
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+.tile-price {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--apple-gold-light);
+  margin-top: auto;
+}
+
+/* Tactile Guest Dial / Stepper */
+.guest-dial-container {
+  background: var(--apple-card);
+  border: 1px solid var(--apple-border);
+  border-radius: var(--apple-radius-tile);
+  padding: 1.8rem;
+  margin-top: 1rem;
+  backdrop-filter: var(--apple-blur);
+}
+
+.guest-dial-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.guest-count-display {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.guest-count-unit {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--apple-text-secondary);
+}
+
+.guest-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.preset-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--apple-border);
+  color: var(--apple-text-secondary);
+  padding: 0.45rem 1rem;
+  border-radius: var(--apple-radius-pill);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--apple-fast);
+}
+
+.preset-chip:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.preset-chip.active {
+  background: var(--apple-gold-gradient);
+  color: #000;
+  border-color: transparent;
+}
+
+/* Apple Slider */
+.apple-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  outline: none;
+  margin: 1.5rem 0 0.8rem;
+  transition: background 0.2s;
+}
+
+.apple-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid var(--apple-gold);
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 10px rgba(212, 175, 55, 0.5);
+  transition: transform 0.15s ease;
+}
+
+.apple-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.18);
+}
+
+.capacity-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: #88c0d0;
+  margin-top: 0.5rem;
+}
+
+/* Add-on Toggle Chips (Multi-Selectable) */
+.addon-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.addon-chip {
+  background: var(--apple-card);
+  border: 1px solid var(--apple-border);
+  border-radius: var(--apple-radius-sm);
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: var(--apple-fast);
+}
+
+.addon-chip:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--apple-card-hover);
+}
+
+.addon-chip.active {
+  background: rgba(35, 30, 18, 0.9);
+  border-color: var(--apple-gold);
+}
+
+.addon-chip-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.addon-checkbox-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--apple-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  transition: var(--apple-fast);
+}
+
+.addon-chip.active .addon-checkbox-circle {
+  background: var(--apple-gold);
+  border-color: var(--apple-gold);
+  color: #000;
+  font-weight: 700;
+}
+
+/* ===================================================
+   FLOATING APPLE DOCK / PRICE CONCIERGE
+   =================================================== */
+.studio-floating-dock {
+  position: sticky;
+  bottom: 1.5rem;
+  z-index: 900;
+  margin-top: 2.5rem;
+  background: rgba(18, 18, 22, 0.88);
+  border: 1px solid var(--apple-gold);
+  border-radius: var(--apple-radius-card);
+  padding: 1.2rem 2rem;
+  backdrop-filter: var(--apple-blur);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), var(--apple-gold-glow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  transition: var(--apple-spring);
+}
+
+@media (max-width: 850px) {
+  .studio-floating-dock {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.2rem;
+    bottom: 0.8rem;
+  }
+}
+
+.dock-pricing {
+  display: flex;
+  flex-direction: column;
+}
+
+.dock-total-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+}
+
+.dock-total-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.dock-per-person {
+  font-size: 0.95rem;
+  color: var(--apple-gold-light);
+  font-weight: 600;
+}
+
+.dock-subtext {
+  font-size: 0.8rem;
+  color: var(--apple-text-secondary);
+}
+
+.dock-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.btn-apple-primary {
+  background: var(--apple-gold-gradient);
+  color: #000000;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.95rem 1.8rem;
+  border-radius: var(--apple-radius-pill);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
+  transition: var(--apple-spring);
+}
+
+.btn-apple-primary:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.5);
+}
+
+.btn-apple-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.95rem 1.5rem;
+  border-radius: var(--apple-radius-pill);
+  border: 1px solid var(--apple-border);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--apple-spring);
+}
+
+.btn-apple-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Modal de Cotización Formal Imprimible */
+.apple-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(12px);
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.apple-modal-overlay.open {
+  display: flex;
+}
+
+.apple-modal-content {
+  background: #18181b;
+  border: 1px solid var(--apple-gold);
+  border-radius: var(--apple-radius-card);
+  max-width: 620px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2.5rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), var(--apple-gold-glow);
+  position: relative;
+}
+
+.apple-modal-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

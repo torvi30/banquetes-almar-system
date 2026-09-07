@@ -3,190 +3,626 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Banquetes Almar</title>
+  <title>Banquetes Almar | Salón de Eventos, Catering y Alquiler en Marinilla Antioquia</title>
+  <meta name="description" content="Organización de bodas, 15 años, grados, catering de gala y alquiler de mobiliario (sillas Tiffany, carpas, mesas) en Marinilla y Oriente Antioqueño." />
+  
+  <!-- Google Fonts: Playfair Display & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Estilos -->
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/ecommerce.css" />
+  <link rel="stylesheet" href="./css/apple-design.css" />
 </head>
 <body>
-  <!-- HEADER -->
-  <header class="header" id="header">
+
+  <!-- BARRA SUPERIOR DE CONTACTO -->
+  <div style="background: #050507; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 0.55rem 0; font-size: 0.85rem; color: var(--apple-text-secondary);">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+      <div>
+        <span>📍 Calle 29 n° 28-25, Marinilla, Antioquia</span>
+        <span style="margin: 0 0.5rem; opacity: 0.4;">|</span>
+        <span>Oriente Antioqueño: Marinilla, Rionegro, El Retiro, La Ceja, Guarne</span>
+      </div>
+      <div>
+        <span>📞 <a href="tel:+573148849011" style="color: var(--apple-gold-light); font-weight: 600;">314 8849011</a> / (604) 548 5352</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER / NAVEGACIÓN APPLE STYLE -->
+  <header class="header" id="header" style="position: sticky; top: 0; z-index: 999; backdrop-filter: var(--apple-blur); background: rgba(9, 9, 11, 0.85); border-bottom: 1px solid var(--apple-border);">
     <nav class="navbar container">
       <a href="#inicio" class="brand">
-        <img src="./images/logo-almar.png" alt="Logo Banquetes Almar" class="brand-logo" />
+        <img src="./images/logo-almar.png" alt="Logo Banquetes Almar" class="brand-logo" onerror="this.style.display='none'" />
         <div class="brand-text">
-          <span class="logo-main">Banquetes Almar</span>
-          <span class="logo-sub">Banquetes y recepciones</span>
+          <span class="logo-main" style="letter-spacing: -0.5px;">Banquetes Almar</span>
+          <span class="logo-sub">Marinilla • Salón & Eventos</span>
         </div>
       </a>
 
-      <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú">☰</button>
 
       <ul class="nav-links" id="navLinks">
         <li><a href="#inicio">Inicio</a></li>
-        <li><a href="#servicios">Servicios</a></li>
-        <li><a href="#razones">Por qué elegirnos</a></li>
-        <li><a href="./portafolio-servicios.html">Galería</a></li>
-        <li><a href="#cotizacion">Cotización</a></li>
+        <li><a href="#sedes" style="color: var(--apple-gold-light); font-weight: 600;">🏛️ Sedes</a></li>
+        <li><a href="#paquetes">Paquetes</a></li>
+        <li><a href="#cotizador" style="color: var(--apple-gold-light); font-weight: 700;">✨ Diseñar Evento</a></li>
+        <li><a href="#alquiler">Alquiler Mobiliario</a></li>
+        <li><a href="#galeria">Galería</a></li>
         <li><a href="#ubicacion">Ubicación</a></li>
-        <li><a href="#contacto">Contacto</a></li>
+        <li><a href="./portal-cliente.html" style="color: #f5eedc; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem;">👑 Mi Evento</a></li>
+        <li>
+          <button class="btn btn-secondary open-cart-btn" type="button" style="padding: 0.5rem 1.1rem; display: inline-flex; align-items: center; gap: 0.4rem; position: relative;">
+            🛒 Carrito <span class="cart-count-badge">0</span>
+          </button>
+        </li>
+        <li><a href="./admin/login.html" class="btn btn-primary" style="padding: 0.5rem 1.1rem; font-size: 0.85rem;">Portal Admin</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
-    <!-- HERO -->
+    <!-- HERO SECTION -->
     <section class="hero" id="inicio">
-      <div class="hero-overlay"></div>
+      <div class="hero-overlay" style="background: radial-gradient(circle at center, rgba(10,10,12,0.4) 0%, rgba(5,5,7,0.85) 100%);"></div>
       <div class="container hero-content">
-        <p class="hero-tag">Banquetes y recepciones</p>
-        <h1>Haz de tu evento un momento inolvidable</h1>
-        <p>
-          Organización, montaje, decoración y atención profesional para bodas,
-          cumpleaños, eventos empresariales y celebraciones especiales.
+        <p class="hero-tag" style="background: rgba(212,175,55,0.15); border: 1px solid var(--apple-gold); color: var(--apple-gold-light); display: inline-block; padding: 0.35rem 1rem; border-radius: 999px; margin-bottom: 1.5rem;">
+          Salón de Gala en Marinilla & Finca Campestre en El Peñol
+        </p>
+        <h1 style="font-size: clamp(2.4rem, 5vw, 4.2rem); letter-spacing: -1px; font-family: 'Playfair Display', serif;">
+          Celebra Momentos Inolvidables con Elegancia Excepcional
+        </h1>
+        <p style="max-width: 720px; margin: 0 auto; color: var(--apple-text-secondary); font-size: 1.15rem; line-height: 1.7;">
+          Bodas de ensueño, Quinceañeras mágicas, Grados y Eventos Empresariales. 
+          Dos sedes exclusivas en el Oriente Antioqueño: Salón de Gala en Marinilla y Finca Campestre en El Peñol, con alta gastronomía y producción integral.
         </p>
 
-        <div class="hero-actions">
-          <a href="#cotizacion" class="btn btn-primary">Solicitar cotización</a>
-          <a href="./portafolio-servicios.html" class="btn btn-secondary">Ver galería</a>
+        <div class="hero-actions" style="margin-top: 2.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <a href="#cotizador" class="btn-apple-primary" style="font-size: 1.05rem; padding: 1.1rem 2.2rem;">
+            ✨ Configurar Evento al Instante
+          </a>
+          <a href="#sedes" class="btn-apple-secondary" style="font-size: 1.05rem; padding: 1.1rem 2rem;">
+            🏛️ Conocer Nuestras 2 Sedes
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- SERVICIOS -->
-    <section class="section" id="servicios">
+    <!-- SECCIÓN DE NUESTRAS DOS SEDES -->
+    <section class="section" id="sedes" style="background: #09090c; padding: 5rem 0;">
       <div class="container">
         <div class="section-heading reveal">
-          <p class="section-label">Servicios</p>
-          <h2>Todo lo que necesitas para tu evento</h2>
-          <p>Montajes, mobiliario, decoración, atención y soluciones completas.</p>
+          <p class="section-label">Locaciones Exclusivas</p>
+          <h2>Nuestras Sedes en el Oriente</h2>
+          <p>Dos escenarios diseñados para crear atmósferas inolvidables según tu estilo de celebración.</p>
         </div>
 
-        <div class="services-grid" id="servicesGrid">
-          <article class="service-card reveal">
-            <h3>Decoración</h3>
-            <p>Ambientación elegante y personalizada para cada ocasión.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2rem; margin-top: 2.5rem;">
+          
+          <!-- SEDE 1: SALÓN MARINILLA -->
+          <article class="package-card" style="border-color: var(--apple-border); background: var(--apple-card);">
+            <div class="package-image-wrap" style="height: 260px;">
+              <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1000&q=80" alt="Salón Banquetes Almar Marinilla" class="package-image" />
+              <span class="package-badge" style="background: var(--apple-gold-gradient); color: #000;">Sede 1 • Marinilla</span>
+            </div>
+            <div class="package-body">
+              <h3 class="package-title" style="font-size: 1.6rem;">Salón de Gala Almar</h3>
+              <p class="package-desc" style="color: var(--apple-gold-light); font-weight: 500;">
+                📍 Calle 29 n° 28-25, Marinilla, Antioquia
+              </p>
+              <p class="package-desc">
+                Un recinto cerrado elegante, climatizado y con excelente acústica para rumba y fiesta. Ubicación céntrica de fácil acceso para todos tus invitados.
+              </p>
+
+              <ul class="package-inclusions-list">
+                <li>Capacidad confortable para hasta 200 invitados</li>
+                <li>Acceso accesible para personas con movilidad reducida</li>
+                <li>Cocina industrial propia para servicio a la mesa al instante</li>
+                <li>Tarima para sonido, cabezas móviles y pista de baile</li>
+                <li>Ideal para bodas clásicas, 15 años y grados formales</li>
+              </ul>
+
+              <button type="button" class="btn-apple-primary select-venue-btn" data-venue="salon_almar" style="width: 100%; justify-content: center; margin-top: 1rem;">
+                Cotizar en Salón Marinilla
+              </button>
+            </div>
           </article>
 
-          <article class="service-card reveal">
-            <h3>Mobiliario</h3>
-            <p>Sillas, mesas, carpas y elementos para eventos de diferentes tamaños.</p>
-          </article>
+          <!-- SEDE 2: FINCA EL PEÑOL -->
+          <article class="package-card" style="border-color: var(--apple-border); background: var(--apple-card);">
+            <div class="package-image-wrap" style="height: 260px;">
+              <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1000&q=80" alt="Finca Campestre Almar El Peñol" class="package-image" />
+              <span class="package-badge" style="background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%); color: #000;">Sede 2 • El Peñol</span>
+            </div>
+            <div class="package-body">
+              <h3 class="package-title" style="font-size: 1.6rem;">Finca Campestre Almar</h3>
+              <p class="package-desc" style="color: #88c0d0; font-weight: 500;">
+                🌄 Sector Campestre, El Peñol, Antioquia (Cerca a la Represa)
+              </p>
+              <p class="package-desc">
+                Naturaleza, atardeceres dorados y aire puro. El escenario soñado para celebraciones campestres, ceremonias nupciales en jardín y recepciones boho-chic.
+              </p>
 
-          <article class="service-card reveal">
-            <h3>Recepciones</h3>
-            <p>Atención profesional y organización de eventos sociales y corporativos.</p>
+              <ul class="package-inclusions-list">
+                <li>Capacidad para hasta 250 personas en áreas verdes</li>
+                <li>Jardines para ceremonias campestres al aire libre</li>
+                <li>Quiosco estructural con iluminación de hadas cálida</li>
+                <li>Zona lounge con fogata nocturna (Fire pit)</li>
+                <li>Ideal para bodas campestres, aniversarios y fiestas al aire libre</li>
+              </ul>
+
+              <button type="button" class="btn-apple-primary select-venue-btn" data-venue="finca_penol" style="width: 100%; justify-content: center; margin-top: 1rem; background: linear-gradient(135deg, #e6c77b 0%, #9face6 100%);">
+                Cotizar en Finca El Peñol
+              </button>
+            </div>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- RAZONES -->
-    <section class="section reasons" id="razones">
+    <!-- SECCIÓN PAQUETES TODO INCLUIDO -->
+    <section class="section" id="paquetes">
       <div class="container">
         <div class="section-heading reveal">
-          <p class="section-label">Por qué elegirnos</p>
-          <h2>Experiencia, elegancia y confianza</h2>
-          <p>Nos enfocamos en cada detalle para que disfrutes sin estrés.</p>
+          <p class="section-label">Experiencias Diseñadas</p>
+          <h2>Colección de Paquetes Exclusivos</h2>
+          <p>
+            Diseñados minuciosamente para que los anfitriones disfruten sin preocupaciones.
+            Incluyen salón o montaje en finca, banquete gourmet, decoración floral, mobiliario Tiffany y producción técnica.
+          </p>
         </div>
 
-        <div class="reasons-grid">
-          <article class="reason-card reveal">
-            <h3>Montajes elegantes</h3>
-            <p>Diseños visuales que hacen lucir tu evento de forma profesional.</p>
-          </article>
-
-          <article class="reason-card reveal">
-            <h3>Atención personalizada</h3>
-            <p>Adaptamos cada servicio a tu necesidad, presupuesto y estilo.</p>
-          </article>
-
-          <article class="reason-card reveal">
-            <h3>Compromiso real</h3>
-            <p>Responsabilidad y acompañamiento desde la planeación hasta el evento.</p>
-          </article>
+        <div class="packages-grid" id="packagesListContainer">
+          <!-- Cargados desde Firestore / Seed Data -->
         </div>
       </div>
     </section>
 
-    <!-- CTA GALERIA -->
-    <section class="section public-gallery-cta-section">
-      <div class="container">
-        <div class="public-gallery-cta-card">
-          <div>
-            <p class="section-label">Galería</p>
-            <h3>Conoce nuestros montajes y servicios</h3>
-            <p>Explora fotos reales organizadas por secciones.</p>
-          </div>
-
-          <a href="./portafolio-servicios.html" class="btn btn-primary">Ver galería</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- COTIZACION -->
-    <section class="section quote" id="cotizacion">
+    <!-- CONFIGURADOR DE EVENTO APPLE STYLE (STUDIO CONFIGURATOR) -->
+    <section class="section" id="cotizador" style="background: var(--apple-canvas); padding: 5rem 0;">
       <div class="container">
         <div class="section-heading reveal">
-          <p class="section-label">Cotización</p>
-          <h2>Cuéntanos tu evento</h2>
-          <p>Déjanos tus datos y te contactamos.</p>
+          <p class="section-label">Configurador Interactivo</p>
+          <h2>Diseña Tu Evento a la Medida</h2>
+          <p>Una experiencia intuitiva y fluida para personalizar cada elemento de tu celebración con cálculo en tiempo real.</p>
         </div>
 
-        <form class="quote-form" id="quoteForm">
-          <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" required />
+        <div class="studio-configurator">
+          <!-- PASO 1: TIPO DE CELEBRACIÓN -->
+          <div class="studio-step-header">
+            <span class="studio-step-number">1</span>
+            <h3 class="studio-step-title">Tipo de Celebración</h3>
+            <span class="studio-step-desc">Selecciona la ocasión especial</span>
           </div>
 
-          <div class="form-group">
-            <label for="telefono">Teléfono</label>
-            <input type="text" id="telefono" required />
+          <div class="segmented-control">
+            <button type="button" class="segment-item segment-celebration active" data-type="boda">💍 Boda</button>
+            <button type="button" class="segment-item segment-celebration" data-type="quince">👑 Quince Años</button>
+            <button type="button" class="segment-item segment-celebration" data-type="grado">🎓 Grado</button>
+            <button type="button" class="segment-item segment-celebration" data-type="social">🕊️ Comunión / Bautizo</button>
+            <button type="button" class="segment-item segment-celebration" data-type="corporativo">👔 Corporativo</button>
           </div>
 
-          <div class="form-group">
-            <label for="evento">Tipo de evento</label>
-            <input type="text" id="evento" required />
+          <!-- PASO 2: INVITADOS -->
+          <div class="studio-step-header">
+            <span class="studio-step-number">2</span>
+            <h3 class="studio-step-title">Número de Invitados</h3>
+            <span class="studio-step-desc">Desliza o toca un preset</span>
           </div>
 
-          <div class="form-group">
-            <label for="personas">Cantidad de personas</label>
-            <input type="number" id="personas" min="1" required />
+          <div class="guest-dial-container">
+            <div class="guest-dial-header">
+              <div class="guest-count-display">
+                <span id="guestCountDisplay">80</span>
+                <span class="guest-count-unit">invitados</span>
+              </div>
+              <div class="guest-presets">
+                <button type="button" class="preset-chip" data-guests="35">35</button>
+                <button type="button" class="preset-chip" data-guests="50">50</button>
+                <button type="button" class="preset-chip active" data-guests="80">80</button>
+                <button type="button" class="preset-chip" data-guests="100">100</button>
+                <button type="button" class="preset-chip" data-guests="150">150</button>
+                <button type="button" class="preset-chip" data-guests="200">200</button>
+              </div>
+            </div>
+
+            <input type="range" id="guestRangeSlider" class="apple-slider" min="20" max="300" step="5" value="80" />
+            <div class="capacity-indicator" id="capacityNote">
+              ✨ <strong>Capacidad Perfecta:</strong> Ajuste ideal para nuestro Salón en Marinilla (Calle 29 # 28-25).
+            </div>
           </div>
 
-          <div class="form-group full-width">
-            <label for="mensaje">Mensaje</label>
-            <textarea id="mensaje" rows="4"></textarea>
+          <!-- PASO 3: LOCACIÓN -->
+          <div class="studio-step-header">
+            <span class="studio-step-number">3</span>
+            <h3 class="studio-step-title">Locación del Evento</h3>
+            <span class="studio-step-desc">Salón propio o finca campestre</span>
           </div>
 
-          <div class="form-group full-width">
-            <button type="submit" class="btn btn-primary">Enviar solicitud</button>
+          <div class="interactive-tiles-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+            <div class="selectable-tile tile-location active" data-location="salon_almar">
+              <span class="tile-badge">Sede Urbana</span>
+              <div>
+                <span class="tile-icon">🏛️</span>
+                <h4 class="tile-title">Salón de Gala (Marinilla)</h4>
+                <p class="tile-desc">Calle 29 # 28-25 Marinilla. Climatizado, acústica para fiesta, cocina industrial y fácil acceso.</p>
+              </div>
+              <span class="tile-price">Incluido en la propuesta</span>
+            </div>
+
+            <div class="selectable-tile tile-location" data-location="finca_penol">
+              <span class="tile-badge" style="background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%); color: #000;">Sede Campestre</span>
+              <div>
+                <span class="tile-icon">🌄</span>
+                <h4 class="tile-title">Finca Almar (El Peñol)</h4>
+                <p class="tile-desc">Entorno campestre cerca a la represa. Jardines para ceremonias, quiosco nocturno, fogata y vista natural.</p>
+              </div>
+              <span class="tile-price">+$300.000 uso campestre</span>
+            </div>
+
+            <div class="selectable-tile tile-location" data-location="finca_oriente">
+              <span class="tile-badge">A Domicilio</span>
+              <div>
+                <span class="tile-icon">🚚</span>
+                <h4 class="tile-title">Tu Propia Finca (Oriente)</h4>
+                <p class="tile-desc">Traslado de menaje, cocina y montaje a fincas en Rionegro, El Retiro, Guarne, La Ceja o El Carmen.</p>
+              </div>
+              <span class="tile-price">+$450.000 logística</span>
+            </div>
           </div>
-        </form>
+
+          <!-- PASO 4: GASTRONOMÍA / MENÚ -->
+          <div class="studio-step-header">
+            <span class="studio-step-number">4</span>
+            <h3 class="studio-step-title">Experiencia Gastronómica</h3>
+            <span class="studio-step-desc">Menús de gala y degustación previa</span>
+          </div>
+
+          <div class="interactive-tiles-grid">
+            <div class="selectable-tile tile-catering" data-catering="tradicional">
+              <div>
+                <span class="tile-icon">🍲</span>
+                <h4 class="tile-title">Menú Tradicional</h4>
+                <p class="tile-desc">Plato principal con opciones de carnes seleccionadas, guarnición y bebida natural.</p>
+              </div>
+              <span class="tile-price">$38.000 / persona</span>
+            </div>
+
+            <div class="selectable-tile tile-catering active" data-catering="gala_2t">
+              <span class="tile-badge">Más Popular</span>
+              <div>
+                <span class="tile-icon">🍽️</span>
+                <h4 class="tile-title">Menú de Gala (2 Tiempos)</h4>
+                <p class="tile-desc">Entrada gourmet, plato fuerte selecto (lomo o pechuga rellena), postre artesanal y bebidas.</p>
+              </div>
+              <span class="tile-price">$52.000 / persona</span>
+            </div>
+
+            <div class="selectable-tile tile-catering" data-catering="gourmet_3t">
+              <span class="tile-badge">Alta Gama</span>
+              <div>
+                <span class="tile-icon">🍷</span>
+                <h4 class="tile-title">Menú Imperial (3 Tiempos)</h4>
+                <p class="tile-desc">Degustación previa para novios/anfitriones, 3 tiempos de alta cocina y cristalería de gala.</p>
+              </div>
+              <span class="tile-price">$69.000 / persona</span>
+            </div>
+
+            <div class="selectable-tile tile-catering" data-catering="coctel">
+              <div>
+                <span class="tile-icon">🍸</span>
+                <h4 class="tile-title">Estación Cóctel & Pasabocas</h4>
+                <p class="tile-desc">Mesa interactiva con variedades de pasabocas calientes y fríos, postres y coctelería.</p>
+              </div>
+              <span class="tile-price">$34.000 / persona</span>
+            </div>
+          </div>
+
+          <!-- PASO 5: MOBILIARIO Y AMBIENTACIÓN -->
+          <div class="studio-step-header">
+            <span class="studio-step-number">5</span>
+            <h3 class="studio-step-title">Mobiliario & Estilo</h3>
+            <span class="studio-step-desc">El confort y la estética de tus invitados</span>
+          </div>
+
+          <div class="interactive-tiles-grid">
+            <div class="selectable-tile tile-staging active" data-staging="tiffany_oro">
+              <span class="tile-badge">Elegancia Clásica</span>
+              <div>
+                <span class="tile-icon">🪑</span>
+                <h4 class="tile-title">Sillas Tiffany Doradas</h4>
+                <p class="tile-desc">Con cojinería acolchada de lujo, mesas vestidas y mantelería en finos textiles.</p>
+              </div>
+              <span class="tile-price">$16.000 / puesto</span>
+            </div>
+
+            <div class="selectable-tile tile-staging" data-staging="tiffany_blanca">
+              <div>
+                <span class="tile-icon">🤍</span>
+                <h4 class="tile-title">Sillas Tiffany Blancas</h4>
+                <p class="tile-desc">Estilo fresco, minimalista y luminoso. Excelente para recepciones diurnas y quinceaños.</p>
+              </div>
+              <span class="tile-price">$15.000 / puesto</span>
+            </div>
+
+            <div class="selectable-tile tile-staging" data-staging="crossback">
+              <span class="tile-badge">Tendencia Vintage</span>
+              <div>
+                <span class="tile-icon">🪵</span>
+                <h4 class="tile-title">Crossback Madera Rústica</h4>
+                <p class="tile-desc">Madera natural artesanal, favorita para bodas campestres y boho chic en el Oriente.</p>
+              </div>
+              <span class="tile-price">$22.000 / puesto</span>
+            </div>
+          </div>
+
+          <!-- PASO 6: PRODUCCIÓN TÉCNICA Y ADICIONALES -->
+          <div class="studio-step-header">
+            <span class="studio-step-number">6</span>
+            <h3 class="studio-step-title">Producción Especial & Adicionales</h3>
+            <span class="studio-step-desc">Toca para activar o desactivar servicios</span>
+          </div>
+
+          <div class="addon-chips-grid">
+            <div class="addon-chip active" data-addon="arco_floral">
+              <div class="addon-chip-info">
+                <span class="addon-checkbox-circle">✓</span>
+                <div>
+                  <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🌸 Arco Floral Natural</div>
+                  <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Arco o backing fotográfico</div>
+                </div>
+              </div>
+              <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$650.000</span>
+            </div>
+
+            <div class="addon-chip active" data-addon="dj_robotica">
+              <div class="addon-chip-info">
+                <span class="addon-checkbox-circle">✓</span>
+                <div>
+                  <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🎧 DJ Pro & Luces Robóticas</div>
+                  <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">6 horas de fiesta y cabezas móviles</div>
+                </div>
+              </div>
+              <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$950.000</span>
+            </div>
+
+            <div class="addon-chip" data-addon="pista_led">
+              <div class="addon-chip-info">
+                <span class="addon-checkbox-circle"></span>
+                <div>
+                  <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">✨ Pista de Baile LED</div>
+                  <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Piso iluminado interactivo</div>
+                </div>
+              </div>
+              <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$600.000</span>
+            </div>
+
+            <div class="addon-chip" data-addon="hora_loca">
+              <div class="addon-chip-info">
+                <span class="addon-checkbox-circle"></span>
+                <div>
+                  <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🎭 Show de Hora Loca</div>
+                  <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Animación y cotillón temático</div>
+                </div>
+              </div>
+              <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$380.000</span>
+            </div>
+
+            <div class="addon-chip" data-addon="cabina_360">
+              <div class="addon-chip-info">
+                <span class="addon-checkbox-circle"></span>
+                <div>
+                  <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">📹 Cabina 360° PhotoBooth</div>
+                  <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Videos instantáneos para invitados</div>
+                </div>
+              </div>
+              <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$420.000</span>
+            </div>
+
+            <div class="addon-chip" data-addon="brindis_champagne">
+              <div class="addon-chip-info">
+                <span class="addon-checkbox-circle"></span>
+                <div>
+                  <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🥂 Brindis con Champaña</div>
+                  <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Copas de cristal para todos</div>
+                </div>
+              </div>
+              <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$280.000</span>
+            </div>
+          </div>
+
+          <!-- DOCK FLOTANTE APPLE CON EL PRECIO Y ACCIONES -->
+          <div class="studio-floating-dock">
+            <div class="dock-pricing">
+              <span class="dock-subtext">Inversión Total Estimada</span>
+              <div class="dock-total-row">
+                <span class="dock-total-val" id="appleTotalLive">$0</span>
+                <span class="dock-per-person">(<span id="applePerPersonLive">$0</span> / invitado)</span>
+              </div>
+              <span class="dock-subtext">Anticipo sugerido de separación (30%): <strong id="appleDepositLive" style="color: #fff;">$0</strong></span>
+            </div>
+
+            <div class="dock-actions">
+              <button type="button" class="btn-apple-secondary" id="applePreviewBtn">
+                📄 Ver Propuesta Formal (PDF)
+              </button>
+              <button type="button" class="btn-apple-primary" id="appleBookBtn">
+                📲 Enviar a WhatsApp Almar
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- UBICACION -->
+    <!-- TIENDA E-COMMERCE DE ALQUILER DE MOBILIARIO -->
+    <section class="section" id="alquiler">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="section-label">Alquiler para Fincas y Eventos</p>
+          <h2>Catálogo de Mobiliario, Carpas y Menaje</h2>
+          <p>
+            ¿Ya tienes el lugar pero necesitas el equipamiento? Alquila directamente sillas Tiffany, carpas estructurales, 
+            mesas, manteles y vajilla con entrega en Marinilla y todo el Oriente Antioqueño.
+          </p>
+        </div>
+
+        <!-- Filtros de categoría -->
+        <div class="rental-filter-bar">
+          <button class="rental-cat-btn active" data-category="todos">Todos los artículos</button>
+          <button class="rental-cat-btn" data-category="sillas">Sillas Tiffany & Madera</button>
+          <button class="rental-cat-btn" data-category="mesas">Mesas y Tablones</button>
+          <button class="rental-cat-btn" data-category="carpas">Carpas Impermeables</button>
+          <button class="rental-cat-btn" data-category="menaje">Menaje y Cristalería</button>
+          <button class="rental-cat-btn" data-category="decoracion">Decoración & Iluminación</button>
+        </div>
+
+        <!-- Cuadrícula de productos de alquiler -->
+        <div class="services-grid" id="rentalProductsGrid">
+          <!-- Renderizado dinámico desde db.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- GALERÍA DE MONTAJES REALES -->
+    <section class="section" id="galeria" style="background: #08080a;">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="section-label">Nuestro Portafolio</p>
+          <h2>Galería de Eventos Realizados</h2>
+          <p>Bodas, quinceañeras y montajes reales en nuestro salón en Marinilla y fincas del Oriente Antioqueño.</p>
+        </div>
+
+        <div class="rental-filter-bar" id="galleryFilters">
+          <!-- Filtros de categoría de fotos -->
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+          <!-- Fotos dinámicas -->
+        </div>
+      </div>
+    </section>
+
+    <!-- UBICACIÓN & CONTACTO EN MARINILLA -->
     <section class="section" id="ubicacion">
       <div class="container">
         <div class="section-heading reveal">
-          <p class="section-label">Ubicación</p>
-          <h2>Estamos para atenderte</h2>
-          <p>Contáctanos y agenda tu evento con nosotros.</p>
+          <p class="section-label">Visítanos</p>
+          <h2>Ubicación & Contacto</h2>
+          <p>Estamos ubicados en el centro de eventos de Marinilla, Antioquia. Atendemos con cita previa para asesoría y degustación.</p>
         </div>
-      </div>
-    </section>
 
-    <!-- CONTACTO -->
-    <section class="section" id="contacto">
-      <div class="container">
-        <div class="section-heading reveal">
-          <p class="section-label">Contacto</p>
-          <h2>Hablemos</h2>
-          <p>Escríbenos y con gusto te ayudamos.</p>
+        <div class="location-card" style="background: var(--apple-card); border-color: var(--apple-border); backdrop-filter: var(--apple-blur);">
+          <div>
+            <h3 style="font-family: 'Playfair Display', serif; color: var(--apple-gold-light); font-size: 1.8rem; margin-bottom: 1rem;">
+              Salón Banquetes Almar
+            </h3>
+            <p style="color: var(--apple-text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+              Un espacio versátil, climatizado y con acústica profesional. Capacidad de hasta 200 personas, baños accesibles y zona para cocina y servicio.
+            </p>
+
+            <ul style="color: #dedede; font-size: 0.95rem; display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem;">
+              <li>📍 <strong>Dirección:</strong> Calle 29 n° 28-25, Marinilla, Colombia</li>
+              <li>📱 <strong>Celular & WhatsApp:</strong> +57 314 8849011</li>
+              <li>☎️ <strong>Teléfono fijo:</strong> (604) 548 5352</li>
+              <li>✉️ <strong>Correo electrónico:</strong> banquetes-almar@hotmail.com</li>
+              <li>⏰ <strong>Horario de atención:</strong> Lunes a Sábado con cita previa</li>
+            </ul>
+
+            <a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20deseo%20agendar%20una%20visita%20al%20salón%20en%20Marinilla" target="_blank" class="btn-apple-primary">
+              Agendar Visita al Salón
+            </a>
+          </div>
+
+          <div class="location-map-wrap">
+            <iframe 
+              src="https://maps.google.com/maps?q=Marinilla%20Antioquia%20Calle%2029%2028-25&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+              loading="lazy" 
+              title="Mapa de ubicación Banquetes Almar Marinilla"
+              allowfullscreen>
+            </iframe>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <script src="./js/main.js"></script>
+  <!-- PIE DE PÁGINA APPLE MINIMALISTA -->
+  <footer style="background: #050507; border-top: 1px solid var(--apple-border); padding: 3.5rem 0 2rem; color: var(--apple-text-secondary); font-size: 0.9rem;">
+    <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;">
+      <div>
+        <h4 style="color: var(--apple-gold-light); font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 0.8rem;">Banquetes Almar</h4>
+        <p>Especialistas en bodas, 15 años, eventos corporativos, catering de gala y alquiler de mobiliario en Marinilla y todo el Oriente Antioqueño.</p>
+      </div>
+
+      <div>
+        <h4 style="color: var(--apple-gold-light); font-size: 0.9rem; margin-bottom: 0.8rem; text-transform: uppercase;">Servicios</h4>
+        <ul style="display: flex; flex-direction: column; gap: 0.4rem;">
+          <li><a href="#paquetes">Bodas de Ensueño</a></li>
+          <li><a href="#paquetes">Quince Años de Gala</a></li>
+          <li><a href="#paquetes">Grados & Promociones</a></li>
+          <li><a href="#alquiler">Alquiler de Sillas Tiffany</a></li>
+          <li><a href="#alquiler">Carpas y Estructuras</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 style="color: var(--apple-gold-light); font-size: 0.9rem; margin-bottom: 0.8rem; text-transform: uppercase;">Oriente Antioqueño</h4>
+        <p>Prestamos servicio en: Marinilla, Rionegro, Guarne, El Carmen de Viboral, El Santuario, El Retiro, La Ceja y San Vicente Ferrer.</p>
+      </div>
+
+      <div>
+        <h4 style="color: var(--apple-gold-light); font-size: 0.9rem; margin-bottom: 0.8rem; text-transform: uppercase;">Contacto & Accesos</h4>
+        <p>📱 +57 314 8849011</p>
+        <p>📍 Calle 29 n° 28-25, Marinilla</p>
+        <p style="margin-top: 0.8rem;"><a href="./portal-cliente.html" style="color: var(--apple-gold-light); text-decoration: underline;">👑 Portal del Anfitrión (Mi Evento)</a></p>
+        <p style="margin-top: 0.3rem;"><a href="./admin/login.html" style="color: var(--apple-text-secondary); text-decoration: underline; font-size: 0.8rem;">Acceso Administrativo</a></p>
+      </div>
+    </div>
+
+    <div class="container" style="text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 1.5rem; font-size: 0.82rem;">
+      <p>© 2026 Banquetes Almar. Diseñado con excelencia y precisión para Marinilla, Antioquia.</p>
+    </div>
+  </footer>
+
+  <!-- BOTÓN FLOTANTE DE WHATSAPP -->
+  <a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20deseo%20información%20sobre%20sus%20servicios%20de%20eventos" class="whatsapp-float-btn" target="_blank" rel="noopener noreferrer">
+    <span style="font-size: 1.3rem;">💬</span>
+    <span>WhatsApp Almar</span>
+  </a>
+
+  <!-- BOTÓN FLOTANTE DEL CARRITO -->
+  <button class="cart-floating-btn open-cart-btn" type="button" aria-label="Ver carrito de alquiler">
+    <span style="font-size: 1.5rem;">🛒</span>
+    <span class="cart-count-badge">0</span>
+  </button>
+
+  <!-- OVERLAY Y DRAWER DEL CARRITO -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer-header">
+      <h3>Carrito de Alquiler</h3>
+      <button class="close-cart-btn" id="closeCartBtn" type="button">&times;</button>
+    </div>
+    <div class="cart-items-container" id="cartItemsList">
+      <!-- Items agregados -->
+    </div>
+    <div class="cart-drawer-footer">
+      <div class="cart-subtotal-row">
+        <span>Subtotal Mobiliario:</span>
+        <span id="cartSubtotal">$0</span>
+      </div>
+      <button class="btn-apple-primary" id="cartCheckoutBtn" style="width: 100%; justify-content: center; padding: 0.95rem;">
+        Solicitar Disponibilidad por WhatsApp
+      </button>
+    </div>
+  </aside>
+
+  <!-- SCRIPTS MODULARES -->
+  <script type="module" src="./js/app.js"></script>
+  <script type="module" src="./js/apple-configurator.js"></script>
 </body>
 </html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contrato Oficial de Eventos | Banquetes Almar</title>
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+      .contract-sheet { box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #121214;
+      color: #1a1a1a;
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+
+    .contract-sheet {
+      background: #ffffff;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 3rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      border: 1px solid #ddd;
+    }
+
+    .header-table {
+      width: 100%;
+      border-bottom: 2px solid #c89b3c;
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .brand-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #946f1d;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .brand-sub {
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    .contract-badge {
+      display: inline-block;
+      background: #fdf6e7;
+      border: 1px solid #c89b3c;
+      color: #946f1d;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      color: #111;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.4rem;
+      margin: 1.5rem 0 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .data-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem 1.5rem;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed #eee;
+      padding-bottom: 0.25rem;
+    }
+
+    .data-label {
+      font-weight: 600;
+      color: #555;
+    }
+
+    .data-val {
+      font-weight: 700;
+      color: #111;
+    }
+
+    .clauses-text {
+      font-size: 0.82rem;
+      color: #444;
+      text-align: justify;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .clauses-text ol {
+      margin-left: 1.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .clauses-text li {
+      margin-bottom: 0.5rem;
+    }
+
+    .totals-box {
+      background: #faf8f5;
+      border: 1px solid #e6c77b;
+      border-radius: 8px;
+      padding: 1.2rem;
+      margin: 1.5rem 0;
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+    }
+
+    .totals-box .item span {
+      display: block;
+      font-size: 0.8rem;
+      color: #666;
+      text-transform: uppercase;
+    }
+
+    .totals-box .item strong {
+      font-size: 1.3rem;
+      color: #111;
+    }
+
+    .signatures {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 3.5rem;
+      padding-top: 1rem;
+    }
+
+    .sign-line {
+      border-top: 1px solid #333;
+      padding-top: 0.5rem;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    .action-bar {
+      max-width: 820px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-print {
+      background: #c89b3c;
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .btn-back {
+      color: #ccc;
+      text-decoration: underline;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="action-bar no-print">
+    <a href="./reservas.html" class="btn-back">← Volver a Reservas</a>
+    <button onclick="window.print()" class="btn-print">🖨️ Imprimir / Guardar como PDF</button>
+  </div>
+
+  <div class="contract-sheet">
+    <table class="header-table">
+      <tr>
+        <td>
+          <div class="brand-title">Banquetes Almar</div>
+          <div class="brand-sub">NIT: 71.378.912-4 • Registro Comercial Marinilla, Antioquia</div>
+          <div class="brand-sub">Sede 1: Calle 29 n° 28-25 Marinilla • Sede 2: Finca El Peñol</div>
+          <div class="brand-sub">Teléfono: +57 314 8849011 • (604) 548 5352</div>
+        </td>
+        <td style="text-align: right; vertical-align: top;">
+          <div class="contract-badge" id="contractNumBadge">CONTRATO N° ALM-2026-001</div>
+          <div style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+            Fecha de expedición: <strong id="fechaHoy">07/09/2026</strong>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <div style="text-align: center; margin-bottom: 1.5rem;">
+      <h1 style="font-size: 1.3rem; text-transform: uppercase; color: #111; letter-spacing: 0.5px;">
+        Contrato de Prestación de Servicios para Eventos y Recepciones
+      </h1>
+    </div>
+
+    <h2>1. Partes Intervinientes</h2>
+    <div class="data-grid">
+      <div class="data-row">
+        <span class="data-label">Prestador del Servicio:</span>
+        <span class="data-val">Banquetes Almar</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">NIT / Representante:</span>
+        <span class="data-val">Alejandro Almar</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Cliente / Contratante:</span>
+        <span class="data-val" id="contratoCliente">Valentina Muñoz</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Teléfono de Contacto:</span>
+        <span class="data-val" id="contratoTelefono">311 789 2233</span>
+      </div>
+    </div>
+
+    <h2>2. Especificaciones del Evento</h2>
+    <div class="data-grid">
+      <div class="data-row">
+        <span class="data-label">Tipo de Celebración:</span>
+        <span class="data-val" id="contratoTipoEvento">Boda Imperial</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Fecha del Evento:</span>
+        <span class="data-val" id="contratoFechaEvento">05 de Diciembre de 2026</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Sede / Locación:</span>
+        <span class="data-val" id="contratoLocacion">Finca Campestre Almar (El Peñol)</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Número de Invitados:</span>
+        <span class="data-val" id="contratoPersonas">100 personas</span>
+      </div>
+    </div>
+
+    <h2>3. Servicios Incluidos en la Propuesta</h2>
+    <div style="background: #fafafa; border: 1px solid #eee; padding: 0.9rem; border-radius: 6px; font-size: 0.88rem; margin-bottom: 1rem;" id="contratoServicios">
+      • Alquiler y adecuación de la sede según el horario acordado.<br />
+      • Servicio de gastronomía y catering con personal de atención y meseros uniformados.<br />
+      • Mobiliario completo (sillas, mesas vestidas, mantelería, vajilla y cristalería de gala).<br />
+      • Decoración integral, ambientación floral y montaje de mesas de honor.<br />
+      • Producción técnica de sonido, micrófonos y show de luces según paquete contratado.
+    </div>
+
+    <h2>4. Liquidación Económica</h2>
+    <div class="totals-box">
+      <div class="item">
+        <span>Valor Total del Contrato</span>
+        <strong id="contratoTotal">$11.800.000 COP</strong>
+      </div>
+      <div class="item">
+        <span>Anticipo de Separación</span>
+        <strong style="color: #27ae60;" id="contratoAnticipo">$4.000.000 COP</strong>
+      </div>
+      <div class="item">
+        <span>Saldo Pendiente</span>
+        <strong style="color: #c0392b;" id="contratoSaldo">$7.800.000 COP</strong>
+      </div>
+    </div>
+
+    <h2>5. Cláusulas y Condiciones del Servicio</h2>
+    <div class="clauses-text">
+      <ol>
+        <li><strong>Separación de Fecha:</strong> La reserva de la fecha y de la sede (Salón Marinilla o Finca El Peñol) queda en firme exclusivamente tras el pago del anticipo estipulado.</li>
+        <li><strong>Pago del Saldo:</strong> El saldo pendiente deberá ser cancelado en su totalidad a más tardar cinco (5) días hábiles antes de la realización del evento.</li>
+        <li><strong>Aforo y Menaje:</strong> El contratante se hace responsable por el cuidado del mobiliario, cristalería y menaje entregados durante la jornada. Cualquier daño o pérdida de elementos correrá por cuenta del contratante a precio de reposición.</li>
+        <li><strong>Degustación y Pruebas:</strong> Banquetes Almar coordinará previamente con el contratante la prueba de menú en sus instalaciones en Marinilla.</li>
+        <li><strong>Fuerza Mayor:</strong> En caso de aplazamiento por causas de fuerza mayor debidamente comprobadas, se reprogramará la fecha según disponibilidad de agenda de las sedes.</li>
+      </ol>
+    </div>
+
+    <div class="signatures">
+      <div class="sign-line">
+        <strong>BANQUETES ALMAR</strong><br />
+        Prestador del Servicio<br />
+        NIT / C.C. Representante Legal
+      </div>
+
+      <div class="sign-line">
+        <strong id="signClienteNombre">EL CONTRATANTE</strong><br />
+        Acepto los términos y condiciones<br />
+        C.C. __________________________
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { dbService } from "../js/firebase/db.js";
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id") || "res-201";
+
+      document.getElementById("fechaHoy").textContent = new Date().toLocaleDateString("es-CO");
+
+      try {
+        const reservas = await dbService.getReservations();
+        const reserva = reservas.find(r => r.id === id) || reservas[0];
+
+        if (reserva) {
+          document.getElementById("contractNumBadge").textContent = `CONTRATO N° ALM-${reserva.id.slice(-6).toUpperCase()}`;
+          document.getElementById("contratoCliente").textContent = reserva.cliente || "Cliente";
+          document.getElementById("signClienteNombre").textContent = (reserva.cliente || "EL CONTRATANTE").toUpperCase();
+          document.getElementById("contratoTelefono").textContent = reserva.telefono || "No especificado";
+          document.getElementById("contratoTipoEvento").textContent = reserva.tipo_evento || "Evento Social";
+          document.getElementById("contratoFechaEvento").textContent = reserva.fecha_evento || "Por definir";
+          document.getElementById("contratoLocacion").textContent = reserva.locacion || reserva.lugar || "Salón Almar Marinilla";
+          document.getElementById("contratoPersonas").textContent = `${reserva.personas || 0} personas`;
+
+          document.getElementById("contratoTotal").textContent = `$${Number(reserva.total || 0).toLocaleString("es-CO")} COP`;
+          document.getElementById("contratoAnticipo").textContent = `$${Number(reserva.anticipo || 0).toLocaleString("es-CO")} COP`;
+          document.getElementById("contratoSaldo").textContent = `$${Number(reserva.saldo || 0).toLocaleString("es-CO")} COP`;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>

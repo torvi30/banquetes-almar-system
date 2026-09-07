@@ -1,5 +1,12 @@
-const API_URL = "http://localhost:3001/api/reservations";
-const token = localStorage.getItem("token");
+/**
+ * Gestión de Reservas y Eventos Confirmados - Banquetes Almar (Marinilla, Antioquia)
+ * Migrado a Firebase Firestore / dbService.
+ */
+
+import { authService } from "./firebase/auth.js";
+import { dbService } from "./firebase/db.js";
+
+authService.requireAuth("./login.html");
 
 const form = document.getElementById("reservationForm");
 const reservationsGrid = document.getElementById("reservationsGrid");
@@ -23,415 +30,231 @@ const filterFecha = document.getElementById("filterFecha");
 const filterEstado = document.getElementById("filterEstado");
 const filterSearch = document.getElementById("filterSearch");
 
-if (!token) {
-  Swal.fire({
-    icon: "warning",
-    title: "Sesión expirada",
-    text: "Debes iniciar sesión nuevamente."
-  }).then(() => {
+let reservasCache = [];
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    authService.logout();
     window.location.href = "./login.html";
   });
 }
 
-function authHeaders(extra = {}) {
-  return {
-    Authorization: `Bearer ${token}`,
-    ...extra
-  };
+function limpiarFormulario() {
+  if (reservationIdInput) reservationIdInput.value = "";
+  if (clienteIdInput) clienteIdInput.value = "";
+  if (clienteInput) clienteInput.value = "";
+  if (telefonoInput) telefonoInput.value = "";
+  if (tipoEventoInput) tipoEventoInput.value = "";
+  if (fechaEventoInput) fechaEventoInput.value = "";
+  if (lugarInput) lugarInput.value = "";
+  if (personasInput) personasInput.value = "";
+  if (estadoInput) estadoInput.value = "Pendiente";
+  if (observacionesInput) observacionesInput.value = "";
+  if (saveReservationBtn) saveReservationBtn.textContent = "Guardar reserva";
 }
 
-function limpiarFormulario() {
-  reservationIdInput.value = "";
-  clienteIdInput.value = "";
-  clienteInput.value = "";
-  telefonoInput.value = "";
-  tipoEventoInput.value = "";
-  fechaEventoInput.value = "";
-  lugarInput.value = "";
-  personasInput.value = "";
-  estadoInput.value = "Pendiente";
-  observacionesInput.value = "";
-  saveReservationBtn.textContent = "Guardar reserva";
+if (cancelEditBtn) {
+  cancelEditBtn.addEventListener("click", limpiarFormulario);
 }
 
 function formatearFecha(fecha) {
   if (!fecha) return "Sin fecha";
-  return String(fecha).slice(0, 10);
+  const d = new Date(fecha);
+  if (Number.isNaN(d.getTime())) return String(fecha).slice(0, 10);
+  return d.toLocaleDateString("es-CO", {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  });
 }
 
 function claseEstadoReserva(estado) {
   const valor = String(estado || "").toLowerCase();
-
   if (valor === "pendiente") return "estado-contactado";
-  if (valor === "confirmada") return "estado-confirmado";
-  if (valor === "cancelada") return "estado-cancelado";
-  if (valor === "convertida") return "estado-convertido";
-
+  if (valor === "confirmada" || valor === "confirmado") return "estado-confirmado";
+  if (valor === "cancelada" || valor === "cancelado") return "estado-cancelado";
+  if (valor === "finalizado" || valor === "finalizada") return "estado-convertido";
   return "estado-contactado";
 }
 
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("adminNombre");
-    window.location.href = "./login.html";
-  });
+function crearCardReserva(reserva) {
+  const total = Number(reserva.total || 0).toLocaleString("es-CO");
+  const anticipo = Number(reserva.anticipo || 0).toLocaleString("es-CO");
+  const saldo = Number(reserva.saldo || 0).toLocaleString("es-CO");
+
+  return `
+    <article class="reservation-card" data-id="${reserva.id}" style="background: rgba(22, 22, 22, 0.9); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1rem;">
+      <div class="reservation-card-head" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+        <div>
+          <h3 style="color: #fff; font-size: 1.15rem;">${reserva.cliente || "Sin cliente"}</h3>
+          <p style="color: var(--gold-light); font-size: 0.9rem;">${reserva.tipo_evento || "Evento Social"}</p>
+        </div>
+        <span class="status-badge ${claseEstadoReserva(reserva.estado)}" style="padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600;">
+          ${reserva.estado || "Pendiente"}
+        </span>
+      </div>
+
+      <div class="reservation-card-body" style="font-size: 0.88rem; color: #ccc; display: flex; flex-direction: column; gap: 0.4rem;">
+        <p>📅 <strong>Fecha:</strong> ${formatearFecha(reserva.fecha_evento)} ${reserva.hora_evento ? `· ⏰ ${reserva.hora_evento}` : ""}</p>
+        <p>📍 <strong>Locación:</strong> ${reserva.locacion || reserva.lugar || "Salón Almar Marinilla"}</p>
+        <p>👥 <strong>Invitados:</strong> ${reserva.personas || 0} personas</p>
+        <p>📱 <strong>Teléfono:</strong> <a href="tel:${reserva.telefono}" style="color: #88c0d0;">${reserva.telefono || "No registrado"}</a></p>
+        
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 0.8rem; border-radius: 6px; margin: 0.5rem 0;">
+          <div style="display: flex; justify-content: space-between;">
+            <span>Total: <strong>$${total}</strong></span>
+            <span>Abono: <strong style="color: #a8d5ba;">$${anticipo}</strong></span>
+            <span>Saldo: <strong style="color: #e74c3c;">$${saldo}</strong></span>
+          </div>
+        </div>
+
+        ${reserva.observaciones ? `<p style="font-style: italic; color: #999;">"${reserva.observaciones}"</p>` : ""}
+      </div>
+
+      <div class="reservation-card-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
+        <a href="https://wa.me/57${String(reserva.telefono || "").replace(/\D/g, "")}?text=Hola%20${encodeURIComponent(reserva.cliente || "")},%20te%20contactamos%20de%20Banquetes%20Almar%20respecto%20a%20tu%20evento%20del%20${formatearFecha(reserva.fecha_evento)}..." 
+           target="_blank" class="btn btn-secondary btn-sm" style="background: #25d366; color: #000; font-weight: 700;">
+          WhatsApp
+        </a>
+
+        <a href="./contrato.html?id=${reserva.id}" target="_blank" class="btn btn-secondary btn-sm" style="color: var(--gold-light); font-weight: 600; border-color: var(--gold);">
+          📄 Contrato PDF
+        </a>
+
+        <button class="btn btn-secondary btn-sm edit-reserva-btn" data-id="${reserva.id}">
+          Editar
+        </button>
+
+        <button class="btn btn-secondary btn-sm delete-reserva-btn" data-id="${reserva.id}" style="color: #e74c3c;">
+          Eliminar
+        </button>
+      </div>
+    </article>
+  `;
 }
 
-if (cancelEditBtn) {
-  cancelEditBtn.addEventListener("click", () => {
-    limpiarFormulario();
+function renderReservas(lista) {
+  if (!reservationsGrid) return;
 
-    Swal.fire({
-      icon: "info",
-      title: "Edición cancelada",
-      timer: 900,
-      showConfirmButton: false
-    });
-  });
-}
-
-function renderReservas(data) {
-  reservationsGrid.innerHTML = "";
-
-  if (!Array.isArray(data) || data.length === 0) {
+  if (!lista.length) {
     reservationsGrid.innerHTML = `
-      <div class="empty-state-card">
-        <h3>Sin reservas</h3>
-        <p>No se encontraron reservas con esos filtros.</p>
+      <div style="padding: 2.5rem; text-align: center; color: var(--text-soft); grid-column: 1 / -1;">
+        <h3>No se encontraron reservas</h3>
+        <p>Crea una nueva reserva o ajusta los filtros de búsqueda.</p>
       </div>
     `;
     return;
   }
 
-  data.forEach((reserva) => {
-    const card = document.createElement("article");
-    card.className = "quote-card";
+  reservationsGrid.innerHTML = lista.map(crearCardReserva).join("");
 
-    const estadoClass = claseEstadoReserva(reserva.estado);
+  // Acciones
+  reservationsGrid.querySelectorAll(".edit-reserva-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+      const res = reservasCache.find(r => r.id === id);
+      if (res) {
+        if (reservationIdInput) reservationIdInput.value = res.id;
+        if (clienteInput) clienteInput.value = res.cliente || "";
+        if (telefonoInput) telefonoInput.value = res.telefono || "";
+        if (tipoEventoInput) tipoEventoInput.value = res.tipo_evento || "";
+        if (fechaEventoInput) fechaEventoInput.value = (res.fecha_evento || "").slice(0, 10);
+        if (lugarInput) lugarInput.value = res.locacion || res.lugar || "";
+        if (personasInput) personasInput.value = res.personas || "";
+        if (estadoInput) estadoInput.value = res.estado || "Pendiente";
+        if (observacionesInput) observacionesInput.value = res.observaciones || "";
 
-    card.innerHTML = `
-      <div class="quote-card-top">
-        <div>
-          <h3>${reserva.cliente || "Sin cliente"}</h3>
-          <p><strong>ID reserva:</strong> ${reserva.id}</p>
-          <p><strong>Teléfono:</strong> ${reserva.telefono || "No definido"}</p>
-          <p><strong>Fecha:</strong> ${formatearFecha(reserva.fecha_evento)}</p>
-          <p><strong>Lugar:</strong> ${reserva.lugar || "No definido"}</p>
-          <p><strong>Personas:</strong> ${reserva.personas || 0}</p>
-        </div>
-
-        <span class="event-chip">
-          ${reserva.tipo_evento || "Evento"}
-        </span>
-      </div>
-
-      <div class="quote-status-row">
-        <span class="status-badge ${estadoClass}">
-          ${reserva.estado || "Pendiente"}
-        </span>
-      </div>
-
-      <p><strong>Observaciones:</strong> ${reserva.observaciones || "Sin observaciones"}</p>
-
-      <div class="quote-card-actions">
-        <button class="btn btn-success edit-btn" data-id="${reserva.id}">Editar</button>
-        <button class="btn btn-primary convert-btn" data-id="${reserva.id}">Convertir a evento</button>
-        <button class="btn btn-danger delete-btn" data-id="${reserva.id}">Eliminar</button>
-      </div>
-    `;
-
-    reservationsGrid.appendChild(card);
+        if (saveReservationBtn) saveReservationBtn.textContent = "Actualizar reserva";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
   });
 
-  document.querySelectorAll(".edit-btn").forEach((btn) => {
+  reservationsGrid.querySelectorAll(".delete-reserva-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.id;
-
-      try {
-        const res = await fetch(`${API_URL}/${id}`, {
-          headers: authHeaders()
-        });
-
-        const reserva = await res.json();
-
-        if (!res.ok) {
-          throw new Error(reserva.message || "No se pudo cargar la reserva");
-        }
-
-        reservationIdInput.value = reserva.id;
-        clienteIdInput.value = reserva.cliente_id || "";
-        clienteInput.value = reserva.cliente || "";
-        telefonoInput.value = reserva.telefono || "";
-        tipoEventoInput.value = reserva.tipo_evento || "";
-        fechaEventoInput.value = reserva.fecha_evento ? String(reserva.fecha_evento).slice(0, 10) : "";
-        lugarInput.value = reserva.lugar || "";
-        personasInput.value = reserva.personas || "";
-        estadoInput.value = reserva.estado || "Pendiente";
-        observacionesInput.value = reserva.observaciones || "";
-
-        saveReservationBtn.textContent = "Actualizar reserva";
-
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
-
-        Swal.fire({
-          icon: "info",
-          title: "Reserva cargada",
-          text: "Ya puedes editar la reserva.",
-          timer: 1200,
-          showConfirmButton: false
-        });
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: error.message
-        });
-      }
-    });
-  });
-
-  document.querySelectorAll(".delete-btn").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const confirmar = await Swal.fire({
+      const confirm = await Swal.fire({
+        title: "¿Eliminar reserva?",
+        text: "Se borrará la reserva del sistema.",
         icon: "warning",
-        title: "¿Eliminar esta reserva?",
-        text: "Esta acción no se puede deshacer.",
         showCancelButton: true,
         confirmButtonText: "Sí, eliminar",
-        cancelButtonText: "Cancelar",
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#6c757d"
+        cancelButtonText: "Cancelar"
       });
 
-      if (!confirmar.isConfirmed) return;
-
-      try {
-        const res = await fetch(`${API_URL}/${btn.dataset.id}`, {
-          method: "DELETE",
-          headers: authHeaders()
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.message || "No se pudo eliminar la reserva");
-        }
-
-        await Swal.fire({
-          icon: "success",
-          title: "Reserva eliminada",
-          timer: 1200,
-          showConfirmButton: false
-        });
-
+      if (confirm.isConfirmed) {
+        await dbService.deleteReservation(id);
         await cargarReservas();
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: error.message
-        });
-      }
-    });
-  });
-
-  document.querySelectorAll(".convert-btn").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const confirmar = await Swal.fire({
-        icon: "question",
-        title: "¿Convertir esta reserva a evento?",
-        text: "Se creará un evento con los datos de esta reserva.",
-        showCancelButton: true,
-        confirmButtonText: "Sí, convertir",
-        cancelButtonText: "Cancelar",
-        confirmButtonColor: "#28a745",
-        cancelButtonColor: "#6c757d"
-      });
-
-      if (!confirmar.isConfirmed) return;
-
-      try {
-        const res = await fetch(`${API_URL}/${btn.dataset.id}/convert`, {
-          method: "POST",
-          headers: authHeaders()
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.message || "No se pudo convertir la reserva");
-        }
-
-        await Swal.fire({
-          icon: "success",
-          title: "Reserva convertida",
-          text: "La reserva fue convertida a evento correctamente.",
-          timer: 1400,
-          showConfirmButton: false
-        });
-
-        await cargarReservas();
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: error.message
-        });
+        Swal.fire("Eliminada", "La reserva ha sido eliminada.", "success");
       }
     });
   });
 }
 
-async function cargarReservas() {
-  try {
-    const params = new URLSearchParams();
+function aplicarFiltros() {
+  const texto = (filterSearch?.value || "").toLowerCase().trim();
+  const fecha = filterFecha?.value || "";
+  const estado = (filterEstado?.value || "").toLowerCase().trim();
 
-    if (filterFecha.value) params.append("fecha", filterFecha.value);
-    if (filterEstado.value) params.append("estado", filterEstado.value);
-    if (filterSearch.value.trim()) params.append("q", filterSearch.value.trim());
+  const filtradas = reservasCache.filter(item => {
+    const cumpleTexto = !texto || 
+      `${item.cliente} ${item.telefono} ${item.tipo_evento} ${item.locacion || item.lugar}`.toLowerCase().includes(texto);
+    const cumpleFecha = !fecha || String(item.fecha_evento || "").startsWith(fecha);
+    const cumpleEstado = !estado || String(item.estado || "").toLowerCase() === estado;
 
-    const url = params.toString()
-      ? `${API_URL}?${params.toString()}`
-      : API_URL;
-
-    const res = await fetch(url, {
-      headers: authHeaders()
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudieron cargar las reservas");
-    }
-
-    renderReservas(data);
-  } catch (error) {
-    console.error("ERROR CARGANDO RESERVAS:", error);
-
-    reservationsGrid.innerHTML = `
-      <div class="empty-state-card">
-        <h3>Error</h3>
-        <p>No se pudieron cargar las reservas.</p>
-      </div>
-    `;
-
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: error.message || "No se pudieron cargar las reservas"
-    });
-  }
-}
-
-if (btnFiltrar) {
-  btnFiltrar.addEventListener("click", async () => {
-    await cargarReservas();
-
-    Swal.fire({
-      icon: "success",
-      title: "Filtros aplicados",
-      timer: 900,
-      showConfirmButton: false
-    });
+    return cumpleTexto && cumpleFecha && cumpleEstado;
   });
+
+  renderReservas(filtradas);
 }
 
 if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const id = reservationIdInput.value;
-
-    const payload = {
-      cliente_id: clienteIdInput.value || null,
-      cliente: clienteInput.value,
-      telefono: telefonoInput.value,
-      tipo_evento: tipoEventoInput.value,
-      fecha_evento: fechaEventoInput.value,
-      lugar: lugarInput.value,
-      personas: personasInput.value || 0,
-      estado: estadoInput.value,
-      observaciones: observacionesInput.value
+    const id = reservationIdInput?.value;
+    const datos = {
+      cliente: clienteInput?.value.trim(),
+      telefono: telefonoInput?.value.trim(),
+      tipo_evento: tipoEventoInput?.value.trim(),
+      fecha_evento: fechaEventoInput?.value,
+      locacion: lugarInput?.value.trim() || "Salón Almar Marinilla",
+      personas: parseInt(personasInput?.value || "50", 10),
+      estado: estadoInput?.value || "Confirmada",
+      observaciones: observacionesInput?.value.trim() || ""
     };
 
-    if (!payload.cliente.trim()) {
-      Swal.fire({
-        icon: "warning",
-        title: "Campo obligatorio",
-        text: "El cliente es obligatorio"
-      });
-      return;
-    }
-
-    if (!payload.tipo_evento.trim()) {
-      Swal.fire({
-        icon: "warning",
-        title: "Campo obligatorio",
-        text: "El tipo de evento es obligatorio"
-      });
-      return;
-    }
-
-    if (!payload.fecha_evento) {
-      Swal.fire({
-        icon: "warning",
-        title: "Campo obligatorio",
-        text: "La fecha del evento es obligatoria"
-      });
-      return;
-    }
-
     try {
-      let res;
-
       if (id) {
-        res = await fetch(`${API_URL}/${id}`, {
-          method: "PUT",
-          headers: authHeaders({
-            "Content-Type": "application/json"
-          }),
-          body: JSON.stringify(payload)
-        });
+        await dbService.updateReservation(id, datos);
+        Swal.fire("Actualizado", "La reserva ha sido modificada.", "success");
       } else {
-        res = await fetch(API_URL, {
-          method: "POST",
-          headers: authHeaders({
-            "Content-Type": "application/json"
-          }),
-          body: JSON.stringify(payload)
-        });
+        await dbService.createReservation(datos);
+        Swal.fire("Creada", "La reserva ha sido registrada exitosamente.", "success");
       }
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "No se pudo guardar la reserva");
-      }
-
-      await Swal.fire({
-        icon: "success",
-        title: id ? "Reserva actualizada" : "Reserva creada",
-        text: id
-          ? "La reserva se actualizó correctamente."
-          : "La reserva se creó correctamente.",
-        timer: 1200,
-        showConfirmButton: false
-      });
 
       limpiarFormulario();
       await cargarReservas();
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error.message
-      });
+    } catch (err) {
+      console.error("Error guardando reserva:", err);
+      Swal.fire("Error", "No se pudo guardar la reserva.", "error");
     }
   });
 }
+
+async function cargarReservas() {
+  try {
+    const list = await dbService.getReservations();
+    reservasCache = list;
+    aplicarFiltros();
+  } catch (error) {
+    console.error("Error cargando reservas:", error);
+  }
+}
+
+if (filterSearch) filterSearch.addEventListener("input", aplicarFiltros);
+if (filterFecha) filterFecha.addEventListener("change", aplicarFiltros);
+if (filterEstado) filterEstado.addEventListener("change", aplicarFiltros);
+if (btnFiltrar) btnFiltrar.addEventListener("click", aplicarFiltros);
 
 cargarReservas();

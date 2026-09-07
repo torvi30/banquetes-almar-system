@@ -1,8 +1,13 @@
-const QUOTES_API = "http://localhost:3001/api/quotes";
-const STATS_API = "http://localhost:3001/api/stats";
-const EVENTS_API = "http://localhost:3001/api/events";
+/**
+ * Dashboard Administrativo de Banquetes Almar (Marinilla, Antioquia)
+ * Migrado a Firebase Firestore / Servicio Unificado dbService.
+ */
 
-const token = localStorage.getItem("token");
+import { authService } from "./firebase/auth.js";
+import { dbService } from "./firebase/db.js";
+
+// Verificar sesión
+authService.requireAuth("./login.html");
 
 const totalQuotes = document.getElementById("totalQuotes");
 const totalEventos = document.getElementById("totalEventos");
@@ -16,35 +21,16 @@ const latestQuotes = document.getElementById("latestQuotes");
 const latestReservas = document.getElementById("latestReservas");
 const upcomingEvents = document.getElementById("upcomingEvents");
 
-const adminNombre = localStorage.getItem("adminNombre") || "Administrador";
-
-if (!token) {
-  Swal.fire({
-    icon: "warning",
-    title: "Sesión expirada",
-    text: "Debes iniciar sesión de nuevo."
-  }).then(() => {
-    window.location.href = "./login.html";
-  });
-}
-
-if (adminWelcome) {
-  adminWelcome.textContent = `Bienvenido, ${adminNombre}`;
+const currentUser = authService.getCurrentUser();
+if (adminWelcome && currentUser) {
+  adminWelcome.textContent = `Bienvenido, ${currentUser.nombre}`;
 }
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("adminNombre");
+    authService.logout();
     window.location.href = "./login.html";
   });
-}
-
-function authHeaders(extra = {}) {
-  return {
-    Authorization: `Bearer ${token}`,
-    ...extra
-  };
 }
 
 function formatearDinero(valor) {
@@ -53,93 +39,64 @@ function formatearDinero(valor) {
 
 function formatearFecha(fecha) {
   if (!fecha) return "Sin fecha";
-
   const d = new Date(fecha);
   if (Number.isNaN(d.getTime())) return String(fecha).slice(0, 10);
-
-  return d.toLocaleString("es-CO", {
-    dateStyle: "medium",
-    timeStyle: "short"
+  return d.toLocaleDateString("es-CO", {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
   });
 }
 
 function normalizarTextoEstado(estado) {
   const valor = String(estado || "").toLowerCase().trim();
-
   if (valor === "nuevo") return "Nuevo";
   if (valor === "contactado") return "Contactado";
-  if (valor === "confirmado") return "Confirmado";
-  if (valor === "cancelado") return "Cancelado";
-  if (valor === "convertido") return "Convertido";
+  if (valor === "confirmado" || valor === "confirmada") return "Confirmado";
+  if (valor === "cancelado" || valor === "cancelada") return "Cancelado";
+  if (valor === "convertido" || valor === "convertida") return "Convertido";
   if (valor === "pendiente") return "Pendiente";
-  if (valor === "confirmada") return "Confirmada";
-  if (valor === "cancelada") return "Cancelada";
-  if (valor === "convertida") return "Convertida";
   if (valor === "en_proceso") return "En proceso";
   if (valor === "finalizado") return "Finalizado";
-
   return estado || "Sin estado";
 }
 
 function claseEstado(estado) {
   const valor = String(estado || "").toLowerCase().trim();
-
-  if (valor === "nuevo" || valor === "contactado" || valor === "pendiente") {
-    return "estado-contactado";
-  }
-
-  if (valor === "confirmado" || valor === "confirmada" || valor === "finalizado") {
-    return "estado-confirmado";
-  }
-
-  if (valor === "cancelado" || valor === "cancelada") {
-    return "estado-cancelado";
-  }
-
-  if (valor === "convertido" || valor === "convertida" || valor === "en_proceso") {
-    return "estado-convertido";
-  }
-
+  if (valor === "nuevo" || valor === "contactado" || valor === "pendiente") return "estado-contactado";
+  if (valor === "confirmado" || valor === "confirmada" || valor === "finalizado") return "estado-confirmado";
+  if (valor === "cancelado" || valor === "cancelada") return "estado-cancelado";
+  if (valor === "convertido" || valor === "convertida" || valor === "en_proceso") return "estado-convertido";
   return "estado-contactado";
 }
 
-async function leerRespuestaJSON(res) {
-  const text = await res.text();
-
-  try {
-    return JSON.parse(text);
-  } catch (error) {
-    console.error("Respuesta no JSON:", text);
-    throw new Error("El servidor devolvió una respuesta inválida.");
-  }
-}
-
 function renderEmpty(container, titulo, texto) {
+  if (!container) return;
   container.innerHTML = `
-    <div class="dashboard-empty">
-      <h4>${titulo}</h4>
-      <p>${texto}</p>
+    <div class="dashboard-empty" style="padding: 1.5rem; text-align: center; color: var(--text-soft);">
+      <h4 style="color: #fff; margin-bottom: 0.3rem;">${titulo}</h4>
+      <p style="font-size: 0.85rem;">${texto}</p>
     </div>
   `;
 }
 
 function crearItemDashboard({ titulo, subtitulo, fecha, estado, badgeTexto, link, linkTexto }) {
   return `
-    <article class="dashboard-item">
-      <div class="dashboard-item-top">
+    <article class="dashboard-item" style="padding: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+      <div class="dashboard-item-top" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
         <div>
-          <h4>${titulo}</h4>
-          <p>${subtitulo}</p>
+          <h4 style="color: #fff; font-size: 0.95rem;">${titulo}</h4>
+          <p style="color: var(--text-soft); font-size: 0.82rem;">${subtitulo}</p>
         </div>
 
-        <span class="status-badge ${claseEstado(estado)}">
+        <span class="status-badge ${claseEstado(estado)}" style="font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 999px; font-weight: 600;">
           ${badgeTexto || normalizarTextoEstado(estado)}
         </span>
       </div>
 
-      <div class="dashboard-item-bottom">
-        <span class="dashboard-date">${fecha}</span>
-        ${link ? `<a href="${link}" class="dashboard-inline-link">${linkTexto || "Ver más"}</a>` : ""}
+      <div class="dashboard-item-bottom" style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #888;">
+        <span class="dashboard-date">📅 ${fecha}</span>
+        ${link ? `<a href="${link}" class="dashboard-inline-link" style="color: var(--gold-light); font-weight: 600;">${linkTexto || "Ver más"}</a>` : ""}
       </div>
     </article>
   `;
@@ -147,21 +104,13 @@ function crearItemDashboard({ titulo, subtitulo, fecha, estado, badgeTexto, link
 
 async function cargarResumen() {
   try {
-    const res = await fetch(STATS_API, {
-      headers: authHeaders()
-    });
+    const stats = await dbService.getStats();
 
-    const data = await leerRespuestaJSON(res);
-
-    if (!res.ok) {
-      throw new Error(data.message || "Error cargando estadísticas");
-    }
-
-    if (totalQuotes) totalQuotes.textContent = data.totalQuotes ?? 0;
-    if (totalEventos) totalEventos.textContent = data.totalEventos ?? 0;
-    if (confirmados) confirmados.textContent = data.confirmados ?? 0;
-    if (ingresos) ingresos.textContent = formatearDinero(data.ingresos ?? 0);
-    if (pendiente) pendiente.textContent = formatearDinero(data.pendiente ?? 0);
+    if (totalQuotes) totalQuotes.textContent = stats.totalQuotes ?? 0;
+    if (totalEventos) totalEventos.textContent = stats.totalEventos ?? 0;
+    if (confirmados) confirmados.textContent = stats.confirmados ?? 0;
+    if (ingresos) ingresos.textContent = formatearDinero(stats.ingresos ?? 0);
+    if (pendiente) pendiente.textContent = formatearDinero(stats.pendiente ?? 0);
   } catch (error) {
     console.error("ERROR CARGANDO RESUMEN:", error);
   }
@@ -169,29 +118,20 @@ async function cargarResumen() {
 
 async function cargarCotizacionesYReservas() {
   try {
-    const res = await fetch(QUOTES_API, {
-      headers: authHeaders()
-    });
+    const quotes = await dbService.getQuotes();
+    const reservas = await dbService.getReservations();
 
-    const data = await leerRespuestaJSON(res);
+    const topQuotes = quotes.slice(0, 5);
+    const topReservas = reservas.slice(0, 5);
 
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudieron cargar cotizaciones y reservas");
-    }
-
-    const lista = Array.isArray(data) ? data : [];
-
-    const quotes = lista.filter(item => item.origen === "cotizacion").slice(0, 5);
-    const reservas = lista.filter(item => item.origen === "reserva").slice(0, 5);
-
-    if (!quotes.length) {
+    if (!topQuotes.length) {
       renderEmpty(latestQuotes, "Sin cotizaciones", "No hay cotizaciones recientes.");
     } else {
-      latestQuotes.innerHTML = quotes.map(item => {
+      latestQuotes.innerHTML = topQuotes.map(item => {
         return crearItemDashboard({
           titulo: item.nombre || "Sin nombre",
-          subtitulo: `${item.tipo_evento || "Evento"} · ${item.telefono || "Sin teléfono"}`,
-          fecha: formatearFecha(item.created_at),
+          subtitulo: `${item.evento || "Evento"} · ${item.personas || 0} pers · ${item.telefono || ""}`,
+          fecha: formatearFecha(item.createdAt),
           estado: item.estado,
           badgeTexto: normalizarTextoEstado(item.estado),
           link: "./cotizaciones.html",
@@ -200,18 +140,18 @@ async function cargarCotizacionesYReservas() {
       }).join("");
     }
 
-    if (!reservas.length) {
-      renderEmpty(latestReservas, "Sin reservas", "No hay reservas recientes.");
+    if (!topReservas.length) {
+      renderEmpty(latestReservas, "Sin reservas", "No hay reservas registradas.");
     } else {
-      latestReservas.innerHTML = reservas.map(item => {
+      latestReservas.innerHTML = topReservas.map(item => {
         return crearItemDashboard({
-          titulo: item.nombre || "Sin cliente",
-          subtitulo: `${item.tipo_evento || "Reserva"} · ${item.telefono || "Sin teléfono"}`,
-          fecha: formatearFecha(item.created_at),
+          titulo: item.cliente || "Sin cliente",
+          subtitulo: `${item.tipo_evento || "Evento"} · ${item.locacion || "Marinilla"}`,
+          fecha: formatearFecha(item.fecha_evento),
           estado: item.estado,
           badgeTexto: normalizarTextoEstado(item.estado),
           link: "./reservas.html",
-          linkTexto: "Ver reservas"
+          linkTexto: "Ver reserva"
         });
       }).join("");
     }
@@ -222,56 +162,31 @@ async function cargarCotizacionesYReservas() {
   }
 }
 
-function obtenerFechaEvento(item) {
-  return item.fecha_evento || item.fecha || item.created_at || null;
-}
-
 async function cargarEventosProximos() {
   try {
-    const res = await fetch(EVENTS_API, {
-      headers: authHeaders()
-    });
-
-    const data = await leerRespuestaJSON(res);
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudieron cargar los eventos");
-    }
-
+    const reservas = await dbService.getReservations();
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
-    const eventos = (Array.isArray(data) ? data : [])
-      .filter(evento => {
-        const fecha = obtenerFechaEvento(evento);
-        if (!fecha) return true;
-
-        const d = new Date(fecha);
-        if (Number.isNaN(d.getTime())) return true;
-
-        return d >= hoy;
-      })
-      .sort((a, b) => {
-        const fechaA = new Date(obtenerFechaEvento(a) || 0);
-        const fechaB = new Date(obtenerFechaEvento(b) || 0);
-        return fechaA - fechaB;
-      })
+    const eventos = reservas
+      .filter(r => r.fecha_evento)
+      .sort((a, b) => new Date(a.fecha_evento) - new Date(b.fecha_evento))
       .slice(0, 5);
 
     if (!eventos.length) {
-      renderEmpty(upcomingEvents, "Sin próximos eventos", "No hay eventos próximos registrados.");
+      renderEmpty(upcomingEvents, "Sin próximos eventos", "No hay eventos próximos en agenda.");
       return;
     }
 
     upcomingEvents.innerHTML = eventos.map(evento => {
       return crearItemDashboard({
         titulo: evento.cliente || "Sin cliente",
-        subtitulo: `${evento.tipo_evento || "Evento"} · ${evento.lugar || "Lugar por definir"}`,
-        fecha: formatearFecha(obtenerFechaEvento(evento)),
-        estado: evento.estado || "Pendiente",
-        badgeTexto: normalizarTextoEstado(evento.estado || "Pendiente"),
-        link: "./eventos.html",
-        linkTexto: "Ver eventos"
+        subtitulo: `${evento.tipo_evento || "Evento"} · ${evento.locacion || "Salón Almar Marinilla"}`,
+        fecha: formatearFecha(evento.fecha_evento),
+        estado: evento.estado || "Confirmada",
+        badgeTexto: normalizarTextoEstado(evento.estado || "Confirmada"),
+        link: "./calendario.html",
+        linkTexto: "Ver agenda"
       });
     }).join("");
   } catch (error) {
