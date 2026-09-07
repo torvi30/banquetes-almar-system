@@ -1,5 +1,12 @@
-const API_URL = "http://localhost:3001/api/clients";
-const token = localStorage.getItem("token");
+/**
+ * Gestión de Clientes en el Panel Administrativo - Banquetes Almar
+ * Conectado en vivo con Firebase Cloud Firestore y dbService.
+ */
+
+import { authService } from "./firebase/auth.js";
+import { dbService } from "./firebase/db.js";
+
+authService.requireAuth("./login.html");
 
 const form = document.getElementById("clientForm");
 const clientsGrid = document.getElementById("clientsGrid");
@@ -16,23 +23,6 @@ const documentoInput = document.getElementById("documento");
 const direccionInput = document.getElementById("direccion");
 const tipoClienteInput = document.getElementById("tipo_cliente");
 
-if (!token) {
-  Swal.fire({
-    icon: "warning",
-    title: "Sesión expirada",
-    text: "Debes iniciar sesión nuevamente."
-  }).then(() => {
-    window.location.href = "./login.html";
-  });
-}
-
-function authHeaders(extra = {}) {
-  return {
-    Authorization: `Bearer ${token}`,
-    ...extra
-  };
-}
-
 function limpiarFormulario() {
   clientIdInput.value = "";
   nombreInput.value = "";
@@ -46,8 +36,7 @@ function limpiarFormulario() {
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("adminNombre");
+    authService.logout();
     window.location.href = "./login.html";
   });
 }
@@ -63,7 +52,7 @@ function renderClientes(data) {
     clientsGrid.innerHTML = `
       <div class="empty-state-card">
         <h3>Sin clientes</h3>
-        <p>No hay clientes registrados.</p>
+        <p>No hay clientes registrados aún. Puedes agregar uno en el formulario superior.</p>
       </div>
     `;
     return;
@@ -80,10 +69,10 @@ function renderClientes(data) {
       <p><strong>Correo:</strong> ${cliente.email || "No definido"}</p>
       <p><strong>Documento:</strong> ${cliente.documento || "No definido"}</p>
       <p><strong>Dirección:</strong> ${cliente.direccion || "No definida"}</p>
-      <p><strong>Tipo:</strong> ${cliente.tipo_cliente || "Cliente"}</p>
+      <p><strong>Tipo:</strong> <span class="badge" style="background: rgba(212,175,55,0.15); color: #d4af37; padding: 2px 8px; border-radius: 6px;">${cliente.tipo_cliente || "Cliente"}</span></p>
 
       <div class="quote-card-actions">
-        <a href="./cliente.html?id=${cliente.id}" class="btn btn-secondary">Ver cliente</a>
+        <a href="./cliente.html?id=${cliente.id}" class="btn btn-secondary">Ver ficha</a>
         <button class="btn btn-success edit-btn" data-id="${cliente.id}">Editar</button>
         <button class="btn btn-danger delete-btn" data-id="${cliente.id}">Eliminar</button>
       </div>
@@ -92,19 +81,16 @@ function renderClientes(data) {
     clientsGrid.appendChild(card);
   });
 
-  document.querySelectorAll(".edit-btn").forEach((btn) => {
+  // Conectar botones de edición
+  clientsGrid.querySelectorAll(".edit-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.id;
 
       try {
-        const res = await fetch(`${API_URL}/${id}`, {
-          headers: authHeaders()
-        });
+        const cliente = await dbService.getClientById(id);
 
-        const cliente = await res.json();
-
-        if (!res.ok) {
-          throw new Error(cliente.message || "No se pudo cargar el cliente");
+        if (!cliente) {
+          throw new Error("No se encontró el cliente seleccionado");
         }
 
         clientIdInput.value = cliente.id;
@@ -118,7 +104,7 @@ function renderClientes(data) {
         saveClientBtn.textContent = "Actualizar cliente";
 
         window.scrollTo({
-          top: 0,
+          top: form.offsetTop - 50,
           behavior: "smooth"
         });
       } catch (error) {
@@ -131,14 +117,15 @@ function renderClientes(data) {
     });
   });
 
-  document.querySelectorAll(".delete-btn").forEach((btn) => {
+  // Conectar botones de eliminación
+  clientsGrid.querySelectorAll(".delete-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.id;
 
       const confirmacion = await Swal.fire({
         icon: "warning",
         title: "¿Eliminar cliente?",
-        text: "Esta acción no se puede deshacer.",
+        text: "Esta acción removerá el cliente de la base de datos.",
         showCancelButton: true,
         confirmButtonText: "Sí, eliminar",
         cancelButtonText: "Cancelar",
@@ -148,16 +135,7 @@ function renderClientes(data) {
       if (!confirmacion.isConfirmed) return;
 
       try {
-        const res = await fetch(`${API_URL}/${id}`, {
-          method: "DELETE",
-          headers: authHeaders()
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.message || "No se pudo eliminar el cliente");
-        }
+        await dbService.deleteClient(id);
 
         Swal.fire({
           icon: "success",
@@ -180,48 +158,28 @@ function renderClientes(data) {
 
 async function cargarClientes() {
   try {
-    const res = await fetch(API_URL, {
-      headers: authHeaders()
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudieron cargar los clientes");
-    }
-
+    const data = await dbService.getClients();
     renderClientes(data);
   } catch (error) {
     console.error("ERROR CARGANDO CLIENTES:", error);
-
     clientsGrid.innerHTML = `
       <div class="empty-state-card">
         <h3>Error</h3>
-        <p>No se pudieron cargar los clientes.</p>
+        <p>No se pudieron cargar los clientes: ${error.message}</p>
       </div>
     `;
   }
 }
 
 async function buscarClientes(query) {
-  const res = await fetch(`${API_URL}?q=${encodeURIComponent(query)}`, {
-    headers: authHeaders()
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data.message || "Error buscando clientes");
-  }
-
-  return data;
+  return await dbService.searchClients(query);
 }
 
 function abrirBuscador() {
   Swal.fire({
     title: "Buscar cliente",
     input: "text",
-    inputPlaceholder: "ID, nombre o teléfono...",
+    inputPlaceholder: "Nombre, teléfono, documento o ID...",
     showCancelButton: true,
     confirmButtonText: "Buscar",
     cancelButtonText: "Cancelar",
@@ -239,7 +197,7 @@ function abrirBuscador() {
           Swal.fire({
             icon: "info",
             title: "Sin resultados",
-            text: "No se encontraron clientes."
+            text: "No se encontraron clientes que coincidan con la búsqueda."
           });
           return false;
         }
@@ -258,18 +216,18 @@ function mostrarResultados(clientes) {
   const html = clientes.map((c) => `
     <div style="padding:12px 10px; border-bottom:1px solid #333; text-align:left;">
       <strong>${c.nombre}</strong><br>
-      <small>ID: ${c.id} | ${c.telefono || "Sin teléfono"}</small>
+      <small>ID: ${c.id} | Tel: ${c.telefono || "Sin teléfono"} | Doc: ${c.documento || "S/D"}</small>
       <div style="margin-top:10px;">
         <a href="./cliente.html?id=${c.id}" 
-           style="display:inline-block; padding:8px 14px; background:#d4af37; color:#111; border-radius:10px; text-decoration:none; font-weight:600;">
-          Ver cliente
+           style="display:inline-block; padding:6px 12px; background:#d4af37; color:#111; border-radius:8px; text-decoration:none; font-weight:600; font-size:0.85rem;">
+          Ver ficha completa
         </a>
       </div>
     </div>
   `).join("");
 
   Swal.fire({
-    title: "Resultados",
+    title: `Resultados (${clientes.length})`,
     html,
     width: 650,
     showConfirmButton: false,
@@ -305,50 +263,38 @@ if (form) {
       return;
     }
 
+    saveClientBtn.disabled = true;
+    saveClientBtn.textContent = id ? "Actualizando..." : "Guardando...";
+
     try {
-      let res;
-
       if (id) {
-        res = await fetch(`${API_URL}/${id}`, {
-          method: "PUT",
-          headers: authHeaders({
-            "Content-Type": "application/json"
-          }),
-          body: JSON.stringify(payload)
-        });
+        await dbService.updateClient(id, payload);
       } else {
-        res = await fetch(API_URL, {
-          method: "POST",
-          headers: authHeaders({
-            "Content-Type": "application/json"
-          }),
-          body: JSON.stringify(payload)
-        });
-      }
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "No se pudo guardar el cliente");
+        await dbService.createClient(payload);
       }
 
       Swal.fire({
         icon: "success",
-        title: id ? "Cliente actualizado" : "Cliente creado",
-        timer: 1200,
+        title: id ? "¡Cliente actualizado!" : "¡Cliente guardado con éxito!",
+        timer: 1500,
         showConfirmButton: false
       });
 
       limpiarFormulario();
       await cargarClientes();
     } catch (error) {
+      console.error("Error al guardar cliente:", error);
       Swal.fire({
         icon: "error",
-        title: "Error",
-        text: error.message
+        title: "Error al guardar",
+        text: error.message || "Ocurrió un error inesperado al guardar el cliente."
       });
+    } finally {
+      saveClientBtn.disabled = false;
+      saveClientBtn.textContent = id ? "Actualizar cliente" : "Guardar cliente";
     }
   });
 }
 
+// Carga inicial
 cargarClientes();

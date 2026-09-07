@@ -60,7 +60,13 @@ export const EventStudio = {
   },
 
   // Inicialización
+  _initialized: false,
   init() {
+    if (this._initialized) {
+      this.render();
+      return;
+    }
+    this._initialized = true;
     this.bindEvents();
     this.render();
   },

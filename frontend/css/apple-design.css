@@ -559,3 +559,26 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+/* Animación de feedback visual al seleccionar sede o paquete */
+@keyframes highlightPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+    border-color: var(--apple-gold);
+  }
+  50% {
+    transform: scale(1.025);
+    box-shadow: 0 0 25px 6px rgba(212, 175, 55, 0.5);
+    border-color: var(--apple-gold-light);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: var(--apple-gold-glow);
+    border-color: var(--apple-gold);
+  }
+}
+
+.highlight-pulse {
+  animation: highlightPulse 1.8s ease-in-out;
+}

@@ -7,9 +7,11 @@ import { dbService } from "./firebase/db.js";
 import { initCotizadorEcommerce, aplicarPaqueteAlCotizador } from "./cotizador-ecommerce.js";
 import { initRentalStore, rentalCart } from "./alquiler-cart.js";
 import { BUSINESS_INFO } from "./firebase/seed-data.js";
+import { EventStudio } from "./apple-configurator.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   initNavigation();
+  initSecretAdminAccess();
   initCotizadorEcommerce();
   initRentalStore();
   await cargarPaquetesDestacados();
@@ -34,6 +36,40 @@ function initNavigation() {
   }
 }
 
+// Acceso secreto a Administración (Invisible para el público):
+// 1. Triple clic en el logo de Banquetes Almar (en menos de 1.2 segundos).
+// 2. Atajo de teclado: Ctrl + Alt + A (o Cmd + Alt + A en Mac).
+function initSecretAdminAccess() {
+  // Atajo de teclado global
+  window.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.altKey && (e.key === "a" || e.key === "A")) {
+      e.preventDefault();
+      window.location.href = "./admin/login.html";
+    }
+  });
+
+  // Triple clic en el logo
+  const brand = document.querySelector(".brand");
+  if (brand) {
+    let clickCount = 0;
+    let clickTimer = null;
+
+    brand.addEventListener("click", (e) => {
+      clickCount++;
+      if (clickCount === 1) {
+        clickTimer = setTimeout(() => {
+          clickCount = 0;
+        }, 1200);
+      } else if (clickCount >= 3) {
+        e.preventDefault();
+        clearTimeout(clickTimer);
+        clickCount = 0;
+        window.location.href = "./admin/login.html";
+      }
+    });
+  }
+}
+
 // Carga y renderizado de paquetes todo incluido
 async function cargarPaquetesDestacados() {
   const container = document.getElementById("packagesListContainer");
@@ -54,11 +90,11 @@ async function cargarPaquetesDestacados() {
           
           <div class="package-price-wrap">
             <span class="price-label">Desde (por invitado)</span>
-            <span class="price-val">$${pkg.precioPorPersona.toLocaleString("es-CO")} COP</span>
+            <span class="price-val">$${(pkg.precioPorPersona || 0).toLocaleString("es-CO")} COP</span>
           </div>
 
           <ul class="package-inclusions-list">
-            ${pkg.inclusions.slice(0, 4).map(inc => `<li>${inc}</li>`).join("")}
+            ${(pkg.inclusiones || pkg.inclusions || []).slice(0, 4).map(inc => `<li>${inc}</li>`).join("")}
           </ul>
 
           <button class="btn btn-primary select-package-btn" data-id="${pkg.id}" style="width: 100%;">
@@ -73,21 +109,6 @@ async function cargarPaquetesDestacados() {
       btn.addEventListener("click", () => {
         const pkgId = btn.dataset.id;
         aplicarPaqueteAlCotizador(pkgId);
-      });
-    });
-
-    // Conectar botones de selección de sede (Marinilla vs El Peñol)
-    document.querySelectorAll(".select-venue-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const venue = btn.dataset.venue;
-        if (window.EventStudio) {
-          window.EventStudio.state.location = venue;
-          window.EventStudio.render();
-        }
-        const cotSection = document.getElementById("cotizador");
-        if (cotSection) {
-          cotSection.scrollIntoView({ behavior: "smooth" });
-        }
       });
     });
 

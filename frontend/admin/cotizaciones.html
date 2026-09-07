@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cotizaciones | Banquetes Almar</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/style.css?v=20260907.6" />
 </head>
 <body>
   <section class="section admin-panel">
@@ -29,59 +29,116 @@
         <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">Cerrar sesión</button>
       </div>
 
-      <div class="cotizaciones-toolbar">
-        <div class="form-group">
-          <label for="searchInput">Buscar</label>
-          <input type="text" id="searchInput" placeholder="Nombre, teléfono, tipo de evento..." />
+      <!-- METRICAS DE PIPELINE CRM -->
+      <div class="pipeline-metrics-banner">
+        <div class="pipeline-metric-card">
+          <span class="pipeline-metric-label">📋 Total Cotizaciones</span>
+          <strong id="metricTotalQuotes" class="pipeline-metric-val">0</strong>
         </div>
 
-        <div class="form-group">
-          <label for="filterOrigen">Origen</label>
-          <select id="filterOrigen">
-            <option value="">Todos</option>
-            <option value="cotizacion">Cotizaciones</option>
-            <option value="reserva">Reservas</option>
-          </select>
+        <div class="pipeline-metric-card">
+          <span class="pipeline-metric-label">💰 Valor en Pipeline</span>
+          <strong id="metricPipelineValue" class="pipeline-metric-val highlight-gold">$0</strong>
+        </div>
+
+        <div class="pipeline-metric-card">
+          <span class="pipeline-metric-label">⚡ Por Contactar</span>
+          <strong id="metricNewQuotes" class="pipeline-metric-val" style="color: #f59e0b;">0</strong>
+        </div>
+
+        <div class="pipeline-metric-card">
+          <span class="pipeline-metric-label">🏆 Convertidas a Reserva</span>
+          <strong id="metricConverted" class="pipeline-metric-val" style="color: #10b981;">0</strong>
         </div>
       </div>
 
+      <!-- BARRA DE HERRAMIENTAS -->
+      <div class="cotizaciones-toolbar">
+        <div class="form-group">
+          <label for="searchInput">Buscar en tablero</label>
+          <input type="text" id="searchInput" placeholder="Buscar por cliente, teléfono, locación o evento..." />
+        </div>
+
+        <div class="form-group">
+          <label for="filterOrigen">Canal de origen</label>
+          <select id="filterOrigen">
+            <option value="">Todos los canales</option>
+            <option value="cotizacion">Cotizador Web</option>
+            <option value="carrito_alquiler">Mobiliario / Alquiler</option>
+            <option value="reserva">Reservas Directas</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="filterOrden">Ordenar por</label>
+          <select id="filterOrden">
+            <option value="proxima" selected>📅 Fecha más próxima</option>
+            <option value="reciente">⚡ Más recientes primero</option>
+            <option value="mayor_presupuesto">💰 Mayor presupuesto</option>
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 8px; align-self: flex-end;">
+          <button id="btnRefreshBoard" class="btn btn-secondary" style="padding: 10px 14px; font-size: 0.85rem;" title="Recargar tablero">
+            🔄 Refrescar
+          </button>
+        </div>
+      </div>
+
+      <!-- TABLERO KANBAN DRAG & DROP -->
       <div class="pipeline-board">
-        <section class="pipeline-column">
+        <!-- COLUMNA 1: NUEVOS -->
+        <section class="pipeline-column" data-status="nuevo">
           <div class="pipeline-column-head">
-            <h3>Nuevos / Pendientes</h3>
+            <div class="pipeline-column-title">
+              <span class="pipeline-status-dot" style="color: #f59e0b; background: #f59e0b;"></span>
+              <h3>Nuevos / Pendientes</h3>
+            </div>
             <span id="countNuevos" class="pipeline-count">0</span>
           </div>
-          <div id="colNuevos" class="pipeline-list"></div>
+          <div id="colNuevos" class="pipeline-list" data-status="nuevo"></div>
         </section>
 
-        <section class="pipeline-column">
+        <!-- COLUMNA 2: CONTACTADOS -->
+        <section class="pipeline-column" data-status="contactado">
           <div class="pipeline-column-head">
-            <h3>Contactados / Confirmadas</h3>
+            <div class="pipeline-column-title">
+              <span class="pipeline-status-dot" style="color: #0ea5e9; background: #0ea5e9;"></span>
+              <h3>En Seguimiento</h3>
+            </div>
             <span id="countContactados" class="pipeline-count">0</span>
           </div>
-          <div id="colContactados" class="pipeline-list"></div>
+          <div id="colContactados" class="pipeline-list" data-status="contactado"></div>
         </section>
 
-        <section class="pipeline-column">
+        <!-- COLUMNA 3: CONVERTIDOS -->
+        <section class="pipeline-column" data-status="convertido">
           <div class="pipeline-column-head">
-            <h3>Cancelados</h3>
-            <span id="countCancelados" class="pipeline-count">0</span>
-          </div>
-          <div id="colCancelados" class="pipeline-list"></div>
-        </section>
-
-        <section class="pipeline-column">
-          <div class="pipeline-column-head">
-            <h3>Convertidos</h3>
+            <div class="pipeline-column-title">
+              <span class="pipeline-status-dot" style="color: #10b981; background: #10b981;"></span>
+              <h3>Convertidos a Reserva</h3>
+            </div>
             <span id="countConvertidos" class="pipeline-count">0</span>
           </div>
-          <div id="colConvertidos" class="pipeline-list"></div>
+          <div id="colConvertidos" class="pipeline-list" data-status="convertido"></div>
+        </section>
+
+        <!-- COLUMNA 4: CANCELADOS -->
+        <section class="pipeline-column" data-status="cancelado">
+          <div class="pipeline-column-head">
+            <div class="pipeline-column-title">
+              <span class="pipeline-status-dot" style="color: #64748b; background: #64748b;"></span>
+              <h3>Cancelados</h3>
+            </div>
+            <span id="countCancelados" class="pipeline-count">0</span>
+          </div>
+          <div id="colCancelados" class="pipeline-list" data-status="cancelado"></div>
         </section>
       </div>
     </div>
   </section>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script type="module" src="../js/cotizaciones-admin.js"></script>
+  <script type="module" src="../js/cotizaciones-admin.js?v=20260907.6"></script>
 </body>
 </html>

@@ -18,7 +18,8 @@ const STORAGE_KEYS = {
   EVENTS: "almar_eventos",
   PAYMENTS: "almar_pagos",
   CLIENTS: "almar_clientes",
-  GALLERY: "almar_galeria"
+  GALLERY: "almar_galeria",
+  GALLERY_CATEGORIES: "almar_galeria_categorias"
 };
 
 // Inicialización de datos semilla si el almacenamiento local está vacío
@@ -92,15 +93,26 @@ function initLocalStore() {
       {
         id: "pay-301",
         reservaId: "res-201",
-        cliente: "Valentina Muñoz",
+        cliente: "Valentina Muñoz & Juan Esteban",
         monto: 4000000,
+        concepto: "Anticipo 30% separación de fecha",
         metodo: "Transferencia Bancolombia",
-        concepto: "Anticipo de separación de fecha",
-        fecha: "2026-09-01",
-        estado: "Aprobado"
+        fecha: "2026-08-15"
       }
     ];
     localStorage.setItem(STORAGE_KEYS.PAYMENTS, JSON.stringify(initialPayments));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.GALLERY_CATEGORIES)) {
+    const initialCategories = [
+      "Bodas",
+      "15 Años",
+      "Salón Marinilla",
+      "Finca El Peñol",
+      "Mobiliario",
+      "Catering",
+      "Eventos Corporativos"
+    ];
+    localStorage.setItem(STORAGE_KEYS.GALLERY_CATEGORIES, JSON.stringify(initialCategories));
   }
   if (!localStorage.getItem(STORAGE_KEYS.GALLERY)) {
     const initialGallery = [
@@ -108,32 +120,82 @@ function initLocalStore() {
         id: "gal-1",
         titulo: "Boda Romántica en Salón Almar",
         categoria: "Bodas",
-        imagen: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
+        imagen: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
         descripcion: "Montaje de gala con centros florales altos e iluminación cálida."
       },
       {
         id: "gal-2",
         titulo: "Ceremonia Campestre en El Peñol",
-        categoria: "Bodas",
-        imagen: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80",
+        categoria: "Finca El Peñol",
+        imagen: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1200&q=80",
         descripcion: "Jardines campestres frente a la represa y quiosco iluminado."
       },
       {
         id: "gal-3",
         titulo: "Quince Años de Ensueño",
         categoria: "15 Años",
-        imagen: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80",
+        imagen: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=80",
         descripcion: "Efectos especiales, pista LED y backing floral."
       },
       {
         id: "gal-4",
-        titulo: "Mesa de Gala y Menaje Fino",
+        titulo: "Cena de Gala y Alta Cocina",
         categoria: "Catering",
-        imagen: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=800&q=80",
-        descripcion: "Vajilla de alta gama y cristalería para cena de gala."
+        imagen: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=1200&q=80",
+        descripcion: "Servicio gourmet a 3 tiempos con emplatado de autor."
+      },
+      {
+        id: "gal-5",
+        titulo: "Montaje Tiffany y Salas Lounge",
+        categoria: "Mobiliario",
+        imagen: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80",
+        descripcion: "Silletería dorada y mobiliario de alquiler de alta gama."
+      },
+      {
+        id: "gal-6",
+        titulo: "Gran Salón de Gala Marinilla",
+        categoria: "Salón Marinilla",
+        imagen: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80",
+        descripcion: "Capacidad para 200 personas con acústica profesional y chandeliers."
       }
     ];
     localStorage.setItem(STORAGE_KEYS.GALLERY, JSON.stringify(initialGallery));
+  }
+
+  if (!localStorage.getItem(STORAGE_KEYS.CLIENTS)) {
+    const initialClients = [
+      {
+        id: "cli-101",
+        nombre: "Mariana Gómez",
+        telefono: "3145678901",
+        email: "mariana.gomez@gmail.com",
+        documento: "1038412991",
+        direccion: "Calle 30 # 29-15, Marinilla",
+        tipo_cliente: "Cliente",
+        createdAt: new Date(Date.now() - 86400000 * 5).toISOString()
+      },
+      {
+        id: "cli-102",
+        nombre: "Carlos Andrés Restrepo",
+        telefono: "3104523311",
+        email: "carlos.restrepo@outlook.com",
+        documento: "1038554210",
+        direccion: "Sector La Dalia, El Peñol",
+        tipo_cliente: "VIP",
+        createdAt: new Date(Date.now() - 86400000 * 2).toISOString()
+      },
+      {
+        id: "cli-103",
+        nombre: "Valentina Muñoz",
+        telefono: "3117892233",
+        email: "valen.munoz@yahoo.es",
+        documento: "1040112845",
+        direccion: "Carrera 31 # 27-10, Rionegro",
+        tipo_cliente: "Empresarial",
+        createdAt: new Date().toISOString()
+      }
+    ];
+    localStorage.setItem(STORAGE_KEYS.CLIENTS, JSON.stringify(initialClients));
   }
 }
 
@@ -384,20 +446,237 @@ export const dbService = {
     return newPayment;
   },
 
-  // GALERÍA
+  // GALERÍA Y CATEGORÍAS
+  async getGalleryCategories() {
+    let cats = getLocal(STORAGE_KEYS.GALLERY_CATEGORIES);
+    if (!Array.isArray(cats) || cats.length === 0) {
+      cats = [
+        "Bodas",
+        "15 Años",
+        "Salón Marinilla",
+        "Finca El Peñol",
+        "Mobiliario",
+        "Catering",
+        "Eventos Corporativos"
+      ];
+      setLocal(STORAGE_KEYS.GALLERY_CATEGORIES, cats);
+    }
+    return cats;
+  },
+
+  async addGalleryCategory(name) {
+    const trimmed = (name || "").trim();
+    if (!trimmed) return false;
+    const cats = await this.getGalleryCategories();
+    if (!cats.some(c => c.toLowerCase() === trimmed.toLowerCase())) {
+      cats.push(trimmed);
+      setLocal(STORAGE_KEYS.GALLERY_CATEGORIES, cats);
+    }
+    return cats;
+  },
+
+  async deleteGalleryCategory(name) {
+    let cats = await this.getGalleryCategories();
+    cats = cats.filter(c => c.toLowerCase() !== name.toLowerCase());
+    setLocal(STORAGE_KEYS.GALLERY_CATEGORIES, cats);
+    return cats;
+  },
+
   async getGallery() {
-    return getLocal(STORAGE_KEYS.GALLERY);
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        const snapshot = await ops.getDocs(ops.collection(db, "galeria"));
+        if (!snapshot.empty) {
+          const remoteItems = [];
+          snapshot.forEach(doc => remoteItems.push({ id: doc.id, ...doc.data() }));
+          setLocal(STORAGE_KEYS.GALLERY, remoteItems);
+          return remoteItems;
+        }
+      } catch (err) {
+        console.warn("Firestore getGallery:", err.message);
+      }
+    }
+    let localItems = getLocal(STORAGE_KEYS.GALLERY);
+    if (!Array.isArray(localItems) || localItems.length === 0) {
+      initDB();
+      localItems = getLocal(STORAGE_KEYS.GALLERY);
+    }
+    return localItems;
   },
 
   async addGalleryItem(item) {
-    const gallery = getLocal(STORAGE_KEYS.GALLERY);
     const newItem = {
-      id: "gal-" + Date.now(),
-      ...item
+      ...item,
+      createdAt: new Date().toISOString()
     };
+
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        const docRef = await ops.addDoc(ops.collection(db, "galeria"), newItem);
+        newItem.id = docRef.id;
+      } catch (err) {
+        console.warn("Firestore addGalleryItem:", err.message);
+        newItem.id = "gal-" + Date.now();
+      }
+    } else {
+      newItem.id = "gal-" + Date.now();
+    }
+
+    const gallery = getLocal(STORAGE_KEYS.GALLERY);
     gallery.unshift(newItem);
     setLocal(STORAGE_KEYS.GALLERY, gallery);
     return newItem;
+  },
+
+  async updateGalleryItem(id, itemData) {
+    const live = await initFirestoreLive();
+    if (live && !String(id).startsWith("gal-")) {
+      try {
+        const { db, ops } = live;
+        await ops.updateDoc(ops.doc(db, "galeria", String(id)), itemData);
+      } catch (err) {
+        console.warn("Firestore updateGalleryItem:", err.message);
+      }
+    }
+
+    const gallery = getLocal(STORAGE_KEYS.GALLERY);
+    const idx = gallery.findIndex(g => String(g.id) === String(id));
+    if (idx !== -1) {
+      gallery[idx] = { ...gallery[idx], ...itemData, id };
+      setLocal(STORAGE_KEYS.GALLERY, gallery);
+      return gallery[idx];
+    }
+    return { id, ...itemData };
+  },
+
+  async deleteGalleryItem(id) {
+    const live = await initFirestoreLive();
+    if (live && !String(id).startsWith("gal-")) {
+      try {
+        const { db, ops } = live;
+        await ops.deleteDoc(ops.doc(db, "galeria", String(id)));
+      } catch (err) {
+        console.warn("Firestore deleteGalleryItem:", err.message);
+      }
+    }
+
+    let gallery = getLocal(STORAGE_KEYS.GALLERY);
+    gallery = gallery.filter(g => String(g.id) !== String(id));
+    setLocal(STORAGE_KEYS.GALLERY, gallery);
+    return true;
+  },
+
+  async saveGalleryOrder(orderedItems) {
+    if (Array.isArray(orderedItems)) {
+      setLocal(STORAGE_KEYS.GALLERY, orderedItems);
+    }
+    return orderedItems;
+  },
+
+  // CLIENTES
+  async getClients() {
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        const snapshot = await ops.getDocs(ops.collection(db, "clientes"));
+        if (!snapshot.empty) {
+          const remoteClients = [];
+          snapshot.forEach(doc => remoteClients.push({ id: doc.id, ...doc.data() }));
+          setLocal(STORAGE_KEYS.CLIENTS, remoteClients);
+          return remoteClients;
+        }
+      } catch (err) {
+        console.warn("Firestore getClients:", err.message);
+      }
+    }
+    return getLocal(STORAGE_KEYS.CLIENTS).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  },
+
+  async getClientById(id) {
+    const clients = await this.getClients();
+    return clients.find(c => String(c.id) === String(id)) || null;
+  },
+
+  async createClient(clientData) {
+    const newClient = {
+      ...clientData,
+      createdAt: new Date().toISOString()
+    };
+
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        const docRef = await ops.addDoc(ops.collection(db, "clientes"), newClient);
+        newClient.id = docRef.id;
+      } catch (err) {
+        console.warn("Firestore createClient:", err.message);
+        newClient.id = "cli-" + Date.now();
+      }
+    } else {
+      newClient.id = "cli-" + Date.now();
+    }
+
+    const clients = getLocal(STORAGE_KEYS.CLIENTS);
+    clients.unshift(newClient);
+    setLocal(STORAGE_KEYS.CLIENTS, clients);
+    return newClient;
+  },
+
+  async updateClient(id, clientData) {
+    const live = await initFirestoreLive();
+    if (live && !String(id).startsWith("cli-")) {
+      try {
+        const { db, ops } = live;
+        await ops.updateDoc(ops.doc(db, "clientes", String(id)), clientData);
+      } catch (err) {
+        console.warn("Firestore updateClient:", err.message);
+      }
+    }
+
+    const clients = getLocal(STORAGE_KEYS.CLIENTS);
+    const idx = clients.findIndex(c => String(c.id) === String(id));
+    if (idx !== -1) {
+      clients[idx] = { ...clients[idx], ...clientData, id };
+      setLocal(STORAGE_KEYS.CLIENTS, clients);
+      return clients[idx];
+    }
+    return { id, ...clientData };
+  },
+
+  async deleteClient(id) {
+    const live = await initFirestoreLive();
+    if (live && !String(id).startsWith("cli-")) {
+      try {
+        const { db, ops } = live;
+        await ops.deleteDoc(ops.doc(db, "clientes", String(id)));
+      } catch (err) {
+        console.warn("Firestore deleteClient:", err.message);
+      }
+    }
+
+    let clients = getLocal(STORAGE_KEYS.CLIENTS);
+    clients = clients.filter(c => String(c.id) !== String(id));
+    setLocal(STORAGE_KEYS.CLIENTS, clients);
+    return true;
+  },
+
+  async searchClients(query) {
+    const clients = await this.getClients();
+    if (!query || !query.trim()) return clients;
+    const q = query.toLowerCase().trim();
+    return clients.filter(c => 
+      String(c.nombre || "").toLowerCase().includes(q) ||
+      String(c.telefono || "").toLowerCase().includes(q) ||
+      String(c.documento || "").toLowerCase().includes(q) ||
+      String(c.email || "").toLowerCase().includes(q) ||
+      String(c.id || "").toLowerCase().includes(q)
+    );
   },
 
   // ESTADÍSTICAS DEL DASHBOARD
@@ -405,6 +684,7 @@ export const dbService = {
     const quotes = getLocal(STORAGE_KEYS.QUOTES);
     const reservas = getLocal(STORAGE_KEYS.RESERVATIONS);
     const payments = getLocal(STORAGE_KEYS.PAYMENTS);
+    const clients = getLocal(STORAGE_KEYS.CLIENTS);
 
     const totalIngresos = payments.reduce((acc, p) => acc + (Number(p.monto) || 0), 0);
     const totalPendiente = reservas.reduce((acc, r) => acc + (Number(r.saldo) || 0), 0);
@@ -413,6 +693,7 @@ export const dbService = {
     return {
       totalQuotes: quotes.length,
       totalEventos: reservas.length,
+      totalClientes: clients.length,
       confirmados: confirmados,
       ingresos: totalIngresos,
       pendiente: totalPendiente
