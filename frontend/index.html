@@ -487,19 +487,25 @@
     </section>
 
     <!-- GALERÍA DE MONTAJES REALES -->
-    <section class="section" id="galeria" style="background: #08080a;">
+    <section class="section" id="galeria" style="background: #070709; padding: 5rem 0;">
       <div class="container">
-        <div class="section-heading reveal">
-          <p class="section-label">Nuestro Portafolio</p>
-          <h2>Galería de Eventos Realizados</h2>
-          <p>Bodas, quinceañeras y montajes reales en nuestro salón en Marinilla y fincas del Oriente Antioqueño.</p>
+        <div class="section-heading reveal" style="text-align: center; max-width: 780px; margin: 0 auto 2.5rem;">
+          <p class="section-label" style="background: rgba(212,175,55,0.15); border: 1px solid var(--apple-gold); color: var(--apple-gold-light); display: inline-block; padding: 0.35rem 1.1rem; border-radius: 999px; margin-bottom: 1rem; font-size: 0.85rem; font-weight: 600;">
+            ✨ Portafolio de Gala
+          </p>
+          <h2 style="font-size: clamp(2rem, 4vw, 3rem); font-family: 'Playfair Display', serif; color: #fff; margin-bottom: 0.9rem; letter-spacing: -0.5px;">
+            Galería de Eventos & Montajes Reales
+          </h2>
+          <p style="color: var(--apple-text-secondary); font-size: 1.05rem; line-height: 1.6;">
+            Cada fotografía es un momento real lleno de magia y distinción. Explora nuestros montajes en el Salón de Gala en Marinilla y fincas campestres del Oriente Antioqueño.
+          </p>
         </div>
 
-        <div class="rental-filter-bar" id="galleryFilters">
+        <div class="gallery-filters-bar" id="galleryFilters">
           <!-- Filtros de categoría de fotos -->
         </div>
 
-        <div class="gallery-grid" id="galleryGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+        <div class="public-gallery-grid" id="galleryGrid">
           <!-- Fotos dinámicas -->
         </div>
       </div>
@@ -619,8 +625,38 @@
     </div>
   </aside>
 
+  <!-- MODAL LIGHTBOX DE ALTA GAMA PARA GALERÍA CLIENTE -->
+  <div class="client-lightbox-overlay" id="clientLightboxModal" aria-hidden="true">
+    <div class="client-lightbox-content" role="dialog" aria-modal="true" aria-labelledby="clientLightboxTitle">
+      <button class="client-lightbox-close" id="clientLightboxClose" aria-label="Cerrar vista previa">&times;</button>
+      
+      <div class="client-lightbox-image-stage">
+        <button class="client-lightbox-nav prev" id="clientLightboxPrev" aria-label="Foto anterior">&#8249;</button>
+        <img src="" alt="" class="client-lightbox-img" id="clientLightboxImg" />
+        <button class="client-lightbox-nav next" id="clientLightboxNext" aria-label="Foto siguiente">&#8250;</button>
+      </div>
+
+      <div class="client-lightbox-details">
+        <div>
+          <div class="client-lightbox-header">
+            <span class="client-lightbox-category" id="clientLightboxCategory">✨ Banquetes Almar</span>
+            <span class="client-lightbox-counter" id="clientLightboxCounter">1 de 6</span>
+          </div>
+          <h3 class="client-lightbox-title" id="clientLightboxTitle">Montaje de Gala</h3>
+          <p class="client-lightbox-desc" id="clientLightboxDesc">Diseño y decoración profesional para eventos en Marinilla y Antioquia.</p>
+        </div>
+
+        <div class="client-lightbox-actions">
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn-apple-primary" id="clientLightboxWpBtn" style="width: 100%; justify-content: center; text-decoration: none;">
+            <span>💬 Cotizar Este Montaje</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPTS MODULARES -->
-  <script type="module" src="./js/app.js"></script>
-  <script type="module" src="./js/apple-configurator.js"></script>
+  <script type="module" src="./js/app.js?v=20260907.21"></script>
+  <script type="module" src="./js/apple-configurator.js?v=20260907.21"></script>
 </body>
 </html>
