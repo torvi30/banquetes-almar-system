@@ -12,55 +12,73 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="./css/style.css?v=20260908.1" />
-  <link rel="stylesheet" href="./css/ecommerce.css?v=20260908.1" />
-  <link rel="stylesheet" href="./css/apple-design.css?v=20260908.1" />
+  <link rel="stylesheet" href="./css/style.css?v=20260908.2" />
+  <link rel="stylesheet" href="./css/ecommerce.css?v=20260908.2" />
+  <link rel="stylesheet" href="./css/apple-design.css?v=20260908.2" />
 </head>
 <body>
 
-  <!-- BARRA SUPERIOR DE CONTACTO -->
-  <div style="background: #050507; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 0.55rem 0; font-size: 0.85rem; color: var(--apple-text-secondary);">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-      <div>
-        <span>📍 Calle 29 n° 28-25, Marinilla, Antioquia</span>
-        <span style="margin: 0 0.5rem; opacity: 0.4;">|</span>
-        <span>Oriente Antioqueño: Marinilla, Rionegro, El Retiro, La Ceja, Guarne</span>
+  <!-- FRANJA DE PRESTIGIO & GALA (ANUNCIO EDITORIAL DE ALTA GAMA) -->
+  <div class="top-announcement-bar">
+    <div class="container announcement-inner">
+      <div class="announcement-left">
+        <span class="announcement-sparkle">✨</span>
+        <span class="announcement-highlight">Temporada de Eventos 2026-2027:</span>
+        <span class="announcement-venues">Salón de Gala en Marinilla & Finca Campestre en El Peñol</span>
       </div>
-      <div>
-        <span>📞 <a href="tel:+573148849011" style="color: var(--apple-gold-light); font-weight: 600;">314 8849011</a> / (604) 548 5352</span>
+      <div class="announcement-right">
+        <span class="announcement-badge">Oriente Antioqueño</span>
+        <span class="announcement-dot">•</span>
+        <span>Degustación Previa de Menú Incluida</span>
       </div>
     </div>
   </div>
 
-  <!-- HEADER / NAVEGACIÓN APPLE STYLE -->
-  <header class="header" id="header" style="position: sticky; top: 0; z-index: 999; backdrop-filter: var(--apple-blur); background: rgba(9, 9, 11, 0.85); border-bottom: 1px solid var(--apple-border);">
-    <nav class="navbar container">
-      <a href="#inicio" class="brand">
+  <!-- HEADER / NAVEGACIÓN APPLE LUXURY STYLE (3 ZONAS BALANCEADAS) -->
+  <header class="header apple-header" id="header">
+    <nav class="navbar container navbar-luxury">
+      <!-- ZONA 1: IDENTIDAD DE MARCA (Logotipo + Tipografía de Gala) -->
+      <a href="#inicio" class="brand" title="Banquetes Almar - Inicio">
         <img src="./images/logo-almar.png" alt="Logo Banquetes Almar" class="brand-logo" onerror="this.style.display='none'" />
         <div class="brand-text">
-          <span class="logo-main" style="letter-spacing: -0.5px;">Banquetes Almar</span>
+          <span class="logo-main">Banquetes Almar</span>
           <span class="logo-sub">Marinilla • Salón & Eventos</span>
         </div>
       </a>
 
-      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú">☰</button>
-
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#inicio">Inicio</a></li>
-        <li><a href="#sedes" style="color: var(--apple-gold-light); font-weight: 600;">🏛️ Sedes</a></li>
-        <li><a href="#paquetes">Paquetes</a></li>
-        <li><a href="#gastronomia" style="color: #f5eedc; font-weight: 600;">🍽️ Gastronomía</a></li>
-        <li><a href="#cotizador" style="color: var(--apple-gold-light); font-weight: 700;">✨ Diseñar Evento</a></li>
-        <li><a href="#alquiler">Alquiler Mobiliario</a></li>
-        <li><a href="#galeria" style="color: var(--apple-gold-light); font-weight: 600;">📸 Galería</a></li>
-        <li><a href="#ubicacion">Ubicación</a></li>
-        <li><a href="./portal-cliente.html" style="color: #f5eedc; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem;">👑 Mi Evento</a></li>
-        <li>
-          <button class="btn btn-secondary open-cart-btn" type="button" style="padding: 0.5rem 1.1rem; display: inline-flex; align-items: center; gap: 0.4rem; position: relative;">
-            🛒 Carrito <span class="cart-count-badge">0</span>
-          </button>
+      <!-- ZONA 2: NAVEGACIÓN EDITORIAL LIMPIA (Centro - Enlaces Sin Ruido) -->
+      <ul class="nav-links nav-links-editorial" id="navLinks">
+        <li><a href="#sedes" class="nav-editorial-link">Sedes</a></li>
+        <li><a href="#paquetes" class="nav-editorial-link">Paquetes</a></li>
+        <li><a href="#gastronomia" class="nav-editorial-link">Gastronomía</a></li>
+        <li><a href="#alquiler" class="nav-editorial-link">Mobiliario</a></li>
+        <li><a href="#galeria" class="nav-editorial-link">Galería</a></li>
+        <li><a href="#ubicacion" class="nav-editorial-link">Ubicación</a></li>
+        
+        <!-- Herramientas en Menú Móvil Desplegable -->
+        <li class="mobile-drawer-action">
+          <a href="#cotizador" class="btn-nav-cta btn-mobile-cta">✨ Diseñar Evento</a>
+        </li>
+        <li class="mobile-drawer-action">
+          <a href="./portal-cliente.html" class="nav-client-portal btn-mobile-portal">👑 Mi Evento</a>
         </li>
       </ul>
+
+      <!-- ZONA 3: ACCIONES DE CONVERSIÓN & HERRAMIENTAS DE CLIENTE (Derecha) -->
+      <div class="nav-actions-group">
+        <a href="#cotizador" class="btn-nav-cta" title="Diseñar mi evento interactivo">
+          ✨ Diseñar Evento
+        </a>
+        <a href="./portal-cliente.html" class="nav-client-portal" title="Portal de Clientes Almar">
+          👑 Mi Evento
+        </a>
+        <button class="btn-nav-cart open-cart-btn" type="button" title="Ver Carrito de Alquiler" aria-label="Ver Carrito de Alquiler">
+          <span class="cart-icon">🛒</span>
+          <span class="cart-label">Carrito</span>
+          <span class="cart-count-badge">0</span>
+        </button>
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú de navegación">☰</button>
+      </div>
     </nav>
   </header>
 

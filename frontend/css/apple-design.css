@@ -706,3 +706,416 @@ section[id] {
   visibility: visible !important;
 }
 
+/* ===================================================
+   LUXURY NAVIGATION & PRESTIGE ANNOUNCEMENT STRIP
+   =================================================== */
+
+/* Franja Superior de Prestigio (Editorial Announcement Bar) */
+.top-announcement-bar {
+  background: #060608;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  padding: 0.5rem 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.3px;
+  color: #a1a1aa;
+}
+
+.announcement-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.announcement-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.81rem;
+}
+
+.announcement-sparkle {
+  color: var(--apple-gold);
+  font-size: 0.95rem;
+}
+
+.announcement-highlight {
+  color: var(--apple-gold-light);
+  font-weight: 600;
+}
+
+.announcement-venues {
+  color: #e4e4e7;
+}
+
+.announcement-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.77rem;
+  color: var(--apple-text-secondary);
+}
+
+.announcement-badge {
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  color: var(--apple-gold-light);
+  padding: 0.15rem 0.65rem;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+.announcement-dot {
+  opacity: 0.35;
+}
+
+/* Header Luxury 3 Zonas */
+.apple-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(9, 9, 11, 0.88);
+  backdrop-filter: var(--apple-blur);
+  -webkit-backdrop-filter: var(--apple-blur);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.apple-header.scrolled {
+  background: rgba(6, 6, 8, 0.96);
+  border-bottom-color: rgba(212, 175, 55, 0.22);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+}
+
+.navbar-luxury {
+  min-height: 74px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Zona 1: Marca */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  text-decoration: none;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.brand-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(212, 175, 55, 0.35);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.brand:hover .brand-logo {
+  transform: scale(1.05);
+  border-color: var(--apple-gold);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
+}
+
+.logo-main {
+  font-family: "Playfair Display", serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--apple-gold-light);
+  letter-spacing: -0.2px;
+  line-height: 1.15;
+}
+
+.logo-sub {
+  font-size: 0.64rem;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: #a1a1aa;
+  margin-top: 0.15rem;
+}
+
+/* Zona 2: Enlaces Editoriales Limpios */
+.nav-links-editorial {
+  display: flex;
+  align-items: center;
+  gap: 1.65rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-editorial-link {
+  color: #d1d5db;
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.25px;
+  text-decoration: none;
+  position: relative;
+  padding: 0.45rem 0;
+  transition: color 0.25s ease;
+}
+
+.nav-editorial-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #d4af37, #f5e6b3);
+  border-radius: 2px;
+  transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-editorial-link:hover {
+  color: #ffffff;
+}
+
+.nav-editorial-link:hover::after {
+  width: 100%;
+}
+
+.mobile-drawer-action {
+  display: none;
+}
+
+/* Zona 3: Acciones & Herramientas */
+.nav-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Botón CTA Protagonista */
+.btn-nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #09090b !important;
+  background: linear-gradient(135deg, #fceec5 0%, #d4af37 50%, #aa8212 100%);
+  border-radius: 999px;
+  text-decoration: none;
+  border: none;
+  box-shadow: 0 2px 14px rgba(212, 175, 55, 0.32);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.btn-nav-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(212, 175, 55, 0.5);
+  filter: brightness(1.06);
+}
+
+/* Portal de Cliente */
+.nav-client-portal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.52rem 1.05rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #e4e4e7;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 999px;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.nav-client-portal:hover {
+  background: rgba(212, 175, 55, 0.12);
+  border-color: rgba(212, 175, 55, 0.55);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Botón de Carrito Glassmorphic */
+.btn-nav-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.95rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #f4f4f5;
+  background: rgba(24, 24, 27, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.btn-nav-cart .cart-icon {
+  font-size: 0.95rem;
+}
+
+.btn-nav-cart .cart-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.btn-nav-cart .cart-count-badge {
+  background: var(--apple-gold);
+  color: #09090b;
+  font-size: 0.72rem;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.btn-nav-cart:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: rgba(39, 39, 42, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+/* Botón Hamburguesa */
+.menu-toggle {
+  display: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 0.4rem 0.65rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-toggle:hover {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+/* ===================================================
+   RESPONSIVIDAD & DRAWER MÓVIL
+   =================================================== */
+
+@media (max-width: 1080px) {
+  .nav-links-editorial {
+    gap: 1.15rem;
+  }
+  .nav-editorial-link {
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .nav-actions-group .btn-nav-cta,
+  .nav-actions-group .nav-client-portal {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: block !important;
+  }
+
+  .nav-links-editorial {
+    position: fixed;
+    top: 74px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: rgba(9, 9, 11, 0.98);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    padding: 1.5rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    display: none;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.85);
+    z-index: 999;
+    max-height: calc(100vh - 74px);
+    overflow-y: auto;
+  }
+
+  .nav-links-editorial.active {
+    display: flex !important;
+  }
+
+  .nav-editorial-link {
+    display: block;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 1rem;
+  }
+
+  .nav-editorial-link:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: rgba(212, 175, 55, 0.3);
+    color: #ffffff;
+  }
+
+  .nav-editorial-link::after {
+    display: none;
+  }
+
+  .mobile-drawer-action {
+    display: block;
+    margin-top: 0.35rem;
+  }
+
+  .btn-mobile-cta,
+  .btn-mobile-portal {
+    width: 100%;
+    justify-content: center;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .announcement-right {
+    display: none;
+  }
+
+  .announcement-inner {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .btn-nav-cart .cart-label {
+    display: none;
+  }
+
+  .brand-logo {
+    width: 42px;
+    height: 42px;
+  }
+
+  .logo-main {
+    font-size: 1.18rem;
+  }
+
+  .logo-sub {
+    font-size: 0.58rem;
+  }
+}
+
+
