@@ -14,9 +14,37 @@ document.addEventListener("DOMContentLoaded", async () => {
   initSecretAdminAccess();
   initCotizadorEcommerce();
   initRentalStore();
+  initRevealAnimations();
   await cargarPaquetesDestacados();
   await cargarGaleria();
+  initRevealAnimations();
 });
+
+// Animaciones reveal fluidas con garantía absoluta de visibilidad
+function initRevealAnimations() {
+  const reveals = document.querySelectorAll(".reveal");
+  if (!reveals.length) return;
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("active");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    reveals.forEach(el => observer.observe(el));
+  } else {
+    reveals.forEach(el => el.classList.add("active"));
+  }
+
+  // Fallback de seguridad inmediato para garantizar que nada quede invisible
+  setTimeout(() => {
+    document.querySelectorAll(".reveal:not(.active)").forEach(el => el.classList.add("active"));
+  }, 800);
+}
 
 // Navegación móvil y scroll suave
 function initNavigation() {
