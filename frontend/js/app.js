@@ -124,8 +124,8 @@ function getCategoryIcon(cat) {
   if (c.includes("15") || c.includes("quince")) return "👑";
   if (c.includes("marinilla") || c.includes("salón") || c.includes("salon")) return "🏛️";
   if (c.includes("peñol") || c.includes("campestre") || c.includes("finca")) return "🌿";
-  if (c.includes("cater") || c.includes("comida") || c.includes("cena")) return "🍽️";
-  if (c.includes("mobiliario") || c.includes("silla") || c.includes("mesa")) return "🪑";
+  if (c.includes("cater") || c.includes("comida") || c.includes("cena") || c.includes("gastro") || c.includes("plato") || c.includes("banquete")) return "🍽️";
+  if (c.includes("mobiliario") || c.includes("silla") || c.includes("mesa") || c.includes("lounge")) return "🪑";
   if (c.includes("corp")) return "👔";
   if (c.includes("grado")) return "🎓";
   return "✨";

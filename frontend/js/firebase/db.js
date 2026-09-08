@@ -159,6 +159,20 @@ function initLocalStore() {
         categoria: "Salón Marinilla",
         imagen: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80",
         descripcion: "Capacidad para 200 personas con acústica profesional y chandeliers."
+      },
+      {
+        id: "gal-7",
+        titulo: "Estación de Cóctel & Pasabocas",
+        categoria: "Catering",
+        imagen: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80",
+        descripcion: "Recepción de bienvenida con bocados gourmet y coctelería."
+      },
+      {
+        id: "gal-8",
+        titulo: "Mesa Dulce & Repostería Fina",
+        categoria: "Catering",
+        imagen: "https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=1200&q=80",
+        descripcion: "Postres de bocado, macarons, shots dulces y torta ceremonial."
       }
     ];
     localStorage.setItem(STORAGE_KEYS.GALLERY, JSON.stringify(initialGallery));
