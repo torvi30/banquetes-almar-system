@@ -20,7 +20,8 @@ const STORAGE_KEYS = {
   CLIENTS: "almar_clientes",
   GALLERY: "almar_galeria",
   GALLERY_CATEGORIES: "almar_galeria_categorias",
-  SERVICES: "almar_servicios"
+  SERVICES: "almar_servicios",
+  INVENTORY_CATEGORIES: "almar_inventario_categorias"
 };
 
 // Inicialización de datos semilla si el almacenamiento local está vacío
@@ -252,6 +253,11 @@ function initLocalStore() {
     ];
     localStorage.setItem(STORAGE_KEYS.SERVICES, JSON.stringify(initialServices));
   }
+
+  if (!localStorage.getItem(STORAGE_KEYS.INVENTORY_CATEGORIES)) {
+    const defaultInvCategories = ["Sillas", "Mesas", "Carpas", "Menaje", "Mantelería", "Lounge"];
+    localStorage.setItem(STORAGE_KEYS.INVENTORY_CATEGORIES, JSON.stringify(defaultInvCategories));
+  }
 }
 
 initLocalStore();
@@ -320,6 +326,50 @@ export const dbService = {
   async getRentalItemById(id) {
     const list = getLocal(STORAGE_KEYS.RENTAL);
     return list.find(item => item.id === id) || null;
+  },
+
+  async getInventoryCategories() {
+    let cats = getLocal(STORAGE_KEYS.INVENTORY_CATEGORIES);
+    if (!Array.isArray(cats) || cats.length === 0) {
+      cats = ["Sillas", "Mesas", "Carpas", "Menaje", "Mantelería", "Lounge"];
+      setLocal(STORAGE_KEYS.INVENTORY_CATEGORIES, cats);
+    }
+    return cats;
+  },
+
+  async addInventoryCategory(name) {
+    const cats = await this.getInventoryCategories();
+    const clean = String(name || "").trim();
+    if (clean && !cats.some(c => c.toLowerCase() === clean.toLowerCase())) {
+      cats.push(clean);
+      setLocal(STORAGE_KEYS.INVENTORY_CATEGORIES, cats);
+    }
+    return cats;
+  },
+
+  async saveRentalItem(itemData) {
+    let items = await this.getRentalItems();
+    if (itemData.id) {
+      const idx = items.findIndex(i => String(i.id) === String(itemData.id));
+      if (idx !== -1) {
+        items[idx] = { ...items[idx], ...itemData, updatedAt: new Date().toISOString() };
+      } else {
+        items.unshift({ ...itemData, id: itemData.id || ("mob-" + Date.now()), createdAt: new Date().toISOString() });
+      }
+    } else {
+      itemData.id = "mob-" + Date.now();
+      itemData.createdAt = new Date().toISOString();
+      items.unshift(itemData);
+    }
+    setLocal(STORAGE_KEYS.RENTAL, items);
+    return itemData;
+  },
+
+  async deleteRentalItem(id) {
+    let items = await this.getRentalItems();
+    items = items.filter(i => String(i.id) !== String(id));
+    setLocal(STORAGE_KEYS.RENTAL, items);
+    return true;
   },
 
   // COTIZACIONES

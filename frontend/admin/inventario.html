@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inventario Admin | Banquetes Almar</title>
+  <title>Inventario & Mobiliario | Banquetes Almar</title>
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
-        <p class="section-label">Panel Admin</p>
-        <h2>Administrar inventario</h2>
-        <p>Gestiona sillas, carpas, mesas, vajilla y más.</p>
+        <p class="section-label">Suite Ejecutiva</p>
+        <h2>Inventario & Menaje de Gala</h2>
+        <p>Control de silletería Tiffany, mantelería, carpas, vajilla y disponibilidad de alquiler.</p>
       </div>
 
+      <!-- NAVEGACIÓN MAESTRA UNIFICADA (6 MÓDULOS DE GALA) -->
       <div class="admin-menu admin-menu-grid">
         <a href="./dashboard.html" class="btn btn-secondary menu-btn">📊 Dashboard</a>
         <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">💬 Cotizaciones</a>
@@ -26,66 +27,125 @@
         <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
       </div>
 
-      <div class="calendar-panel" style="margin-bottom: 1.5rem;">
-        <h3>Crear categoría</h3>
-        <form id="categoryForm" class="quote-form">
-          <div class="form-group">
-            <label for="newCategoryName">Nombre de la categoría</label>
-            <input type="text" id="newCategoryName" placeholder="Ej: Sillas, Carpas, Vajilla" required />
+      <div class="gallery-admin-layout" style="display: grid; grid-template-columns: 1fr 2.4fr; gap: 2rem; margin-bottom: 2.5rem;">
+        <!-- PANEL LATERAL: CATEGORÍAS -->
+        <section class="dashboard-panel" style="height: fit-content;">
+          <div class="dashboard-panel-head">
+            <div>
+              <p class="dashboard-mini-label">Organización</p>
+              <h3 style="color: #fff; font-size: 1.15rem; margin: 0;">Categorías</h3>
+            </div>
           </div>
 
-          <div class="form-group full-width">
-            <button type="submit" class="btn btn-primary">Crear categoría</button>
+          <div style="padding: 1.4rem;">
+            <form id="categoryForm" style="margin-bottom: 1.5rem;">
+              <div class="form-group" style="margin-bottom: 0.8rem;">
+                <label for="newCategoryName" style="font-size: 0.85rem;">Nueva categoría</label>
+                <input type="text" id="newCategoryName" placeholder="Ej: Carpas Luxury, Salas Lounge" required style="width: 100%; box-sizing: border-box;" />
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.65rem;">
+                + Agregar Categoría
+              </button>
+            </form>
+
+            <div id="categoriesChipsList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <!-- Categorías activas -->
+            </div>
           </div>
-        </form>
+        </section>
+
+        <!-- PANEL PRINCIPAL: FORMULARIO DE ARTÍCULO -->
+        <section class="dashboard-panel">
+          <div class="dashboard-panel-head">
+            <div>
+              <p class="dashboard-mini-label">Gestión de Mobiliario</p>
+              <h3 id="formItemTitle" style="color: #fff; font-size: 1.15rem; margin: 0;">Agregar nuevo artículo</h3>
+            </div>
+          </div>
+
+          <form id="inventoryForm" class="quote-form" style="padding: 1.4rem;">
+            <input type="hidden" id="inventoryId" />
+            <input type="hidden" id="inventoryCurrentImage" />
+
+            <div class="form-group">
+              <label for="nombre">Nombre del artículo *</label>
+              <input type="text" id="nombre" placeholder="Ej: Silla Crossback Madera Rústica" required />
+            </div>
+
+            <div class="form-group">
+              <label for="categoria_id">Categoría *</label>
+              <select id="categoria_id" required>
+                <!-- Poblado dinámicamente -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="precio">Precio de alquiler ($) *</label>
+              <input type="number" id="precio" placeholder="Ej: 11000" min="0" required />
+            </div>
+
+            <div class="form-group">
+              <label for="unidad">Unidad de cobro</label>
+              <input type="text" id="unidad" placeholder="día/evento, unidad, set" value="día/evento" />
+            </div>
+
+            <div class="form-group">
+              <label for="cantidad_total">Stock total (unidades) *</label>
+              <input type="number" id="cantidad_total" min="0" placeholder="Ej: 160" required />
+            </div>
+
+            <div class="form-group">
+              <label for="cantidad_disponible">Stock disponible *</label>
+              <input type="number" id="cantidad_disponible" min="0" placeholder="Ej: 160" required />
+            </div>
+
+            <div class="form-group full-width">
+              <label for="descripcion">Descripción del artículo</label>
+              <textarea id="descripcion" rows="3" placeholder="Diseño vintage en madera natural con cruceta en el espaldar. La favorita para bodas campestres."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="imagen">Subir foto propia</label>
+              <input type="file" id="imagen" accept="image/*" />
+            </div>
+
+            <div class="form-group">
+              <label for="imagenUrl">O ingresar enlace de imagen</label>
+              <input type="url" id="imagenUrl" placeholder="https://ejemplo.com/foto-silla.jpg" />
+            </div>
+
+            <div class="form-group full-width" id="previewWrapper" style="display: none;">
+              <label>Vista previa de la imagen</label>
+              <div style="width: 100%; max-width: 320px; height: 180px; border-radius: 12px; overflow: hidden; border: 1px solid var(--apple-border); background: #0c0c0e;">
+                <img id="imagePreview" src="" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover;" />
+              </div>
+            </div>
+
+            <div class="form-group full-width event-form-actions">
+              <button type="submit" class="btn btn-primary" id="saveInventoryBtn">Guardar artículo</button>
+              <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display: none;">Cancelar edición</button>
+            </div>
+          </form>
+        </section>
       </div>
 
-      <form id="inventoryForm" class="quote-form" enctype="multipart/form-data">
-        <input type="hidden" id="inventoryId" />
-
-        <div class="form-group">
-          <label for="nombre">Nombre del item</label>
-          <input type="text" id="nombre" placeholder="Ej: Silla Tiffany Dorada" required />
-        </div>
-
-        <div class="form-group">
-          <label for="categoria_id">Categoría</label>
-          <select id="categoria_id" required>
-            <option value="">Cargando categorías...</option>
+      <!-- BARRA DE BÚSQUEDA Y FILTROS -->
+      <div style="background: #111115; border: 1px solid var(--apple-border); border-radius: 16px; padding: 1.2rem; margin-bottom: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;">
+        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; flex-grow: 1;">
+          <input type="text" id="searchInventoryInput" placeholder="🔍 Buscar por nombre o descripción..." style="min-width: 250px; flex-grow: 1; padding: 0.6rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff;" />
+          <select id="filterCategorySelect" style="padding: 0.6rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff;">
+            <option value="todos">Todas las categorías</option>
           </select>
         </div>
+        <p id="inventoryCounter" style="color: var(--apple-text-secondary); font-size: 0.88rem; margin: 0;">Cargando inventario...</p>
+      </div>
 
-        <div class="form-group">
-          <label for="cantidad_total">Cantidad total</label>
-          <input type="number" id="cantidad_total" min="0" required />
-        </div>
-
-        <div class="form-group">
-          <label for="cantidad_disponible">Cantidad disponible</label>
-          <input type="number" id="cantidad_disponible" min="0" required />
-        </div>
-
-        <div class="form-group full-width">
-          <label for="descripcion">Descripción</label>
-          <textarea id="descripcion" rows="4" placeholder="Describe este item..."></textarea>
-        </div>
-
-        <div class="form-group full-width">
-          <label for="imagen">Imagen</label>
-          <input type="file" id="imagen" accept="image/*" />
-        </div>
-
-        <div class="form-group full-width event-form-actions">
-          <button type="submit" class="btn btn-primary" id="saveInventoryBtn">Guardar item</button>
-          <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
-        </div>
-      </form>
-
-      <div id="inventoryGrid" class="quotes-grid" style="margin-top: 2rem;"></div>
+      <!-- CUADRÍCULA DE ITEMS -->
+      <div id="inventoryGrid" class="quotes-grid"></div>
     </div>
   </section>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script type="module" src="../js/inventario-admin.js"></script>
+  <script type="module" src="../js/inventario-admin.js?v=20260907.35"></script>
 </body>
 </html>
