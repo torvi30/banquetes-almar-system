@@ -3,123 +3,163 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reservas | Banquetes Almar</title>
+  <title>Eventos & Agenda | Banquetes Almar</title>
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
-        <p class="section-label">Panel Admin</p>
-        <h2>Reservas / Disponibilidad</h2>
-        <p>Gestiona reservas pendientes antes de convertirlas en eventos.</p>
+        <p class="section-label">Suite Ejecutiva</p>
+        <h2>Eventos & Agenda de Gala</h2>
+        <p>Control integral de celebraciones confirmadas, fechas, contratos y disponibilidad en Marinilla y El Peñol.</p>
       </div>
 
+      <!-- NAVEGACIÓN MAESTRA UNIFICADA (6 MÓDULOS DE GALA) -->
       <div class="admin-menu admin-menu-grid">
-        <a href="./dashboard.html" class="btn btn-secondary menu-btn">Dashboard</a>
-        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">Cotizaciones</a>
-        <a href="./galeria.html" class="btn btn-secondary menu-btn">Galería</a>
-        <a href="./servicios.html" class="btn btn-secondary menu-btn">Servicios</a>
-        <a href="./reservas.html" class="btn btn-secondary menu-btn">Reservas</a>
-        <a href="./eventos.html" class="btn btn-secondary menu-btn">Eventos</a>
-        <a href="./calendario.html" class="btn btn-secondary menu-btn">Calendario</a>
-        <a href="./inventario.html" class="btn btn-secondary menu-btn">Inventario</a>
-        <a href="./clientes.html" class="btn btn-secondary menu-btn">Clientes</a>
-        <a href="./pagos.html" class="btn btn-secondary menu-btn">Pagos</a>
-        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">Cerrar sesión</button>
+        <a href="./dashboard.html" class="btn btn-secondary menu-btn">📊 Dashboard</a>
+        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">💬 Cotizaciones</a>
+        <a href="./reservas.html" class="btn btn-secondary menu-btn active-menu">📅 Eventos & Agenda</a>
+        <a href="./pagos.html" class="btn btn-secondary menu-btn">💵 Pagos & Finanzas</a>
+        <a href="./inventario.html" class="btn btn-secondary menu-btn">📦 Inventario</a>
+        <a href="./galeria.html" class="btn btn-secondary menu-btn">✨ Catálogo Web</a>
+        <a href="./clientes.html" class="btn btn-secondary menu-btn">👥 Clientes</a>
+        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
       </div>
 
-      <form id="reservationForm" class="quote-form">
-        <input type="hidden" id="reservationId" />
-
-        <div class="form-group">
-          <label for="cliente_id">ID cliente</label>
-          <input type="number" id="cliente_id" />
-        </div>
-
-        <div class="form-group">
-          <label for="cliente">Cliente</label>
-          <input type="text" id="cliente" required />
-        </div>
-
-        <div class="form-group">
-          <label for="telefono">Teléfono</label>
-          <input type="text" id="telefono" />
-        </div>
-
-        <div class="form-group">
-          <label for="tipo_evento">Tipo de evento</label>
-          <input type="text" id="tipo_evento" required />
-        </div>
-
-        <div class="form-group">
-          <label for="fecha_evento">Fecha del evento</label>
-          <input type="date" id="fecha_evento" required />
-        </div>
-
-        <div class="form-group">
-          <label for="lugar">Lugar</label>
-          <input type="text" id="lugar" />
-        </div>
-
-        <div class="form-group">
-          <label for="personas">Personas</label>
-          <input type="number" id="personas" min="0" />
-        </div>
-
-        <div class="form-group">
-          <label for="estado">Estado</label>
-          <select id="estado">
-            <option value="Pendiente">Pendiente</option>
-            <option value="Confirmada">Confirmada</option>
-            <option value="Cancelada">Cancelada</option>
-            <option value="Convertida">Convertida</option>
-          </select>
-        </div>
-
-        <div class="form-group full-width">
-          <label for="observaciones">Observaciones</label>
-          <textarea id="observaciones" rows="3"></textarea>
-        </div>
-
-        <div class="form-group full-width event-form-actions">
-          <button type="submit" class="btn btn-primary" id="saveReservationBtn">Guardar reserva</button>
-          <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
-        </div>
-      </form>
-
-      <div class="quote-form" style="margin-top: 2rem;">
-        <div class="form-group">
-          <label for="filterFecha">Filtrar por fecha</label>
-          <input type="date" id="filterFecha" />
-        </div>
-
-        <div class="form-group">
-          <label for="filterEstado">Filtrar por estado</label>
-          <select id="filterEstado">
-            <option value="">Todos</option>
-            <option value="Pendiente">Pendiente</option>
-            <option value="Confirmada">Confirmada</option>
-            <option value="Cancelada">Cancelada</option>
-            <option value="Convertida">Convertida</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="filterSearch">Buscar</label>
-          <input type="text" id="filterSearch" placeholder="Cliente, teléfono, tipo de evento..." />
-        </div>
-
-        <div class="form-group">
-          <label>&nbsp;</label>
-          <button type="button" class="btn btn-secondary" id="btnFiltrar">Filtrar</button>
+      <!-- SELECTOR DE VISTA UNIFICADA (LISTA / CALENDARIO) -->
+      <div class="agenda-view-switch-bar">
+        <div class="agenda-view-switch">
+          <button type="button" class="agenda-switch-btn active" id="btnViewList">
+            <span>📋 Lista de Eventos</span>
+          </button>
+          <button type="button" class="agenda-switch-btn" id="btnViewCalendar">
+            <span>📆 Calendario Mensual</span>
+          </button>
         </div>
       </div>
 
-      <div id="reservationsGrid" class="quotes-grid" style="margin-top: 2rem;"></div>
+      <!-- VISTA 1: LISTA Y REGISTRO DE EVENTOS -->
+      <div id="viewListContainer">
+        <!-- FORMULARIO DE EVENTO / RESERVA -->
+        <div class="dashboard-panel" style="margin-bottom: 2rem;">
+          <div class="dashboard-panel-head">
+            <div>
+              <p class="dashboard-mini-label">Programación</p>
+              <h3 id="formEventTitle">Registrar nuevo evento</h3>
+            </div>
+          </div>
+
+          <form id="reservationForm" class="quote-form">
+            <input type="hidden" id="reservationId" />
+
+            <div class="form-group">
+              <label for="cliente">Nombre del cliente *</label>
+              <input type="text" id="cliente" placeholder="Ej: Mariana Gómez" required />
+            </div>
+
+            <div class="form-group">
+              <label for="telefono">Teléfono / WhatsApp *</label>
+              <input type="text" id="telefono" placeholder="Ej: 314 884 9011" required />
+            </div>
+
+            <div class="form-group">
+              <label for="tipo_evento">Tipo de celebración *</label>
+              <input type="text" id="tipo_evento" placeholder="Ej: Boda Campestre, 15 Años, Grado" required />
+            </div>
+
+            <div class="form-group">
+              <label for="fecha_evento">Fecha del evento *</label>
+              <input type="date" id="fecha_evento" required />
+            </div>
+
+            <div class="form-group">
+              <label for="lugar">Locación / Salón</label>
+              <input type="text" id="lugar" placeholder="Salón Marinilla / Finca El Peñol / Externa" />
+            </div>
+
+            <div class="form-group">
+              <label for="personas">Número de invitados</label>
+              <input type="number" id="personas" min="1" placeholder="Ej: 100" />
+            </div>
+
+            <div class="form-group">
+              <label for="estado">Estado del evento</label>
+              <select id="estado">
+                <option value="Confirmada">💍 Confirmada</option>
+                <option value="Pendiente">⏳ Pendiente</option>
+                <option value="Finalizada">✅ Finalizada</option>
+                <option value="Cancelada">❌ Cancelada</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="totalEvento">Valor total cotizado ($)</label>
+              <input type="number" id="totalEvento" placeholder="Ej: 14500000" />
+            </div>
+
+            <div class="form-group full-width">
+              <label for="observaciones">Detalles del montaje, menú y notas</label>
+              <textarea id="observaciones" rows="3" placeholder="Sillas Tiffany, centros de mesa altos, menú gourmet..."></textarea>
+            </div>
+
+            <div class="form-group full-width event-form-actions">
+              <button type="submit" class="btn btn-primary" id="saveReservationBtn">Guardar evento</button>
+              <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display: none;">Cancelar edición</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- FILTROS Y BÚSQUEDA DE EVENTOS -->
+        <div style="background: #111115; border: 1px solid var(--apple-border); border-radius: 16px; padding: 1.2rem; margin-bottom: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;">
+          <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; flex-grow: 1;">
+            <input type="text" id="filterSearch" placeholder="🔍 Buscar por cliente, evento o locación..." style="min-width: 250px; flex-grow: 1; padding: 0.6rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff;" />
+            <select id="filterEstado" style="padding: 0.6rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff;">
+              <option value="">Todos los estados</option>
+              <option value="Confirmada">Confirmadas</option>
+              <option value="Pendiente">Pendientes</option>
+              <option value="Finalizada">Finalizadas</option>
+              <option value="Cancelada">Canceladas</option>
+            </select>
+            <input type="date" id="filterFecha" style="padding: 0.6rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff;" />
+          </div>
+          <p id="eventsCounter" style="color: var(--apple-text-secondary); font-size: 0.88rem; margin: 0;">Cargando eventos...</p>
+        </div>
+
+        <!-- CUADRÍCULA DE EVENTOS -->
+        <div id="reservationsGrid" class="quotes-grid"></div>
+      </div>
+
+      <!-- VISTA 2: CALENDARIO MENSUAL INTERACTIVO -->
+      <div id="viewCalendarContainer" style="display: none;">
+        <div class="calendar-legend">
+          <span class="legend-item"><span class="legend-dot legend-confirmada"></span> Confirmado</span>
+          <span class="legend-item"><span class="legend-dot legend-pendiente"></span> Pendiente</span>
+          <span class="legend-item"><span class="legend-dot legend-cancelada"></span> Cancelado</span>
+        </div>
+
+        <div class="calendar-toolbar">
+          <button id="prevMonth" class="btn btn-secondary" type="button" style="padding: 0.5rem 1.2rem; font-size: 1.2rem;">◀</button>
+          <h3 id="monthTitle" class="calendar-month-title" style="margin: 0; font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #fff;"></h3>
+          <button id="nextMonth" class="btn btn-secondary" type="button" style="padding: 0.5rem 1.2rem; font-size: 1.2rem;">▶</button>
+        </div>
+
+        <div class="calendar-weekdays">
+          <div>Lun</div>
+          <div>Mar</div>
+          <div>Mié</div>
+          <div>Jue</div>
+          <div>Vie</div>
+          <div>Sáb</div>
+          <div>Dom</div>
+        </div>
+
+        <div id="calendarGrid" class="calendar-grid-pro" style="margin-top: 0.8rem;"></div>
+      </div>
     </div>
   </section>
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script type="module" src="../js/reservas-admin.js"></script>
+  <script type="module" src="../js/reservas-admin.js?v=20260907.30"></script>
 </body>
 </html>

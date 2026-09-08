@@ -3,97 +3,101 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard | Banquetes Almar</title>
+  <title>Dashboard Ejecutivo | Banquetes Almar</title>
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
-        <p class="section-label">Panel Admin</p>
-        <h2>Dashboard Banquetes Almar</h2>
-        <p id="adminWelcome"></p>
+        <p class="section-label">Suite Ejecutiva</p>
+        <h2>Torre de Control Almar</h2>
+        <p id="adminWelcome">Bienvenido al centro de operaciones y agenda de gala.</p>
       </div>
 
+      <!-- NAVEGACIÓN MAESTRA UNIFICADA (6 MÓDULOS DE GALA) -->
       <div class="admin-menu admin-menu-grid">
-        <a href="./dashboard.html" class="btn btn-secondary menu-btn">Dashboard</a>
-        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">Cotizaciones</a>
-        <a href="./galeria.html" class="btn btn-secondary menu-btn">Galería</a>
-        <a href="./servicios.html" class="btn btn-secondary menu-btn">Servicios</a>
-        <a href="./reservas.html" class="btn btn-secondary menu-btn">Reservas</a>
-        <a href="./eventos.html" class="btn btn-secondary menu-btn">Eventos</a>
-        <a href="./calendario.html" class="btn btn-secondary menu-btn">Calendario</a>
-        <a href="./inventario.html" class="btn btn-secondary menu-btn">Inventario</a>
-        <a href="./clientes.html" class="btn btn-secondary menu-btn">Clientes</a>
-        <a href="./pagos.html" class="btn btn-secondary menu-btn">Pagos</a>
-        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">Cerrar sesión</button>
+        <a href="./dashboard.html" class="btn btn-secondary menu-btn active-menu">📊 Dashboard</a>
+        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">💬 Cotizaciones</a>
+        <a href="./reservas.html" class="btn btn-secondary menu-btn">📅 Eventos & Agenda</a>
+        <a href="./pagos.html" class="btn btn-secondary menu-btn">💵 Pagos & Finanzas</a>
+        <a href="./inventario.html" class="btn btn-secondary menu-btn">📦 Inventario</a>
+        <a href="./galeria.html" class="btn btn-secondary menu-btn">✨ Catálogo Web</a>
+        <a href="./clientes.html" class="btn btn-secondary menu-btn">👥 Clientes</a>
+        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
       </div>
 
+      <!-- TARJETAS DE MÉTRICAS CLAVE (KPIs ESTRATÉGICOS) -->
       <div class="admin-summary">
         <div class="summary-card">
-          <span class="summary-title">Total de solicitudes</span>
-          <strong id="totalQuotes">0</strong>
-        </div>
-
-        <div class="summary-card">
-          <span class="summary-title">Total de eventos</span>
-          <strong id="totalEventos">0</strong>
-        </div>
-
-        <div class="summary-card">
-          <span class="summary-title">Confirmados</span>
-          <strong id="confirmados">0</strong>
-        </div>
-
-        <div class="summary-card">
-          <span class="summary-title">Ingresos</span>
+          <span class="summary-title">💰 Total Recaudado</span>
           <strong id="ingresos">$0</strong>
         </div>
 
         <div class="summary-card">
-          <span class="summary-title">Pendiente</span>
+          <span class="summary-title">⏳ Saldo por Cobrar</span>
           <strong id="pendiente">$0</strong>
+        </div>
+
+        <div class="summary-card">
+          <span class="summary-title">💍 Eventos en Agenda</span>
+          <strong id="totalEventos">0</strong>
+        </div>
+
+        <div class="summary-card">
+          <span class="summary-title">💬 Solicitudes Web</span>
+          <strong id="totalQuotes">0</strong>
         </div>
       </div>
 
-      <div class="dashboard-panels">
-        <section class="dashboard-panel">
-          <div class="dashboard-panel-head">
+      <!-- TORRE DE CONTROL EN 3 COLUMNAS ESTRATÉGICAS (CERO DUPLICADOS) -->
+      <div class="dashboard-control-grid">
+        <!-- COLUMNA 1: SOLICITUDES PENDIENTES DE RESPUESTA -->
+        <section class="control-panel">
+          <div class="control-panel-head">
             <div>
-              <p class="dashboard-mini-label">Resumen rápido</p>
-              <h3>Últimas cotizaciones</h3>
+              <p class="dashboard-mini-label">Atención al Cliente</p>
+              <h3 style="color: #fff; font-size: 1.15rem; margin: 0;">🔔 Solicitudes por Atender</h3>
             </div>
-            <a href="./cotizaciones.html" class="btn btn-secondary dashboard-link-btn">Ver todo</a>
+            <a href="./cotizaciones.html" class="btn btn-secondary btn-sm" style="font-size: 0.8rem; padding: 0.4rem 0.9rem;">Ver todas</a>
           </div>
-          <div id="latestQuotes" class="dashboard-list"></div>
+          <div id="pendingQuotesList" class="control-panel-body">
+            <!-- Render dinámico -->
+          </div>
         </section>
 
-        <section class="dashboard-panel">
-          <div class="dashboard-panel-head">
+        <!-- COLUMNA 2: AGENDA OPERATIVA PRÓXIMA (A MONTAR PRONTO) -->
+        <section class="control-panel">
+          <div class="control-panel-head">
             <div>
-              <p class="dashboard-mini-label">Operación</p>
-              <h3>Últimas reservas</h3>
+              <p class="dashboard-mini-label">Operación & Montaje</p>
+              <h3 style="color: #fff; font-size: 1.15rem; margin: 0;">🗓️ Próximos Eventos</h3>
             </div>
-            <a href="./reservas.html" class="btn btn-secondary dashboard-link-btn">Ver reservas</a>
+            <a href="./reservas.html" class="btn btn-secondary btn-sm" style="font-size: 0.8rem; padding: 0.4rem 0.9rem;">Ver agenda</a>
           </div>
-          <div id="latestReservas" class="dashboard-list"></div>
+          <div id="upcomingEventsList" class="control-panel-body">
+            <!-- Render dinámico -->
+          </div>
         </section>
 
-        <section class="dashboard-panel">
-          <div class="dashboard-panel-head">
+        <!-- COLUMNA 3: ALERTAS DE COBROS Y SALDOS URGENTES -->
+        <section class="control-panel">
+          <div class="control-panel-head">
             <div>
-              <p class="dashboard-mini-label">Agenda</p>
-              <h3>Próximos eventos</h3>
+              <p class="dashboard-mini-label">Gestión de Cobranza</p>
+              <h3 style="color: #fff; font-size: 1.15rem; margin: 0;">⚠️ Alertas de Saldos</h3>
             </div>
-            <a href="./eventos.html" class="btn btn-secondary dashboard-link-btn">Ver eventos</a>
+            <a href="./pagos.html" class="btn btn-secondary btn-sm" style="font-size: 0.8rem; padding: 0.4rem 0.9rem;">Ver finanzas</a>
           </div>
-          <div id="upcomingEvents" class="dashboard-list"></div>
+          <div id="paymentAlertsList" class="control-panel-body">
+            <!-- Render dinámico -->
+          </div>
         </section>
       </div>
     </div>
   </section>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script type="module" src="../js/dashboard.js"></script>
+  <script type="module" src="../js/dashboard.js?v=20260907.30"></script>
 </body>
 </html>
