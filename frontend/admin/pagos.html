@@ -3,18 +3,162 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pagos Admin | Banquetes Almar</title>
+  <title>Pagos & Finanzas Admin | Banquetes Almar</title>
   <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    /* Estilos de Gala para Pagos & Finanzas */
+    .finance-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .finance-kpi-card {
+      background: linear-gradient(145deg, rgba(26, 26, 32, 0.95), rgba(16, 16, 20, 0.9));
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .finance-kpi-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .kpi-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-soft);
+    }
+
+    .kpi-value {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: #fff;
+      font-family: var(--font-heading);
+    }
+
+    .kpi-value.gold { color: var(--gold-light); }
+    .kpi-value.green { color: #a8d5ba; }
+    .kpi-value.amber { color: #f39c12; }
+
+    .selector-box {
+      background: rgba(22, 22, 26, 0.95);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .quick-amount-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .amount-pill {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--gold-light);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .amount-pill:hover {
+      background: var(--gold);
+      color: #111;
+      transform: translateY(-1px);
+    }
+
+    .event-financial-card {
+      background: linear-gradient(135deg, rgba(28, 28, 35, 0.95), rgba(18, 18, 22, 0.98));
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 1.8rem;
+      position: relative;
+    }
+
+    .finance-progress-bar {
+      height: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .finance-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #d4af37, #2ecc71);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .payment-receipt-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .payment-receipt-modal.active {
+      display: flex;
+    }
+
+    .receipt-paper {
+      background: #fff;
+      color: #1a1a1a;
+      width: 100%;
+      max-width: 580px;
+      border-radius: 12px;
+      padding: 2.2rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    @media print {
+      body * { visibility: hidden; }
+      .receipt-paper, .receipt-paper * { visibility: visible; }
+      .receipt-paper { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; padding: 0; }
+      .no-print { display: none !important; }
+    }
+  </style>
 </head>
 <body>
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
-        <p class="section-label">Panel Admin</p>
-        <h2>Pagos del evento</h2>
-        <p>Registra abonos y controla el saldo pendiente.</p>
+        <p class="section-label">Suite Ejecutiva</p>
+        <h2>💵 Pagos & Finanzas</h2>
+        <p>Control de abonos, saldos pendientes y emisión de recibos oficiales de caja.</p>
       </div>
 
+      <!-- Menú unificado de gala (7 Módulos Maestros) -->
       <div class="admin-menu admin-menu-grid">
         <a href="./dashboard.html" class="btn btn-secondary menu-btn">📊 Dashboard</a>
         <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">💬 Cotizaciones</a>
@@ -26,53 +170,251 @@
         <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
       </div>
 
-      <div class="quote-form" style="margin-bottom: 1.5rem;">
-        <div class="form-group">
-          <label for="eventoIdManual">ID del evento</label>
-          <input type="number" id="eventoIdManual" min="1" placeholder="Ej: 1" />
+      <!-- Tarjetas de KPIs Financieros -->
+      <div class="finance-kpis">
+        <div class="finance-kpi-card">
+          <span class="kpi-title">💰 Total Recaudado</span>
+          <span class="kpi-value green" id="kpiTotalRecaudado">$0</span>
+          <small style="color: var(--text-soft); font-size: 0.8rem;">Historial consolidado</small>
         </div>
-
-        <div class="form-group">
-          <label>&nbsp;</label>
-          <button type="button" id="loadEventBtn" class="btn btn-primary">Cargar evento</button>
+        <div class="finance-kpi-card">
+          <span class="kpi-title">⏳ Cartera por Cobrar</span>
+          <span class="kpi-value amber" id="kpiCarteraPendiente">$0</span>
+          <small style="color: var(--text-soft); font-size: 0.8rem;">Saldos de eventos activos</small>
+        </div>
+        <div class="finance-kpi-card">
+          <span class="kpi-title">🧾 Abonos Registrados</span>
+          <span class="kpi-value gold" id="kpiCantidadPagos">0</span>
+          <small style="color: var(--text-soft); font-size: 0.8rem;">Transacciones de abono</small>
         </div>
       </div>
 
-      <div id="eventSummary" class="calendar-panel" style="margin-bottom: 1.5rem;"></div>
+      <!-- 1. SELECTOR INTELIGENTE DE EVENTOS -->
+      <div class="selector-box">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem;">
+          <h3 style="color: var(--gold-light); font-size: 1.15rem; margin: 0;">
+            1. Seleccionar Evento para Abono o Consulta
+          </h3>
+          <button type="button" id="clearSelectionBtn" class="btn btn-secondary btn-sm" style="font-size: 0.8rem; padding: 4px 10px;">
+            ✕ Deseleccionar evento
+          </button>
+        </div>
 
-      <form id="paymentForm" class="quote-form">
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="eventoSelect">Buscar en agenda por cliente o tipo de evento:</label>
+            <select id="eventoSelect" class="form-control" style="background: #111; color: #fff; border-color: rgba(212,175,55,0.4); padding: 0.75rem;">
+              <option value="">-- Selecciona un evento para ver saldo y abonar --</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="eventoIdManual">O busca / ingresa ID o Cédula:</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="text" id="eventoIdManual" placeholder="Ej: res-201 o nombre..." style="background: #111;" />
+              <button type="button" id="loadEventBtn" class="btn btn-primary" style="white-space: nowrap; padding: 0 1rem;">
+                Buscar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. RESUMEN FINANCIERO DINÁMICO DEL EVENTO SELECCIONADO -->
+      <div id="eventSummary">
+        <div style="background: rgba(255,255,255,0.03); border: 1px dashed rgba(212,175,55,0.25); border-radius: var(--radius-md); padding: 1.8rem; text-align: center; color: var(--text-soft); margin-bottom: 1.8rem;">
+          <p style="margin: 0; font-size: 0.95rem;">
+            💡 Selecciona un evento arriba para ver el estado de su contrato, su barra de abonos y registrar pagos con 1 solo clic.
+          </p>
+        </div>
+      </div>
+
+      <!-- 3. FORMULARIO DE REGISTRO DE ABONO -->
+      <form id="paymentForm" class="quote-form" style="margin-bottom: 2.5rem;">
         <input type="hidden" id="paymentId" />
+        <input type="hidden" id="selectedEventoId" />
+        <input type="hidden" id="selectedClientName" />
 
-        <div class="form-group">
-          <label for="monto">Monto</label>
-          <input type="number" id="monto" min="1" required />
+        <div style="grid-column: 1 / -1; margin-bottom: 0.5rem;">
+          <h3 id="formActionTitle" style="color: #fff; font-size: 1.15rem; margin: 0 0 0.4rem 0;">
+            2. Registrar Nuevo Abono
+          </h3>
+          <p style="color: var(--text-soft); font-size: 0.85rem; margin: 0;">
+            Los abonos descuentan automáticamente el saldo del evento y se reflejan en el contrato y en la agenda.
+          </p>
         </div>
 
         <div class="form-group">
-          <label for="metodo">Método de pago</label>
+          <label for="monto">Monto del abono (COP) *</label>
+          <input type="number" id="monto" min="1000" step="1000" required placeholder="Ej: 2000000" />
+          <div class="quick-amount-pills">
+            <span class="amount-pill" data-amount="500000">+$500.000</span>
+            <span class="amount-pill" data-amount="1000000">+$1.000.000</span>
+            <span class="amount-pill" data-amount="2000000">+$2.000.000</span>
+            <span class="amount-pill" id="pillPagarSaldo" style="border-color: #2ecc71; color: #a8d5ba; display: none;">⚡ Saldo Completo</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="metodo">Método de pago *</label>
           <select id="metodo">
-            <option value="Efectivo">Efectivo</option>
-            <option value="Transferencia">Transferencia</option>
+            <option value="Transferencia Bancolombia">Transferencia Bancolombia</option>
             <option value="Nequi">Nequi</option>
             <option value="Daviplata">Daviplata</option>
-            <option value="Otro">Otro</option>
+            <option value="Efectivo en Caja">Efectivo en Caja</option>
+            <option value="Tarjeta de Crédito/Débito">Tarjeta de Crédito/Débito</option>
+            <option value="PSE / Botón Bancario">PSE / Botón Bancario</option>
+            <option value="Otro">Otro medio de pago</option>
           </select>
         </div>
 
-        <div class="form-group full-width">
-          <label for="nota">Nota</label>
-          <textarea id="nota" rows="3" placeholder="Detalle del pago..."></textarea>
+        <div class="form-group">
+          <label for="fechaPago">Fecha del pago</label>
+          <input type="date" id="fechaPago" />
         </div>
 
-        <div class="form-group full-width event-form-actions">
-          <button type="submit" class="btn btn-primary" id="savePaymentBtn">Registrar pago</button>
-          <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
+        <div class="form-group">
+          <label for="comprobante">Nro. de Comprobante / Aprobación</label>
+          <input type="text" id="comprobante" placeholder="Ej: Bancolombia #94827 o Nequi M123" />
+        </div>
+
+        <div class="form-group full-width">
+          <label for="nota">Concepto o Nota del Abono</label>
+          <textarea id="nota" rows="2" placeholder="Ej: Anticipo 30% separación de fecha, segundo abono vajilla..."></textarea>
+        </div>
+
+        <div class="form-group full-width event-form-actions" style="display: flex; gap: 1rem; align-items: center;">
+          <button type="submit" class="btn btn-primary" id="savePaymentBtn" style="min-width: 200px;">
+            💰 Registrar Abono
+          </button>
+          <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display: none;">
+            Cancelar edición
+          </button>
         </div>
       </form>
 
-      <div id="paymentsGrid" class="quotes-grid" style="margin-top: 2rem;"></div>
+      <!-- 4. HISTORIAL DE PAGOS Y RECIBOS -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 1rem; border-top: 1px solid var(--border-glass); padding-top: 2rem;">
+        <div>
+          <h3 style="color: #fff; margin: 0; font-size: 1.3rem;">Historial de Pagos & Comprobantes</h3>
+          <p style="color: var(--text-soft); margin: 0.2rem 0 0 0; font-size: 0.85rem;">
+            Consulta recibos de caja, genera comprobantes oficiales e imprime soporte de pago.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 0.8rem; align-items: center;">
+          <button type="button" id="filterAllBtn" class="btn btn-secondary btn-sm" style="background: rgba(212,175,55,0.2); border-color: var(--gold);">
+            Todos los pagos
+          </button>
+          <button type="button" id="filterEventBtn" class="btn btn-secondary btn-sm" style="display: none;">
+            Solo este evento
+          </button>
+        </div>
+      </div>
+
+      <div id="paymentsGrid" class="quotes-grid"></div>
     </div>
   </section>
+
+  <!-- 5. MODAL DE RECIBO OFICIAL DE CAJA (IMPRIMIBLE & WHATSAPP) -->
+  <div id="receiptModal" class="payment-receipt-modal">
+    <div class="receipt-paper">
+      <!-- Cabecera del recibo -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #e0c878; padding-bottom: 1rem; margin-bottom: 1.2rem;">
+        <div>
+          <h2 style="margin: 0; color: #9c7a23; font-size: 1.4rem; font-family: 'Cinzel', Georgia, serif; letter-spacing: 0.05em;">
+            BANQUETES ALMAR
+          </h2>
+          <p style="margin: 3px 0 0 0; font-size: 0.8rem; color: #555;">
+            Eventos & Catering de Alta Gama • Marinilla, Antioquia
+          </p>
+          <p style="margin: 2px 0 0 0; font-size: 0.78rem; color: #777;">
+            NIT 901.458.921-3 • Tel: (+57) 311 789 2233
+          </p>
+        </div>
+        <div style="text-align: right;">
+          <div style="background: #fbf6e8; border: 1px solid #d4af37; border-radius: 6px; padding: 6px 12px;">
+            <span style="font-size: 0.75rem; text-transform: uppercase; color: #886c1f; font-weight: 700; display: block;">Recibo Oficial de Caja</span>
+            <strong id="reciboNumero" style="font-size: 1.15rem; color: #111;">REC-0000</strong>
+          </div>
+          <small id="reciboFechaHora" style="display: block; color: #666; font-size: 0.75rem; margin-top: 4px;"></small>
+        </div>
+      </div>
+
+      <!-- Datos del Cliente y Evento -->
+      <div style="background: #fafafa; border-radius: 8px; padding: 0.9rem; margin-bottom: 1.2rem; font-size: 0.88rem; line-height: 1.5;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+          <div>
+            <strong style="color: #666; font-size: 0.75rem; text-transform: uppercase;">Recibido de:</strong>
+            <div id="reciboCliente" style="font-weight: 700; color: #111;">-</div>
+          </div>
+          <div>
+            <strong style="color: #666; font-size: 0.75rem; text-transform: uppercase;">Evento / Ocasión:</strong>
+            <div id="reciboEvento" style="font-weight: 600; color: #333;">-</div>
+          </div>
+          <div>
+            <strong style="color: #666; font-size: 0.75rem; text-transform: uppercase;">Método de Pago:</strong>
+            <div id="reciboMetodo" style="font-weight: 600; color: #333;">-</div>
+          </div>
+          <div>
+            <strong style="color: #666; font-size: 0.75rem; text-transform: uppercase;">Nro. Comprobante / Ref:</strong>
+            <div id="reciboComprobante" style="font-weight: 600; color: #333;">-</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Valor y Concepto -->
+      <div style="border-left: 4px solid #d4af37; background: #fffcf2; padding: 0.9rem 1.2rem; margin-bottom: 1.2rem; border-radius: 0 8px 8px 0;">
+        <div style="font-size: 0.8rem; text-transform: uppercase; color: #886c1f; font-weight: 600;">La Suma de:</div>
+        <div id="reciboMonto" style="font-size: 1.6rem; font-weight: 800; color: #1b4332; margin: 2px 0;">$0</div>
+        <div style="font-size: 0.85rem; color: #444; margin-top: 4px;">
+          <strong>Concepto:</strong> <span id="reciboConcepto">-</span>
+        </div>
+      </div>
+
+      <!-- Estado de cuenta del evento -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; text-align: center; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 0.8rem 0; margin-bottom: 1.5rem; font-size: 0.82rem;">
+        <div>
+          <span style="color: #777; display: block;">Total Contratado</span>
+          <strong id="reciboTotalEvento" style="color: #111;">-</strong>
+        </div>
+        <div>
+          <span style="color: #777; display: block;">Total Abonado</span>
+          <strong id="reciboAbonadoEvento" style="color: #2e7d32;">-</strong>
+        </div>
+        <div>
+          <span style="color: #777; display: block;">Nuevo Saldo</span>
+          <strong id="reciboSaldoEvento" style="color: #c0392b;">-</strong>
+        </div>
+      </div>
+
+      <!-- Firmas -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1.5rem; font-size: 0.8rem; color: #666;">
+        <div style="text-align: center; width: 45%;">
+          <div style="border-bottom: 1px solid #999; height: 35px; margin-bottom: 4px;"></div>
+          <span>Firma Recibido (Cliente)</span>
+        </div>
+        <div style="text-align: center; width: 45%;">
+          <div style="border-bottom: 1px solid #999; height: 35px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center;">
+            <span style="font-family: 'Brush Script MT', cursive; font-size: 1.2rem; color: #9c7a23;">Banquetes Almar</span>
+          </div>
+          <span>Autorizado Banquetes Almar</span>
+        </div>
+      </div>
+
+      <!-- Botones del modal (no imprimibles) -->
+      <div class="no-print" style="margin-top: 1.8rem; display: flex; gap: 0.8rem; justify-content: flex-end; border-top: 1px solid #eee; padding-top: 1rem;">
+        <button type="button" id="imprimirReciboBtn" class="btn btn-secondary" style="color: #111; border-color: #999;">
+          🖨️ Imprimir Recibo
+        </button>
+        <button type="button" id="whatsappReciboBtn" class="btn btn-primary" style="background: #25d366; border-color: #25d366; color: #fff;">
+          💬 Enviar WhatsApp
+        </button>
+        <button type="button" id="cerrarReciboBtn" class="btn btn-secondary" style="color: #555;">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script type="module" src="../js/pagos-admin.js"></script>

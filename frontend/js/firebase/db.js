@@ -539,17 +539,61 @@ export const dbService = {
     setLocal(STORAGE_KEYS.PAYMENTS, payments);
 
     if (paymentData.reservaId) {
-      const reservas = getLocal(STORAGE_KEYS.RESERVATIONS);
-      const resIdx = reservas.findIndex(r => r.id === paymentData.reservaId);
-      if (resIdx !== -1) {
-        reservas[resIdx].anticipo = (Number(reservas[resIdx].anticipo) || 0) + Number(paymentData.monto);
-        reservas[resIdx].saldo = Math.max(0, (Number(reservas[resIdx].total) || 0) - reservas[resIdx].anticipo);
-        setLocal(STORAGE_KEYS.RESERVATIONS, reservas);
-      }
+      await this.recalcularSaldoReserva(paymentData.reservaId);
     }
 
     return newPayment;
   },
+
+  async updatePayment(id, paymentData) {
+    const payments = getLocal(STORAGE_KEYS.PAYMENTS);
+    const idx = payments.findIndex(p => String(p.id) === String(id));
+    if (idx !== -1) {
+      const oldReservaId = payments[idx].reservaId;
+      payments[idx] = { ...payments[idx], ...paymentData };
+      setLocal(STORAGE_KEYS.PAYMENTS, payments);
+
+      if (payments[idx].reservaId) {
+        await this.recalcularSaldoReserva(payments[idx].reservaId);
+      }
+      if (oldReservaId && oldReservaId !== payments[idx].reservaId) {
+        await this.recalcularSaldoReserva(oldReservaId);
+      }
+      return payments[idx];
+    }
+    return null;
+  },
+
+  async deletePayment(id) {
+    const payments = getLocal(STORAGE_KEYS.PAYMENTS);
+    const item = payments.find(p => String(p.id) === String(id));
+    const reservaId = item ? item.reservaId : null;
+    const filtered = payments.filter(p => String(p.id) !== String(id));
+    setLocal(STORAGE_KEYS.PAYMENTS, filtered);
+
+    if (reservaId) {
+      await this.recalcularSaldoReserva(reservaId);
+    }
+    return true;
+  },
+
+  async recalcularSaldoReserva(reservaId) {
+    if (!reservaId) return;
+    const reservas = getLocal(STORAGE_KEYS.RESERVATIONS);
+    const resIdx = reservas.findIndex(r => String(r.id) === String(reservaId));
+    if (resIdx !== -1) {
+      const payments = getLocal(STORAGE_KEYS.PAYMENTS);
+      const totalAbonado = payments
+        .filter(p => String(p.reservaId) === String(reservaId))
+        .reduce((sum, p) => sum + (Number(p.monto) || 0), 0);
+      
+      reservas[resIdx].anticipo = totalAbonado;
+      const total = Number(reservas[resIdx].total) || 0;
+      reservas[resIdx].saldo = Math.max(0, total - totalAbonado);
+      setLocal(STORAGE_KEYS.RESERVATIONS, reservas);
+    }
+  },
+
 
   // GALERÍA Y CATEGORÍAS
   async getGalleryCategories() {
