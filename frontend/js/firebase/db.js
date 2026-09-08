@@ -320,14 +320,110 @@ if (typeof window !== "undefined") {
 // ----------------- API DEL SERVICIO DE BASE DE DATOS -----------------
 
 export const dbService = {
-  // PAQUETES
+  // PAQUETES TODO INCLUIDO
   async getPackages() {
-    return getLocal(STORAGE_KEYS.PACKAGES);
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        const snapshot = await ops.getDocs(ops.collection(db, "paquetes"));
+        if (!snapshot.empty) {
+          const remoteItems = [];
+          snapshot.forEach(doc => remoteItems.push({ id: doc.id, ...doc.data() }));
+          setLocal(STORAGE_KEYS.PACKAGES, remoteItems);
+          return remoteItems;
+        }
+      } catch (err) {
+        console.warn("Firestore getPackages lectura:", err.message);
+      }
+    }
+    let localItems = getLocal(STORAGE_KEYS.PACKAGES);
+    if (!Array.isArray(localItems) || localItems.length === 0) {
+      localItems = DEFAULT_PACKAGES;
+      setLocal(STORAGE_KEYS.PACKAGES, localItems);
+    }
+    return localItems;
   },
 
   async getPackageById(id) {
-    const list = getLocal(STORAGE_KEYS.PACKAGES);
-    return list.find(p => p.id === id) || null;
+    const list = await this.getPackages();
+    return list.find(p => String(p.id) === String(id)) || null;
+  },
+
+  async addPackage(pkg) {
+    const newPkg = {
+      ...pkg,
+      createdAt: new Date().toISOString()
+    };
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        const docRef = await ops.addDoc(ops.collection(db, "paquetes"), newPkg);
+        newPkg.id = docRef.id;
+      } catch (err) {
+        console.warn("Firestore addPackage error:", err.message);
+        newPkg.id = "pkg-" + Date.now();
+      }
+    } else {
+      newPkg.id = "pkg-" + Date.now();
+    }
+    const list = getLocal(STORAGE_KEYS.PACKAGES) || [];
+    list.push(newPkg);
+    setLocal(STORAGE_KEYS.PACKAGES, list);
+    return newPkg;
+  },
+
+  async updatePackage(id, pkgData) {
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        const docRef = ops.doc(db, "paquetes", id);
+        await ops.updateDoc(docRef, { ...pkgData, updatedAt: new Date().toISOString() });
+      } catch (err) {
+        console.warn("Firestore updatePackage error:", err.message);
+      }
+    }
+    const list = getLocal(STORAGE_KEYS.PACKAGES) || [];
+    const idx = list.findIndex(p => String(p.id) === String(id));
+    if (idx !== -1) {
+      list[idx] = { ...list[idx], ...pkgData, updatedAt: new Date().toISOString() };
+      setLocal(STORAGE_KEYS.PACKAGES, list);
+    }
+    return true;
+  },
+
+  async deletePackage(id) {
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        await ops.deleteDoc(ops.doc(db, "paquetes", id));
+      } catch (err) {
+        console.warn("Firestore deletePackage error:", err.message);
+      }
+    }
+    let list = getLocal(STORAGE_KEYS.PACKAGES) || [];
+    list = list.filter(p => String(p.id) !== String(id));
+    setLocal(STORAGE_KEYS.PACKAGES, list);
+    return true;
+  },
+
+  async resetDefaultPackages() {
+    setLocal(STORAGE_KEYS.PACKAGES, DEFAULT_PACKAGES);
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        for (const pkg of DEFAULT_PACKAGES) {
+          await ops.setDoc(ops.doc(db, "paquetes", pkg.id), pkg, { merge: true });
+        }
+      } catch (e) {
+        console.warn("Firestore resetDefaultPackages error:", e.message);
+      }
+    }
+    return DEFAULT_PACKAGES;
   },
 
   // MOBILIARIO / ALQUILER

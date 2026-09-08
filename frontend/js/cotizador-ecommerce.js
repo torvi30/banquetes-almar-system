@@ -265,11 +265,42 @@ export function aplicarPaqueteAlCotizador(paqueteId) {
       window.EventStudio.state.catering = "tradicional";
       window.EventStudio.state.staging = "tiffany_blanca";
       window.EventStudio.state.addons = new Set(["arco_floral"]);
-    } else if (paqueteId === "corporativo-almar") {
-      window.EventStudio.state.celebration = "corporativo";
-      window.EventStudio.state.catering = "gala_2t";
-      window.EventStudio.state.staging = "tiffany_oro";
-      window.EventStudio.state.addons = new Set(["dj_robotica"]);
+    } else {
+      // Soporte dinámico para paquetes creados desde el panel Admin
+      try {
+        const localPkgs = JSON.parse(localStorage.getItem("almar_paquetes") || "[]");
+        const customPkg = localPkgs.find(p => String(p.id) === String(paqueteId));
+        if (customPkg) {
+          const cat = (customPkg.categoria || "").toLowerCase();
+          if (cat.includes("boda")) {
+            window.EventStudio.state.celebration = "boda";
+            window.EventStudio.state.catering = "gourmet_3t";
+            window.EventStudio.state.staging = "tiffany_oro";
+            window.EventStudio.state.addons = new Set(["arco_floral", "dj_robotica", "brindis_champagne"]);
+          } else if (cat.includes("quince") || cat.includes("15")) {
+            window.EventStudio.state.celebration = "quince";
+            window.EventStudio.state.catering = "gala_2t";
+            window.EventStudio.state.staging = "tiffany_oro";
+            window.EventStudio.state.addons = new Set(["arco_floral", "pista_led", "dj_robotica"]);
+          } else if (cat.includes("grado")) {
+            window.EventStudio.state.celebration = "grado";
+            window.EventStudio.state.catering = "gala_2t";
+            window.EventStudio.state.staging = "tiffany_blanca";
+            window.EventStudio.state.addons = new Set(["dj_robotica", "brindis_champagne"]);
+          } else if (cat.includes("corp")) {
+            window.EventStudio.state.celebration = "corporativo";
+            window.EventStudio.state.catering = "gala_2t";
+            window.EventStudio.state.staging = "tiffany_oro";
+            window.EventStudio.state.addons = new Set(["dj_robotica"]);
+          } else {
+            window.EventStudio.state.celebration = "social";
+            window.EventStudio.state.catering = "tradicional";
+            window.EventStudio.state.staging = "tiffany_blanca";
+          }
+        }
+      } catch (e) {
+        console.warn("Error mapeando paquete dinámico a EventStudio:", e);
+      }
     }
     window.EventStudio.render();
   }

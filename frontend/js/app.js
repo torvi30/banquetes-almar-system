@@ -106,23 +106,31 @@ async function cargarPaquetesDestacados() {
   try {
     const packages = await dbService.getPackages();
 
-    container.innerHTML = packages.map(pkg => `
+    container.innerHTML = packages.map(pkg => {
+      const inclusions = pkg.inclusiones || pkg.inclusions || [];
+      const extraCount = inclusions.length > 4 ? inclusions.length - 4 : 0;
+      return `
       <article class="package-card reveal active">
         <div class="package-image-wrap">
-          <img src="${pkg.imagen}" alt="${pkg.titulo}" class="package-image" loading="lazy" />
-          <span class="package-badge">${pkg.badge}</span>
+          <img src="${pkg.imagen || 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80'}" alt="${pkg.titulo}" class="package-image" loading="lazy" />
+          <span class="package-badge">${pkg.badge || 'Todo Incluido'}</span>
         </div>
         <div class="package-body">
           <h3 class="package-title">${pkg.titulo}</h3>
-          <p class="package-desc">${pkg.descripcion}</p>
+          <p class="package-desc">${pkg.descripcion || ''}</p>
           
           <div class="package-price-wrap">
             <span class="price-label">Desde (por invitado)</span>
             <span class="price-val">$${(pkg.precioPorPersona || 0).toLocaleString("es-CO")} COP</span>
           </div>
 
+          <div style="font-size: 0.8rem; color: var(--apple-gold-light); margin-bottom: 0.8rem;">
+            👥 Mínimo sugerido: <strong>${pkg.minimoPersonas || 40} invitados</strong>
+          </div>
+
           <ul class="package-inclusions-list">
-            ${(pkg.inclusiones || pkg.inclusions || []).slice(0, 4).map(inc => `<li>${inc}</li>`).join("")}
+            ${inclusions.slice(0, 4).map(inc => `<li>${inc}</li>`).join("")}
+            ${extraCount > 0 ? `<li style="list-style: none; color: var(--apple-gold-light); font-size: 0.82rem; font-weight: 600;">+ ${extraCount} inclusiones adicionales</li>` : ''}
           </ul>
 
           <button class="btn btn-primary select-package-btn" data-id="${pkg.id}" style="width: 100%;">
@@ -130,7 +138,8 @@ async function cargarPaquetesDestacados() {
           </button>
         </div>
       </article>
-    `).join("");
+      `;
+    }).join("");
 
     // Conectar botón para seleccionar paquete y auto-completar cotizador
     container.querySelectorAll(".select-package-btn").forEach(btn => {

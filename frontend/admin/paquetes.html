@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrar Paquetes Todo Incluido | Banquetes Almar</title>
+  
+  <!-- Fuentes Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="../css/style.css?v=20260908.1" />
+  <link rel="stylesheet" href="../css/ecommerce.css?v=20260908.1" />
+  <link rel="stylesheet" href="../css/apple-design.css?v=20260908.1" />
+
+  <style>
+    .package-inclusions-manager {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--apple-border);
+      border-radius: 14px;
+      padding: 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .inclusion-item-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      color: var(--apple-gold-light);
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      margin: 0.3rem 0.3rem 0.3rem 0;
+    }
+    .inclusion-item-tag button {
+      background: none;
+      border: none;
+      color: #ff6b6b;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 0;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+    }
+    .inclusion-item-tag button:hover {
+      color: #ff3b30;
+      transform: scale(1.15);
+    }
+    .quick-preset-photos {
+      display: flex;
+      gap: 0.6rem;
+      overflow-x: auto;
+      padding: 0.5rem 0;
+      margin-top: 0.5rem;
+    }
+    .preset-photo-thumb {
+      width: 70px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: var(--apple-fast);
+      opacity: 0.75;
+    }
+    .preset-photo-thumb:hover, .preset-photo-thumb.active {
+      border-color: var(--apple-gold);
+      opacity: 1;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <section class="section admin-panel">
+    <div class="container">
+      <div class="section-heading">
+        <span class="section-label">💎 Panel de Control de Gala</span>
+        <h2>Administrar Paquetes Todo Incluido</h2>
+        <p>Crea, edita y publica las experiencias completas de bodas, quinceañeras y grados. Todo cambio se refleja al instante en la landing page del cliente.</p>
+      </div>
+
+      <!-- NAVEGACIÓN MAESTRA UNIFICADA -->
+      <div class="admin-menu admin-menu-grid">
+        <a href="./dashboard.html" class="btn btn-secondary menu-btn">📊 Dashboard</a>
+        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">💬 Cotizaciones</a>
+        <a href="./reservas.html" class="btn btn-secondary menu-btn">📅 Eventos & Agenda</a>
+        <a href="./pagos.html" class="btn btn-secondary menu-btn">💵 Pagos & Finanzas</a>
+        <a href="./inventario.html" class="btn btn-secondary menu-btn">📦 Inventario</a>
+        <a href="./galeria.html" class="btn btn-secondary menu-btn active-menu">✨ Catálogo Web</a>
+        <a href="./clientes.html" class="btn btn-secondary menu-btn">👥 Clientes</a>
+        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
+      </div>
+
+      <!-- PESTAÑAS CATÁLOGO WEB: GALERÍA VS PAQUETES VS SERVICIOS -->
+      <div class="catalog-tabs-bar">
+        <a href="./galeria.html" class="catalog-tab-btn">📸 Galería de Gala</a>
+        <a href="./paquetes.html" class="catalog-tab-btn active">💎 Paquetes Todo Incluido</a>
+        <a href="./servicios.html" class="catalog-tab-btn">🛎️ Servicios & Banquetería</a>
+      </div>
+
+      <!-- TARJETAS RESUMEN DE PAQUETES -->
+      <div class="admin-summary" style="margin-bottom: 2rem;">
+        <div class="summary-card">
+          <span class="summary-title">💎 Paquetes Activos</span>
+          <strong id="kpiTotalPackages">0</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-title">💰 Inversión Promedio / Invitado</span>
+          <strong id="kpiAvgPrice">$0</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-title">👑 Ocasiones Cubiertas</span>
+          <strong id="kpiCategories">0</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-title">🌐 Conexión Landing Page</span>
+          <strong style="color: #25d366; font-size: 1.25rem;">En Vivo ⚡</strong>
+        </div>
+      </div>
+
+      <!-- FORMULARIO DE CREACIÓN / EDICIÓN DE PAQUETE -->
+      <div class="dashboard-panel" style="margin-bottom: 2.5rem; background: var(--apple-card); border: 1px solid var(--apple-border); border-radius: var(--apple-radius-card); padding: 2rem;">
+        <div class="dashboard-panel-head" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--apple-border); padding-bottom: 1rem;">
+          <div>
+            <p class="dashboard-mini-label" style="color: var(--apple-gold-light); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;">Editor de Experiencias</p>
+            <h3 id="packageFormTitle" style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #fff; margin: 0;">Agregar Nuevo Paquete de Gala</h3>
+          </div>
+          <a href="../index.html#paquetes" target="_blank" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+            👁️ Ver en Landing Page
+          </a>
+        </div>
+
+        <form id="packageForm" class="quote-form">
+          <input type="hidden" id="packageId" />
+          <input type="hidden" id="packageCurrentImage" />
+
+          <!-- TÍTULO Y CATEGORÍA -->
+          <div class="form-group">
+            <label for="pkgTitulo" style="color: #fff; font-weight: 600;">Título del Paquete *</label>
+            <input type="text" id="pkgTitulo" placeholder="Ej: Boda Almar Imperial (Todo Incluido)" required />
+          </div>
+
+          <div class="form-group">
+            <label for="pkgCategoria" style="color: #fff; font-weight: 600;">Categoría / Ocasión *</label>
+            <select id="pkgCategoria" required>
+              <option value="bodas">💍 Bodas de Ensueño</option>
+              <option value="quince">👑 Quince Años & Glam</option>
+              <option value="grados">🎓 Grados & Promociones</option>
+              <option value="corporativo">👔 Eventos Empresariales</option>
+              <option value="social">🕊️ Primera Comunión / Bautizo</option>
+              <option value="familiar">🥂 Fiestas & Aniversarios</option>
+            </select>
+          </div>
+
+          <!-- BADGE Y PRECIO -->
+          <div class="form-group">
+            <label for="pkgBadge" style="color: #fff; font-weight: 600;">Insignia / Badge de Portada</label>
+            <input type="text" id="pkgBadge" placeholder="Ej: Más Solicitado, Juvenil & Elegante, VIP" />
+            <small style="color: var(--apple-text-secondary); font-size: 0.78rem;">Texto flotante sobre la foto en la tarjeta (ej: Más Solicitado)</small>
+          </div>
+
+          <div class="form-group">
+            <label for="pkgPrecio" style="color: #fff; font-weight: 600;">Precio por Persona / Invitado (COP) *</label>
+            <input type="number" id="pkgPrecio" placeholder="Ej: 115000" min="10000" step="1000" required />
+            <small id="priceFormattedPreview" style="color: var(--apple-gold-light); font-size: 0.8rem; font-weight: 600;">$0 COP / persona</small>
+          </div>
+
+          <!-- MÍNIMO DE INVITADOS -->
+          <div class="form-group">
+            <label for="pkgMinPersonas" style="color: #fff; font-weight: 600;">Mínimo de Invitados Sugerido</label>
+            <input type="number" id="pkgMinPersonas" placeholder="Ej: 50" min="10" value="40" />
+          </div>
+
+          <!-- FOTOGRAFÍA -->
+          <div class="form-group">
+            <label for="pkgImagenUrl" style="color: #fff; font-weight: 600;">URL de Fotografía de Gala</label>
+            <input type="url" id="pkgImagenUrl" placeholder="https://images.unsplash.com/..." />
+          </div>
+
+          <div class="form-group full-width">
+            <label style="color: #fff; font-weight: 600;">O sube una imagen desde tu dispositivo / Elige foto sugerida</label>
+            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
+              <input type="file" id="pkgImageFile" accept="image/*" style="max-width: 300px;" />
+              <span style="color: var(--apple-text-secondary); font-size: 0.85rem;">O selecciona una foto recomendada:</span>
+            </div>
+            
+            <div class="quick-preset-photos" id="presetPhotosBar">
+              <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="Boda Imperial" class="preset-photo-thumb" title="Boda de Gala" />
+              <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80" alt="Quinceañera Glam" class="preset-photo-thumb" title="Quinceañera & Pista" />
+              <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80" alt="Salón Elegante" class="preset-photo-thumb" title="Salón con Luces" />
+              <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="Banquete Gourmet" class="preset-photo-thumb" title="Catering 3 Tiempos" />
+              <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80" alt="Boda Campestre" class="preset-photo-thumb" title="Finca Campestre" />
+              <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=800&q=80" alt="Grados & Prom" class="preset-photo-thumb" title="Grados & Fiesta" />
+            </div>
+
+            <div id="pkgPreviewWrap" style="margin-top: 1rem; display: none;">
+              <div style="width: 100%; max-width: 360px; height: 210px; border-radius: 16px; overflow: hidden; position: relative; border: 1px solid var(--apple-border); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+                <img id="pkgImagePreview" src="" alt="Previsualización" style="width: 100%; height: 100%; object-fit: cover;" />
+                <span id="pkgBadgePreview" class="package-badge" style="position: absolute; top: 12px; right: 12px; background: var(--apple-gold-gradient); color: #111; font-weight: 700; font-size: 0.75rem; padding: 4px 10px; border-radius: 999px;">Vista Previa</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- DESCRIPCIÓN -->
+          <div class="form-group full-width">
+            <label for="pkgDescripcion" style="color: #fff; font-weight: 600;">Descripción Comercial del Paquete *</label>
+            <textarea id="pkgDescripcion" rows="3" placeholder="Describe brevemente el alcance del paquete, atmósfera, tipo de montaje..." required></textarea>
+          </div>
+
+          <!-- GESTOR DINÁMICO DE INCLUSIONES -->
+          <div class="form-group full-width">
+            <label style="color: #fff; font-weight: 600;">Inclusiones del Paquete (Lo que incluye el todo incluido) *</label>
+            <div class="package-inclusions-manager">
+              <div style="display: flex; gap: 0.8rem; margin-bottom: 0.8rem; flex-wrap: wrap;">
+                <input type="text" id="newInclusionInput" placeholder="Ej: Menú de gala a 3 tiempos con degustación previa..." style="flex: 1; min-width: 250px;" />
+                <button type="button" class="btn btn-secondary" id="addInclusionBtn" style="white-space: nowrap;">
+                  ➕ Agregar Inclusión
+                </button>
+              </div>
+
+              <div id="inclusionsList" style="min-height: 40px; padding: 0.5rem 0;">
+                <!-- Etiquetas de inclusiones añadidas dinámicamente -->
+              </div>
+              <small style="color: var(--apple-text-secondary); font-size: 0.8rem;">
+                💡 Las primeras 4 inclusiones se muestran destacadas con viñetas en la tarjeta de la landing page.
+              </small>
+            </div>
+          </div>
+
+          <!-- BOTONES DE ACCIÓN -->
+          <div class="form-group full-width event-form-actions" style="margin-top: 1rem; display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary" id="savePackageBtn" style="padding: 0.9rem 2rem; font-size: 1rem;">
+              💾 Guardar y Publicar Paquete
+            </button>
+            <button type="button" class="btn btn-secondary" id="cancelEditPkgBtn" style="display: none; padding: 0.9rem 1.6rem;">
+              Cancelar Edición
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- LISTADO DE PAQUETES PUBLICADOS EN LA WEB -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h3 style="color: #fff; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin: 0 0 0.3rem 0;">
+            Paquetes Publicados en la Landing Page
+          </h3>
+          <p style="color: var(--apple-text-secondary); font-size: 0.9rem; margin: 0;" id="packagesCount">
+            Cargando catálogo...
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center;">
+          <input type="text" id="searchPkgInput" placeholder="🔍 Buscar paquete..." style="padding: 0.55rem 1.1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff; font-size: 0.88rem;" />
+          
+          <select id="filterPkgCat" style="padding: 0.55rem 1.1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff; font-size: 0.88rem;">
+            <option value="todos">Todas las ocasiones</option>
+            <option value="bodas">💍 Bodas</option>
+            <option value="quince">👑 Quince Años</option>
+            <option value="grados">🎓 Grados</option>
+            <option value="corporativo">👔 Corporativo</option>
+            <option value="social">🕊️ Comunión / Bautizo</option>
+          </select>
+
+          <button type="button" class="btn btn-secondary" id="resetDefaultsBtn" style="font-size: 0.82rem; padding: 0.55rem 1rem; border-color: rgba(212,175,55,0.4);" title="Restablece los 3 paquetes iniciales originales">
+            🔄 Restablecer Plantillas
+          </button>
+        </div>
+      </div>
+
+      <!-- CUADRÍCULA DE TARJETAS DE PAQUETES (ESTILO IDÉNTICO A LA WEB DEL CLIENTE) -->
+      <div id="packagesAdminGrid" class="packages-grid" style="margin-top: 1rem;">
+        <!-- Renderizado dinámico desde db.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SweetAlert2 para diálogos de gala -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Lógica modular del panel -->
+  <script type="module" src="../js/paquetes-admin.js?v=20260908.1"></script>
+</body>
+</html>
