@@ -19,7 +19,8 @@ const STORAGE_KEYS = {
   PAYMENTS: "almar_pagos",
   CLIENTS: "almar_clientes",
   GALLERY: "almar_galeria",
-  GALLERY_CATEGORIES: "almar_galeria_categorias"
+  GALLERY_CATEGORIES: "almar_galeria_categorias",
+  SERVICES: "almar_servicios"
 };
 
 // Inicialización de datos semilla si el almacenamiento local está vacío
@@ -196,6 +197,60 @@ function initLocalStore() {
       }
     ];
     localStorage.setItem(STORAGE_KEYS.CLIENTS, JSON.stringify(initialClients));
+  }
+
+  if (!localStorage.getItem(STORAGE_KEYS.SERVICES)) {
+    const initialServices = [
+      {
+        id: "srv-1",
+        titulo: "Banquetería y Catering de Gala",
+        categoria: "Catering",
+        imagen: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=1200&q=80",
+        descripcion: "Menús gourmet a 3 tiempos, pasabocas de bienvenida, repostería fina, vajilla de lujo y personal de protocolo para bodas y 15 años.",
+        destacado: true
+      },
+      {
+        id: "srv-2",
+        titulo: "Decoración y Ambientación Floral de Autor",
+        categoria: "Decoración",
+        imagen: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
+        descripcion: "Centros de mesa altos con flores naturales, arcos ceremoniales, backing de neón para fotos y ambientación de velas.",
+        destacado: true
+      },
+      {
+        id: "srv-3",
+        titulo: "Alquiler de Mobiliario y Menaje de Gala",
+        categoria: "Mobiliario",
+        imagen: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80",
+        descripcion: "Sillas Tiffany doradas, Phoenix, Crossback de madera, salas lounge, mantelería de alta costura y cristalería fina.",
+        destacado: true
+      },
+      {
+        id: "srv-4",
+        titulo: "Salón de Gala en Marinilla",
+        categoria: "Locación",
+        imagen: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80",
+        descripcion: "Espacio climatizado para hasta 200 personas con acústica profesional, suite para anfitriones y ubicación estratégica en Marinilla.",
+        destacado: true
+      },
+      {
+        id: "srv-5",
+        titulo: "Finca Campestre El Peñol",
+        categoria: "Locación",
+        imagen: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1200&q=80",
+        descripcion: "Exclusivo entorno campestre con vista a la represa, amplias zonas verdes, quiosco para ceremonias y parqueadero privado.",
+        destacado: true
+      },
+      {
+        id: "srv-6",
+        titulo: "Producción Audiovisual, Luces & DJ",
+        categoria: "Producción",
+        imagen: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80",
+        descripcion: "Estructuras truss, cabezas móviles, pista de baile LED, chisperos fríos sin pólvora y DJ animador profesional.",
+        destacado: true
+      }
+    ];
+    localStorage.setItem(STORAGE_KEYS.SERVICES, JSON.stringify(initialServices));
   }
 }
 
@@ -677,6 +732,91 @@ export const dbService = {
       String(c.email || "").toLowerCase().includes(q) ||
       String(c.id || "").toLowerCase().includes(q)
     );
+  },
+
+  // GESTIÓN DE SERVICIOS
+  async getServices() {
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        const snapshot = await ops.getDocs(ops.collection(db, "servicios"));
+        if (!snapshot.empty) {
+          const remoteItems = [];
+          snapshot.forEach(doc => remoteItems.push({ id: doc.id, ...doc.data() }));
+          setLocal(STORAGE_KEYS.SERVICES, remoteItems);
+          return remoteItems;
+        }
+      } catch (err) {
+        console.warn("Firestore getServices:", err.message);
+      }
+    }
+    let localItems = getLocal(STORAGE_KEYS.SERVICES);
+    if (!Array.isArray(localItems) || localItems.length === 0) {
+      initLocalStore();
+      localItems = getLocal(STORAGE_KEYS.SERVICES);
+    }
+    return localItems || [];
+  },
+
+  async addService(service) {
+    const newService = {
+      ...service,
+      createdAt: new Date().toISOString()
+    };
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        const docRef = await ops.addDoc(ops.collection(db, "servicios"), newService);
+        newService.id = docRef.id;
+      } catch (err) {
+        console.warn("Firestore addService error:", err.message);
+        newService.id = "srv-" + Date.now();
+      }
+    } else {
+      newService.id = "srv-" + Date.now();
+    }
+    const list = getLocal(STORAGE_KEYS.SERVICES) || [];
+    list.unshift(newService);
+    setLocal(STORAGE_KEYS.SERVICES, list);
+    return newService;
+  },
+
+  async updateService(id, serviceData) {
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        const docRef = ops.doc(db, "servicios", id);
+        await ops.updateDoc(docRef, { ...serviceData, updatedAt: new Date().toISOString() });
+      } catch (err) {
+        console.warn("Firestore updateService error:", err.message);
+      }
+    }
+    const list = getLocal(STORAGE_KEYS.SERVICES) || [];
+    const idx = list.findIndex(s => String(s.id) === String(id));
+    if (idx !== -1) {
+      list[idx] = { ...list[idx], ...serviceData, updatedAt: new Date().toISOString() };
+      setLocal(STORAGE_KEYS.SERVICES, list);
+    }
+    return true;
+  },
+
+  async deleteService(id) {
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        await ops.deleteDoc(ops.doc(db, "servicios", id));
+      } catch (err) {
+        console.warn("Firestore deleteService error:", err.message);
+      }
+    }
+    let list = getLocal(STORAGE_KEYS.SERVICES) || [];
+    list = list.filter(s => String(s.id) !== String(id));
+    setLocal(STORAGE_KEYS.SERVICES, list);
+    return true;
   },
 
   // ESTADÍSTICAS DEL DASHBOARD

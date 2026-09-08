@@ -11,15 +11,15 @@
     <div class="container">
       <div class="section-heading">
         <p class="section-label">Panel Admin</p>
-        <h2>Administrar servicios</h2>
-        <p>Agrega, edita y elimina servicios para la página principal.</p>
+        <h2>Administrar Servicios</h2>
+        <p>Gestiona, edita y publica los servicios exclusivos de Banquetes Almar.</p>
       </div>
 
       <div class="admin-menu admin-menu-grid">
         <a href="./dashboard.html" class="btn btn-secondary menu-btn">Dashboard</a>
         <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">Cotizaciones</a>
         <a href="./galeria.html" class="btn btn-secondary menu-btn">Galería</a>
-        <a href="./servicios.html" class="btn btn-secondary menu-btn">Servicios</a>
+        <a href="./servicios.html" class="btn btn-secondary menu-btn active-menu">Servicios</a>
         <a href="./reservas.html" class="btn btn-secondary menu-btn">Reservas</a>
         <a href="./eventos.html" class="btn btn-secondary menu-btn">Eventos</a>
         <a href="./calendario.html" class="btn btn-secondary menu-btn">Calendario</a>
@@ -29,34 +29,91 @@
         <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">Cerrar sesión</button>
       </div>
 
-      <form id="serviceForm" class="quote-form" enctype="multipart/form-data">
-        <input type="hidden" id="serviceId" />
-
-        <div class="form-group">
-          <label for="titulo">Título</label>
-          <input type="text" id="titulo" placeholder="Ej: Fiesta" required />
+      <div class="dashboard-panel" style="margin-bottom: 2rem;">
+        <div class="dashboard-panel-head">
+          <div>
+            <p class="dashboard-mini-label">Gestión de Catálogo</p>
+            <h3 id="formTitle">Agregar nuevo servicio</h3>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="imagen">Imagen</label>
-          <input type="file" id="imagen" accept="image/*" />
-        </div>
+        <form id="serviceForm" class="quote-form" enctype="multipart/form-data">
+          <input type="hidden" id="serviceId" />
+          <input type="hidden" id="serviceCurrentImage" />
 
-        <div class="form-group full-width">
-          <label for="descripcion">Descripción</label>
-          <textarea id="descripcion" placeholder="Describe el servicio..." rows="4" required></textarea>
-        </div>
+          <div class="form-group">
+            <label for="titulo">Título del servicio *</label>
+            <input type="text" id="titulo" placeholder="Ej: Banquetería y Catering de Gala" required />
+          </div>
 
-        <div class="form-group full-width event-form-actions">
-          <button type="submit" class="btn btn-primary" id="saveServiceBtn">Guardar servicio</button>
-          <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
-        </div>
-      </form>
+          <div class="form-group">
+            <label for="categoria">Categoría</label>
+            <select id="categoria">
+              <option value="Catering">🍽️ Catering y Banquetería</option>
+              <option value="Decoración">💐 Decoración y Flores</option>
+              <option value="Mobiliario">🪑 Mobiliario y Menaje</option>
+              <option value="Locación">🏛️ Locaciones (Salón / Fincas)</option>
+              <option value="Producción">🎵 Sonido, Luces & DJ</option>
+              <option value="Protocolo">🤵 Protocolo y Meseros</option>
+              <option value="General">✨ Otro Servicio</option>
+            </select>
+          </div>
 
-      <div id="servicesGrid" class="quotes-grid" style="margin-top: 2rem;"></div>
+          <div class="form-group full-width">
+            <label for="descripcion">Descripción del servicio *</label>
+            <textarea id="descripcion" placeholder="Describe los beneficios, menú o alcance del servicio..." rows="3" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="imagen">Subir imagen propia</label>
+            <input type="file" id="imagen" accept="image/*" />
+          </div>
+
+          <div class="form-group">
+            <label for="imagenUrl">O ingresar URL de imagen</label>
+            <input type="url" id="imagenUrl" placeholder="https://ejemplo.com/foto.jpg" />
+          </div>
+
+          <div class="form-group full-width" id="previewWrapper" style="display: none;">
+            <label>Vista previa de la imagen</label>
+            <div style="width: 100%; max-width: 380px; height: 210px; border-radius: 14px; overflow: hidden; border: 1px solid var(--apple-border); background: #0c0c0e;">
+              <img id="imagePreview" src="" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+          </div>
+
+          <div class="form-group full-width event-form-actions">
+            <button type="submit" class="btn btn-primary" id="saveServiceBtn">Guardar servicio</button>
+            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display: none;">Cancelar edición</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Filtros y búsqueda de servicios -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h3 style="color: #fff; font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.3rem;">Servicios Publicados</h3>
+          <p style="color: var(--apple-text-secondary); font-size: 0.88rem;" id="servicesCount">Cargando...</p>
+        </div>
+        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+          <input type="text" id="searchServiceInput" placeholder="🔍 Buscar servicio..." style="padding: 0.55rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff; font-size: 0.88rem;" />
+          <select id="filterCategorySelect" style="padding: 0.55rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff; font-size: 0.88rem;">
+            <option value="Todos">Todas las categorías</option>
+            <option value="Catering">🍽️ Catering</option>
+            <option value="Decoración">💐 Decoración</option>
+            <option value="Mobiliario">🪑 Mobiliario</option>
+            <option value="Locación">🏛️ Locación</option>
+            <option value="Producción">🎵 Producción</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="servicesGrid" class="quotes-grid">
+        <!-- Renderizado dinámico -->
+      </div>
     </div>
   </section>
 
-  <script src="../js/servicios-admin.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="module" src="../js/servicios-admin.js?v=20260907.25"></script>
 </body>
 </html>
