@@ -14,7 +14,7 @@
   <!-- Estilos -->
   <link rel="stylesheet" href="./css/style.css?v=20260909.2" />
   <link rel="stylesheet" href="./css/ecommerce.css?v=20260909.2" />
-  <link rel="stylesheet" href="./css/apple-design.css?v=20260909.2" />
+  <link rel="stylesheet" href="./css/apple-design.css?v=20260909.3" />
 </head>
 <body>
 
@@ -379,13 +379,31 @@
               <span class="studio-step-desc">Selecciona la ocasión o escribe la tuya</span>
             </div>
 
-            <div class="segmented-control">
-              <button type="button" class="segment-item segment-celebration active" data-type="boda">💍 Boda</button>
-              <button type="button" class="segment-item segment-celebration" data-type="quince">👑 Quince Años</button>
-              <button type="button" class="segment-item segment-celebration" data-type="grado">🎓 Grado</button>
-              <button type="button" class="segment-item segment-celebration" data-type="social">🕊️ Comunión / Bautizo</button>
-              <button type="button" class="segment-item segment-celebration" data-type="corporativo">👔 Corporativo</button>
-              <button type="button" class="segment-item segment-celebration" data-type="personalizado">✨ Otra Ocasión</button>
+            <div class="celebration-selector-grid" id="celebrationSelectorGrid">
+              <button type="button" class="celebration-card segment-celebration active" data-type="boda">
+                <span class="celebration-card-icon">💍</span>
+                <span class="celebration-card-name">Boda</span>
+              </button>
+              <button type="button" class="celebration-card segment-celebration" data-type="quince">
+                <span class="celebration-card-icon">👑</span>
+                <span class="celebration-card-name">Quince Años</span>
+              </button>
+              <button type="button" class="celebration-card segment-celebration" data-type="grado">
+                <span class="celebration-card-icon">🎓</span>
+                <span class="celebration-card-name">Grado</span>
+              </button>
+              <button type="button" class="celebration-card segment-celebration" data-type="social">
+                <span class="celebration-card-icon">🕊️</span>
+                <span class="celebration-card-name">Comunión / Bautizo</span>
+              </button>
+              <button type="button" class="celebration-card segment-celebration" data-type="corporativo">
+                <span class="celebration-card-icon">👔</span>
+                <span class="celebration-card-name">Corporativo</span>
+              </button>
+              <button type="button" class="celebration-card segment-celebration" data-type="personalizado">
+                <span class="celebration-card-icon">✨</span>
+                <span class="celebration-card-name">Otra Ocasión</span>
+              </button>
             </div>
 
             <!-- Input Dinámico para Ocasión Personalizada -->
@@ -954,6 +972,6 @@
 
   <!-- SCRIPTS MODULARES -->
   <script type="module" src="./js/app.js?v=20260909.2"></script>
-  <script type="module" src="./js/apple-configurator.js?v=20260909.2"></script>
+  <script type="module" src="./js/apple-configurator.js?v=20260909.3"></script>
 </body>
 </html>
