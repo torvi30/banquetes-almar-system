@@ -206,6 +206,49 @@ export const EventStudio = {
       const icon = chip.querySelector(".addon-checkbox-circle");
       if (icon) icon.textContent = isActive ? "✓" : "";
     });
+
+    // Actualizar desglose en vivo en la tarjeta ejecutiva
+    const celebrationNames = {
+      boda: "Boda de Ensueño 💍",
+      quince: "Quince Años de Gala 👑",
+      grado: "Celebración de Grado 🎓",
+      social: "Comunión / Bautizo 🕊️",
+      corporativo: "Evento Corporativo 👔"
+    };
+    const locationNames = {
+      salon_almar: "Salón de Gala (Marinilla)",
+      finca_penol: "Finca Almar (El Peñol)",
+      finca_oriente: "Finca Propia (A Domicilio)"
+    };
+    const cateringNames = {
+      tradicional: "Menú Tradicional",
+      gala_2t: "Menú de Gala (2T)",
+      gourmet_3t: "Menú Imperial (3T)",
+      coctel: "Cóctel & Pasabocas"
+    };
+    const stagingNames = {
+      tiffany_oro: "Tiffany Doradas",
+      tiffany_blanca: "Tiffany Blancas",
+      crossback: "Crossback Rústicas"
+    };
+
+    const sumCeleb = document.getElementById("summaryCelebrationDisplay");
+    if (sumCeleb) sumCeleb.textContent = celebrationNames[this.state.celebration] || this.state.celebration;
+
+    const sumGuests = document.getElementById("summaryGuestsDisplay");
+    if (sumGuests) sumGuests.textContent = `${this.state.guests} personas`;
+
+    const sumLoc = document.getElementById("summaryLocationDisplay");
+    if (sumLoc) sumLoc.textContent = locationNames[this.state.location] || this.state.location;
+
+    const sumCat = document.getElementById("summaryCateringDisplay");
+    if (sumCat) sumCat.textContent = cateringNames[this.state.catering] || this.state.catering;
+
+    const sumStag = document.getElementById("summaryStagingDisplay");
+    if (sumStag) sumStag.textContent = stagingNames[this.state.staging] || this.state.staging;
+
+    const sumAdd = document.getElementById("summaryAddonsCountDisplay");
+    if (sumAdd) sumAdd.textContent = `${this.state.addons.size} servicios`;
   },
 
   // Enlace de Eventos y Touch
@@ -218,11 +261,27 @@ export const EventStudio = {
       });
     });
 
-    // 2. Control de Invitados (Slider + Stepper)
+    // 2. Control de Invitados (Slider + Stepper Táctil + Presets)
     const slider = document.getElementById("guestRangeSlider");
     if (slider) {
       slider.addEventListener("input", (e) => {
         this.state.guests = parseInt(e.target.value, 10);
+        this.render();
+      });
+    }
+
+    const decBtn = document.getElementById("guestDecreaseBtn");
+    if (decBtn) {
+      decBtn.addEventListener("click", () => {
+        this.state.guests = Math.max(20, this.state.guests - 5);
+        this.render();
+      });
+    }
+
+    const incBtn = document.getElementById("guestIncreaseBtn");
+    if (incBtn) {
+      incBtn.addEventListener("click", () => {
+        this.state.guests = Math.min(300, this.state.guests + 5);
         this.render();
       });
     }

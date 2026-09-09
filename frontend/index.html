@@ -12,9 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="./css/style.css?v=20260908.2" />
-  <link rel="stylesheet" href="./css/ecommerce.css?v=20260908.2" />
-  <link rel="stylesheet" href="./css/apple-design.css?v=20260908.2" />
+  <link rel="stylesheet" href="./css/style.css?v=20260909.1" />
+  <link rel="stylesheet" href="./css/ecommerce.css?v=20260909.1" />
+  <link rel="stylesheet" href="./css/apple-design.css?v=20260909.1" />
 </head>
 <body>
 
@@ -368,270 +368,351 @@
           </div>
         </div>
 
-        <div class="studio-configurator">
-          <!-- PASO 1: TIPO DE CELEBRACIÓN -->
-          <div class="studio-step-header">
-            <span class="studio-step-number">1</span>
-            <h3 class="studio-step-title">Tipo de Celebración</h3>
-            <span class="studio-step-desc">Selecciona la ocasión especial</span>
-          </div>
-
-          <div class="segmented-control">
-            <button type="button" class="segment-item segment-celebration active" data-type="boda">💍 Boda</button>
-            <button type="button" class="segment-item segment-celebration" data-type="quince">👑 Quince Años</button>
-            <button type="button" class="segment-item segment-celebration" data-type="grado">🎓 Grado</button>
-            <button type="button" class="segment-item segment-celebration" data-type="social">🕊️ Comunión / Bautizo</button>
-            <button type="button" class="segment-item segment-celebration" data-type="corporativo">👔 Corporativo</button>
-          </div>
-
-          <!-- PASO 2: INVITADOS -->
-          <div class="studio-step-header">
-            <span class="studio-step-number">2</span>
-            <h3 class="studio-step-title">Número de Invitados</h3>
-            <span class="studio-step-desc">Desliza o toca un preset</span>
-          </div>
-
-          <div class="guest-dial-container">
-            <div class="guest-dial-header">
-              <div class="guest-count-display">
-                <span id="guestCountDisplay">80</span>
-                <span class="guest-count-unit">invitados</span>
-              </div>
-              <div class="guest-presets">
-                <button type="button" class="preset-chip" data-guests="35">35</button>
-                <button type="button" class="preset-chip" data-guests="50">50</button>
-                <button type="button" class="preset-chip active" data-guests="80">80</button>
-                <button type="button" class="preset-chip" data-guests="100">100</button>
-                <button type="button" class="preset-chip" data-guests="150">150</button>
-                <button type="button" class="preset-chip" data-guests="200">200</button>
-              </div>
+        <!-- LAYOUT DE 2 COLUMNAS DE ALTA GAMA (STUDIO CONFIGURATOR) -->
+        <div class="studio-layout">
+          <!-- COLUMNA IZQUIERDA: PASOS DE CONFIGURACIÓN -->
+          <div class="studio-steps-column studio-configurator">
+            <!-- PASO 1: TIPO DE CELEBRACIÓN -->
+            <div class="studio-step-header">
+              <span class="studio-step-number">1</span>
+              <h3 class="studio-step-title">Tipo de Celebración</h3>
+              <span class="studio-step-desc">Selecciona la ocasión especial</span>
             </div>
 
-            <input type="range" id="guestRangeSlider" class="apple-slider" min="20" max="300" step="5" value="80" />
-            <div class="capacity-indicator" id="capacityNote">
-              ✨ <strong>Capacidad Perfecta:</strong> Ajuste ideal para nuestro Salón en Marinilla (Calle 29 # 28-25).
+            <div class="segmented-control">
+              <button type="button" class="segment-item segment-celebration active" data-type="boda">💍 Boda</button>
+              <button type="button" class="segment-item segment-celebration" data-type="quince">👑 Quince Años</button>
+              <button type="button" class="segment-item segment-celebration" data-type="grado">🎓 Grado</button>
+              <button type="button" class="segment-item segment-celebration" data-type="social">🕊️ Comunión / Bautizo</button>
+              <button type="button" class="segment-item segment-celebration" data-type="corporativo">👔 Corporativo</button>
             </div>
-          </div>
 
-          <!-- PASO 3: LOCACIÓN -->
-          <div class="studio-step-header">
-            <span class="studio-step-number">3</span>
-            <h3 class="studio-step-title">Locación del Evento</h3>
-            <span class="studio-step-desc">Salón propio o finca campestre</span>
-          </div>
+            <!-- PASO 2: NÚMERO DE INVITADOS (REDISEÑADO CON STEPPER TÁCTIL Y PRESETS) -->
+            <div class="studio-step-header">
+              <span class="studio-step-number">2</span>
+              <h3 class="studio-step-title">Número de Invitados</h3>
+              <span class="studio-step-desc">Ajusta con precisión o toca un preset</span>
+            </div>
 
-          <div class="interactive-tiles-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
-            <div class="selectable-tile tile-location active" data-location="salon_almar">
-              <span class="tile-badge">Sede Urbana</span>
-              <div>
-                <span class="tile-icon">🏛️</span>
-                <h4 class="tile-title">Salón de Gala (Marinilla)</h4>
-                <p class="tile-desc">Calle 29 # 28-25 Marinilla. Climatizado, acústica para fiesta, cocina industrial y fácil acceso.</p>
+            <div class="guest-dial-container">
+              <!-- Stepper Táctil Principal con Contador Prominente -->
+              <div class="guest-stepper-panel">
+                <button type="button" class="btn-guest-stepper" id="guestDecreaseBtn" title="Reducir 5 invitados" aria-label="Reducir 5 invitados">
+                  <span>−</span>
+                </button>
+                
+                <div class="guest-count-center">
+                  <div class="guest-count-display">
+                    <span id="guestCountDisplay">80</span>
+                    <span class="guest-count-unit">invitados</span>
+                  </div>
+                  <span class="guest-count-hint">Ajuste de aforo en tiempo real</span>
+                </div>
+
+                <button type="button" class="btn-guest-stepper" id="guestIncreaseBtn" title="Aumentar 5 invitados" aria-label="Aumentar 5 invitados">
+                  <span>+</span>
+                </button>
               </div>
-              <span class="tile-price">Incluido en la propuesta</span>
-            </div>
 
-            <div class="selectable-tile tile-location" data-location="finca_penol">
-              <span class="tile-badge" style="background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%); color: #000;">Sede Campestre</span>
-              <div>
-                <span class="tile-icon">🌄</span>
-                <h4 class="tile-title">Finca Almar (El Peñol)</h4>
-                <p class="tile-desc">Entorno campestre cerca a la represa. Jardines para ceremonias, quiosco nocturno, fogata y vista natural.</p>
-              </div>
-              <span class="tile-price">+$300.000 uso campestre</span>
-            </div>
-
-            <div class="selectable-tile tile-location" data-location="finca_oriente">
-              <span class="tile-badge">A Domicilio</span>
-              <div>
-                <span class="tile-icon">🚚</span>
-                <h4 class="tile-title">Tu Propia Finca (Oriente)</h4>
-                <p class="tile-desc">Traslado de menaje, cocina y montaje a fincas en Rionegro, El Retiro, Guarne, La Ceja o El Carmen.</p>
-              </div>
-              <span class="tile-price">+$450.000 logística</span>
-            </div>
-          </div>
-
-          <!-- PASO 4: GASTRONOMÍA / MENÚ -->
-          <div class="studio-step-header">
-            <span class="studio-step-number">4</span>
-            <h3 class="studio-step-title">Experiencia Gastronómica</h3>
-            <span class="studio-step-desc">Menús de gala y degustación previa</span>
-          </div>
-
-          <div class="interactive-tiles-grid">
-            <div class="selectable-tile tile-catering" data-catering="tradicional">
-              <div>
-                <span class="tile-icon">🍲</span>
-                <h4 class="tile-title">Menú Tradicional</h4>
-                <p class="tile-desc">Plato principal con opciones de carnes seleccionadas, guarnición y bebida natural.</p>
-              </div>
-              <span class="tile-price">$38.000 / persona</span>
-            </div>
-
-            <div class="selectable-tile tile-catering active" data-catering="gala_2t">
-              <span class="tile-badge">Más Popular</span>
-              <div>
-                <span class="tile-icon">🍽️</span>
-                <h4 class="tile-title">Menú de Gala (2 Tiempos)</h4>
-                <p class="tile-desc">Entrada gourmet, plato fuerte selecto (lomo o pechuga rellena), postre artesanal y bebidas.</p>
-              </div>
-              <span class="tile-price">$52.000 / persona</span>
-            </div>
-
-            <div class="selectable-tile tile-catering" data-catering="gourmet_3t">
-              <span class="tile-badge">Alta Gama</span>
-              <div>
-                <span class="tile-icon">🍷</span>
-                <h4 class="tile-title">Menú Imperial (3 Tiempos)</h4>
-                <p class="tile-desc">Degustación previa para novios/anfitriones, 3 tiempos de alta cocina y cristalería de gala.</p>
-              </div>
-              <span class="tile-price">$69.000 / persona</span>
-            </div>
-
-            <div class="selectable-tile tile-catering" data-catering="coctel">
-              <div>
-                <span class="tile-icon">🍸</span>
-                <h4 class="tile-title">Estación Cóctel & Pasabocas</h4>
-                <p class="tile-desc">Mesa interactiva con variedades de pasabocas calientes y fríos, postres y coctelería.</p>
-              </div>
-              <span class="tile-price">$34.000 / persona</span>
-            </div>
-          </div>
-
-          <!-- PASO 5: MOBILIARIO Y AMBIENTACIÓN -->
-          <div class="studio-step-header">
-            <span class="studio-step-number">5</span>
-            <h3 class="studio-step-title">Mobiliario & Estilo</h3>
-            <span class="studio-step-desc">El confort y la estética de tus invitados</span>
-          </div>
-
-          <div class="interactive-tiles-grid">
-            <div class="selectable-tile tile-staging active" data-staging="tiffany_oro">
-              <span class="tile-badge">Elegancia Clásica</span>
-              <div>
-                <span class="tile-icon">🪑</span>
-                <h4 class="tile-title">Sillas Tiffany Doradas</h4>
-                <p class="tile-desc">Con cojinería acolchada de lujo, mesas vestidas y mantelería en finos textiles.</p>
-              </div>
-              <span class="tile-price">$16.000 / puesto</span>
-            </div>
-
-            <div class="selectable-tile tile-staging" data-staging="tiffany_blanca">
-              <div>
-                <span class="tile-icon">🤍</span>
-                <h4 class="tile-title">Sillas Tiffany Blancas</h4>
-                <p class="tile-desc">Estilo fresco, minimalista y luminoso. Excelente para recepciones diurnas y quinceaños.</p>
-              </div>
-              <span class="tile-price">$15.000 / puesto</span>
-            </div>
-
-            <div class="selectable-tile tile-staging" data-staging="crossback">
-              <span class="tile-badge">Tendencia Vintage</span>
-              <div>
-                <span class="tile-icon">🪵</span>
-                <h4 class="tile-title">Crossback Madera Rústica</h4>
-                <p class="tile-desc">Madera natural artesanal, favorita para bodas campestres y boho chic en el Oriente.</p>
-              </div>
-              <span class="tile-price">$22.000 / puesto</span>
-            </div>
-          </div>
-
-          <!-- PASO 6: PRODUCCIÓN TÉCNICA Y ADICIONALES -->
-          <div class="studio-step-header">
-            <span class="studio-step-number">6</span>
-            <h3 class="studio-step-title">Producción Especial & Adicionales</h3>
-            <span class="studio-step-desc">Toca para activar o desactivar servicios</span>
-          </div>
-
-          <div class="addon-chips-grid">
-            <div class="addon-chip active" data-addon="arco_floral">
-              <div class="addon-chip-info">
-                <span class="addon-checkbox-circle">✓</span>
-                <div>
-                  <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🌸 Arco Floral Natural</div>
-                  <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Arco o backing fotográfico</div>
+              <!-- Presets Rápidos con Etiquetas Descriptivas -->
+              <div class="guest-presets-box">
+                <span class="guest-presets-title">Presets recomendados:</span>
+                <div class="guest-presets">
+                  <button type="button" class="preset-chip" data-guests="35">35 • Íntimo</button>
+                  <button type="button" class="preset-chip" data-guests="50">50 • Familiar</button>
+                  <button type="button" class="preset-chip active" data-guests="80">80 • Clásico</button>
+                  <button type="button" class="preset-chip" data-guests="100">100 • Gala</button>
+                  <button type="button" class="preset-chip" data-guests="150">150 • Magno</button>
+                  <button type="button" class="preset-chip" data-guests="200">200 • Pleno</button>
                 </div>
               </div>
-              <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$650.000</span>
+
+              <!-- Slider de Rango con Marcadores -->
+              <div class="guest-slider-container">
+                <div class="slider-labels-row">
+                  <span>20 mín.</span>
+                  <span>150</span>
+                  <span>300 máx.</span>
+                </div>
+                <input type="range" id="guestRangeSlider" class="apple-slider" min="20" max="300" step="5" value="80" />
+              </div>
+
+              <!-- Indicador Inteligente de Capacidad -->
+              <div class="capacity-indicator" id="capacityNote">
+                ✨ <strong>Capacidad Perfecta:</strong> Ajuste ideal para nuestro Salón en Marinilla (Calle 29 # 28-25).
+              </div>
             </div>
 
-            <div class="addon-chip active" data-addon="dj_robotica">
-              <div class="addon-chip-info">
-                <span class="addon-checkbox-circle">✓</span>
-                <div>
-                  <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🎧 DJ Pro & Luces Robóticas</div>
-                  <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">6 horas de fiesta y cabezas móviles</div>
-                </div>
-              </div>
-              <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$950.000</span>
+            <!-- PASO 3: LOCACIÓN -->
+            <div class="studio-step-header">
+              <span class="studio-step-number">3</span>
+              <h3 class="studio-step-title">Locación del Evento</h3>
+              <span class="studio-step-desc">Salón propio o finca campestre</span>
             </div>
 
-            <div class="addon-chip" data-addon="pista_led">
-              <div class="addon-chip-info">
-                <span class="addon-checkbox-circle"></span>
+            <div class="interactive-tiles-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+              <div class="selectable-tile tile-location active" data-location="salon_almar">
+                <span class="tile-badge">Sede Urbana</span>
                 <div>
-                  <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">✨ Pista de Baile LED</div>
-                  <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Piso iluminado interactivo</div>
+                  <span class="tile-icon">🏛️</span>
+                  <h4 class="tile-title">Salón de Gala (Marinilla)</h4>
+                  <p class="tile-desc">Calle 29 # 28-25 Marinilla. Climatizado, acústica para fiesta, cocina industrial y fácil acceso.</p>
                 </div>
+                <span class="tile-price">Incluido en la propuesta</span>
               </div>
-              <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$600.000</span>
+
+              <div class="selectable-tile tile-location" data-location="finca_penol">
+                <span class="tile-badge" style="background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%); color: #000;">Sede Campestre</span>
+                <div>
+                  <span class="tile-icon">🌄</span>
+                  <h4 class="tile-title">Finca Almar (El Peñol)</h4>
+                  <p class="tile-desc">Entorno campestre cerca a la represa. Jardines para ceremonias, quiosco nocturno, fogata y vista natural.</p>
+                </div>
+                <span class="tile-price">+$300.000 uso campestre</span>
+              </div>
+
+              <div class="selectable-tile tile-location" data-location="finca_oriente">
+                <span class="tile-badge">A Domicilio</span>
+                <div>
+                  <span class="tile-icon">🚚</span>
+                  <h4 class="tile-title">Tu Propia Finca (Oriente)</h4>
+                  <p class="tile-desc">Traslado de menaje, cocina y montaje a fincas en Rionegro, El Retiro, Guarne, La Ceja o El Carmen.</p>
+                </div>
+                <span class="tile-price">+$450.000 logística</span>
+              </div>
             </div>
 
-            <div class="addon-chip" data-addon="hora_loca">
-              <div class="addon-chip-info">
-                <span class="addon-checkbox-circle"></span>
-                <div>
-                  <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🎭 Show de Hora Loca</div>
-                  <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Animación y cotillón temático</div>
-                </div>
-              </div>
-              <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$380.000</span>
+            <!-- PASO 4: GASTRONOMÍA / MENÚ -->
+            <div class="studio-step-header">
+              <span class="studio-step-number">4</span>
+              <h3 class="studio-step-title">Experiencia Gastronómica</h3>
+              <span class="studio-step-desc">Menús de gala y degustación previa</span>
             </div>
 
-            <div class="addon-chip" data-addon="cabina_360">
-              <div class="addon-chip-info">
-                <span class="addon-checkbox-circle"></span>
+            <div class="interactive-tiles-grid">
+              <div class="selectable-tile tile-catering" data-catering="tradicional">
                 <div>
-                  <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">📹 Cabina 360° PhotoBooth</div>
-                  <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Videos instantáneos para invitados</div>
+                  <span class="tile-icon">🍲</span>
+                  <h4 class="tile-title">Menú Tradicional</h4>
+                  <p class="tile-desc">Plato principal con opciones de carnes seleccionadas, guarnición y bebida natural.</p>
                 </div>
+                <span class="tile-price">$38.000 / persona</span>
               </div>
-              <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$420.000</span>
+
+              <div class="selectable-tile tile-catering active" data-catering="gala_2t">
+                <span class="tile-badge">Más Popular</span>
+                <div>
+                  <span class="tile-icon">🍽️</span>
+                  <h4 class="tile-title">Menú de Gala (2 Tiempos)</h4>
+                  <p class="tile-desc">Entrada gourmet, plato fuerte selecto (lomo o pechuga rellena), postre artesanal y bebidas.</p>
+                </div>
+                <span class="tile-price">$52.000 / persona</span>
+              </div>
+
+              <div class="selectable-tile tile-catering" data-catering="gourmet_3t">
+                <span class="tile-badge">Alta Gama</span>
+                <div>
+                  <span class="tile-icon">🍷</span>
+                  <h4 class="tile-title">Menú Imperial (3 Tiempos)</h4>
+                  <p class="tile-desc">Degustación previa para novios/anfitriones, 3 tiempos de alta cocina y cristalería de gala.</p>
+                </div>
+                <span class="tile-price">$69.000 / persona</span>
+              </div>
+
+              <div class="selectable-tile tile-catering" data-catering="coctel">
+                <div>
+                  <span class="tile-icon">🍸</span>
+                  <h4 class="tile-title">Estación Cóctel & Pasabocas</h4>
+                  <p class="tile-desc">Mesa interactiva con variedades de pasabocas calientes y fríos, postres y coctelería.</p>
+                </div>
+                <span class="tile-price">$34.000 / persona</span>
+              </div>
             </div>
 
-            <div class="addon-chip" data-addon="brindis_champagne">
-              <div class="addon-chip-info">
-                <span class="addon-checkbox-circle"></span>
+            <!-- PASO 5: MOBILIARIO Y AMBIENTACIÓN -->
+            <div class="studio-step-header">
+              <span class="studio-step-number">5</span>
+              <h3 class="studio-step-title">Mobiliario & Estilo</h3>
+              <span class="studio-step-desc">El confort y la estética de tus invitados</span>
+            </div>
+
+            <div class="interactive-tiles-grid">
+              <div class="selectable-tile tile-staging active" data-staging="tiffany_oro">
+                <span class="tile-badge">Elegancia Clásica</span>
                 <div>
-                  <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🥂 Brindis con Champaña</div>
-                  <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Copas de cristal para todos</div>
+                  <span class="tile-icon">🪑</span>
+                  <h4 class="tile-title">Sillas Tiffany Doradas</h4>
+                  <p class="tile-desc">Con cojinería acolchada de lujo, mesas vestidas y mantelería en finos textiles.</p>
                 </div>
+                <span class="tile-price">$16.000 / puesto</span>
               </div>
-              <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$280.000</span>
+
+              <div class="selectable-tile tile-staging" data-staging="tiffany_blanca">
+                <div>
+                  <span class="tile-icon">🤍</span>
+                  <h4 class="tile-title">Sillas Tiffany Blancas</h4>
+                  <p class="tile-desc">Estilo fresco, minimalista y luminoso. Excelente para recepciones diurnas y quinceaños.</p>
+                </div>
+                <span class="tile-price">$15.000 / puesto</span>
+              </div>
+
+              <div class="selectable-tile tile-staging" data-staging="crossback">
+                <span class="tile-badge">Tendencia Vintage</span>
+                <div>
+                  <span class="tile-icon">🪵</span>
+                  <h4 class="tile-title">Crossback Madera Rústica</h4>
+                  <p class="tile-desc">Madera natural artesanal, favorita para bodas campestres y boho chic en el Oriente.</p>
+                </div>
+                <span class="tile-price">$22.000 / puesto</span>
+              </div>
+            </div>
+
+            <!-- PASO 6: PRODUCCIÓN TÉCNICA Y ADICIONALES -->
+            <div class="studio-step-header">
+              <span class="studio-step-number">6</span>
+              <h3 class="studio-step-title">Producción Especial & Adicionales</h3>
+              <span class="studio-step-desc">Toca para activar o desactivar servicios</span>
+            </div>
+
+            <div class="addon-chips-grid">
+              <div class="addon-chip active" data-addon="arco_floral">
+                <div class="addon-chip-info">
+                  <span class="addon-checkbox-circle">✓</span>
+                  <div>
+                    <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🌸 Arco Floral Natural</div>
+                    <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Arco o backing fotográfico</div>
+                  </div>
+                </div>
+                <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$650.000</span>
+              </div>
+
+              <div class="addon-chip active" data-addon="dj_robotica">
+                <div class="addon-chip-info">
+                  <span class="addon-checkbox-circle">✓</span>
+                  <div>
+                    <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🎧 DJ Pro & Luces Robóticas</div>
+                    <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">6 horas de fiesta y cabezas móviles</div>
+                  </div>
+                </div>
+                <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$950.000</span>
+              </div>
+
+              <div class="addon-chip" data-addon="pista_led">
+                <div class="addon-chip-info">
+                  <span class="addon-checkbox-circle"></span>
+                  <div>
+                    <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">✨ Pista de Baile LED</div>
+                    <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Piso iluminado interactivo</div>
+                  </div>
+                </div>
+                <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$600.000</span>
+              </div>
+
+              <div class="addon-chip" data-addon="hora_loca">
+                <div class="addon-chip-info">
+                  <span class="addon-checkbox-circle"></span>
+                  <div>
+                    <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🎭 Show de Hora Loca</div>
+                    <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Animación y cotillón temático</div>
+                  </div>
+                </div>
+                <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$380.000</span>
+              </div>
+
+              <div class="addon-chip" data-addon="cabina_360">
+                <div class="addon-chip-info">
+                  <span class="addon-checkbox-circle"></span>
+                  <div>
+                    <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">📹 Cabina 360° PhotoBooth</div>
+                    <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Videos instantáneos para invitados</div>
+                  </div>
+                </div>
+                <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$420.000</span>
+              </div>
+
+              <div class="addon-chip" data-addon="brindis_champagne">
+                <div class="addon-chip-info">
+                  <span class="addon-checkbox-circle"></span>
+                  <div>
+                    <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🥂 Brindis con Champaña</div>
+                    <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Copas de cristal para todos</div>
+                  </div>
+                </div>
+                <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$280.000</span>
+              </div>
             </div>
           </div>
 
-          <!-- DOCK FLOTANTE APPLE CON EL PRECIO Y ACCIONES -->
-          <div class="studio-floating-dock">
-            <div class="dock-pricing">
-              <span class="dock-subtext">Inversión Total Estimada</span>
-              <div class="dock-total-row">
-                <span class="dock-total-val" id="appleTotalLive">$0</span>
-                <span class="dock-per-person">(<span id="applePerPersonLive">$0</span> / invitado)</span>
+          <!-- COLUMNA DERECHA: RESUMEN EJECUTIVO EN VIVO (STICKY DE ALTA GAMA) -->
+          <aside class="studio-summary-column">
+            <div class="studio-summary-card" id="studioSummaryCard">
+              <div class="summary-card-header">
+                <span class="summary-badge">⚡ Cotización en Vivo</span>
+                <h4 class="summary-title">Resumen de Inversión</h4>
+                <p class="summary-subtitle">Total consolidado con transparencia absoluta</p>
               </div>
-              <span class="dock-subtext">Anticipo sugerido de separación (30%): <strong id="appleDepositLive" style="color: #fff;">$0</strong></span>
-            </div>
 
-            <div class="dock-actions">
-              <button type="button" class="btn-apple-secondary" id="applePreviewBtn">
-                📄 Ver Propuesta Formal (PDF)
-              </button>
-              <button type="button" class="btn-apple-primary" id="appleBookBtn">
-                📲 Enviar a WhatsApp Almar
-              </button>
+              <!-- Tarjeta de Precio Principal -->
+              <div class="summary-pricing-block">
+                <span class="summary-price-caption">Inversión Total Estimada</span>
+                <div class="summary-total-amount">
+                  <span class="summary-total-val" id="appleTotalLive">$0</span>
+                </div>
+                <div class="summary-per-guest-row">
+                  <span class="summary-per-guest-text">Equivale a <strong id="applePerPersonLive" style="color: var(--apple-gold-light);">$0</strong> / persona</span>
+                </div>
+                <div class="summary-deposit-row">
+                  <span>Anticipo de separación (30%):</span>
+                  <strong id="appleDepositLive" style="color: #fff;">$0</strong>
+                </div>
+              </div>
+
+              <!-- Desglose Ejecutivo de lo Seleccionado -->
+              <div class="summary-specs-list">
+                <div class="summary-spec-item">
+                  <span class="spec-label">Celebración:</span>
+                  <span class="spec-value" id="summaryCelebrationDisplay">Boda</span>
+                </div>
+                <div class="summary-spec-item">
+                  <span class="spec-label">Invitados:</span>
+                  <span class="spec-value" id="summaryGuestsDisplay">80 personas</span>
+                </div>
+                <div class="summary-spec-item">
+                  <span class="spec-label">Locación:</span>
+                  <span class="spec-value" id="summaryLocationDisplay">Salón de Gala (Marinilla)</span>
+                </div>
+                <div class="summary-spec-item">
+                  <span class="spec-label">Banquete:</span>
+                  <span class="spec-value" id="summaryCateringDisplay">Menú de Gala (2T)</span>
+                </div>
+                <div class="summary-spec-item">
+                  <span class="spec-label">Mobiliario:</span>
+                  <span class="spec-value" id="summaryStagingDisplay">Tiffany Doradas</span>
+                </div>
+                <div class="summary-spec-item">
+                  <span class="spec-label">Adicionales:</span>
+                  <span class="spec-value" id="summaryAddonsCountDisplay">2 servicios</span>
+                </div>
+              </div>
+
+              <!-- Acciones de Conversión -->
+              <div class="summary-actions-box">
+                <button type="button" class="btn-apple-primary btn-summary-cta" id="appleBookBtn">
+                  📲 Enviar a WhatsApp Almar
+                </button>
+                <button type="button" class="btn-apple-secondary btn-summary-sub" id="applePreviewBtn">
+                  📄 Ver Propuesta Formal (PDF)
+                </button>
+              </div>
+
+              <!-- Sellos de Confianza y Calidad -->
+              <div class="summary-trust-footer">
+                <div class="trust-bullet"><span>✓</span> Degustación de menú incluida</div>
+                <div class="trust-bullet"><span>✓</span> Contrato formal y garantía Almar</div>
+                <div class="trust-bullet"><span>✓</span> Sin costos sorpresa ni imprevistos</div>
+              </div>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
     </section>
@@ -786,10 +867,18 @@
     </div>
   </footer>
 
-  <!-- BOTÓN FLOTANTE DE WHATSAPP -->
-  <a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20deseo%20información%20sobre%20sus%20servicios%20de%20eventos" class="whatsapp-float-btn" target="_blank" rel="noopener noreferrer">
-    <span style="font-size: 1.3rem;">💬</span>
-    <span>WhatsApp Almar</span>
+  <!-- BOTÓN FLOTANTE DE WHATSAPP CONCIERGE VIP -->
+  <a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20deseo%20información%20sobre%20sus%20servicios%20de%20eventos" class="whatsapp-vip-float" target="_blank" rel="noopener noreferrer" aria-label="Atención VIP WhatsApp">
+    <div class="wa-vip-icon-ring">
+      <svg class="wa-svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+        <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c4.54 0 8.24 3.7 8.24 8.24 0 2.2-.86 4.28-2.42 5.83a8.18 8.18 0 0 1-5.82 2.41c-1.44 0-2.85-.38-4.09-1.11l-.29-.17-3.12.82.83-3.04-.19-.3a8.18 8.18 0 0 1-1.25-4.44c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.66c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.13-1.06-.39-2.02-1.25-.75-.67-1.25-1.49-1.4-1.74-.14-.25-.02-.39.11-.51.11-.11.25-.29.38-.43.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.45-.06-.13-.56-1.35-.77-1.85-.2-.49-.41-.42-.56-.43l-.48-.01c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08 0 1.23.89 2.42 1.02 2.59.13.17 1.76 2.69 4.26 3.77.6.26 1.06.41 1.43.53.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.17-.48-.29z"/>
+      </svg>
+      <span class="wa-online-pulse"></span>
+    </div>
+    <div class="wa-vip-text-group">
+      <span class="wa-vip-title">Asesoría VIP Almar</span>
+      <span class="wa-vip-subtitle">En línea • Respuesta Inmediata</span>
+    </div>
   </a>
 
   <!-- BOTÓN FLOTANTE DEL CARRITO -->
@@ -850,7 +939,7 @@
   </div>
 
   <!-- SCRIPTS MODULARES -->
-  <script type="module" src="./js/app.js?v=20260908.1"></script>
-  <script type="module" src="./js/apple-configurator.js?v=20260908.1"></script>
+  <script type="module" src="./js/app.js?v=20260909.1"></script>
+  <script type="module" src="./js/apple-configurator.js?v=20260909.1"></script>
 </body>
 </html>

@@ -538,30 +538,8 @@
 }
 
 /* ===================================================
-   BOTÓN FLOTANTE DE WHATSAPP
+   BOTÓN FLOTANTE DE WHATSAPP (Gestionado en apple-design.css como whatsapp-vip-float)
    =================================================== */
-.whatsapp-float-btn {
-  position: fixed;
-  bottom: 2rem;
-  left: 2rem;
-  z-index: 999;
-  background: #25d366;
-  color: #fff;
-  border-radius: 999px;
-  padding: 0.75rem 1.4rem;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-weight: 700;
-  font-size: 0.95rem;
-  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-  transition: transform 0.25s ease;
-  text-decoration: none;
-}
-
-.whatsapp-float-btn:hover {
-  transform: translateY(-4px) scale(1.03);
-}
 
 /* ===================================================
    SECCIÓN DE UBICACIÓN Y MAPA DE MARINILLA
