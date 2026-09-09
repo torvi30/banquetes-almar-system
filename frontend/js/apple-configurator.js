@@ -10,6 +10,7 @@ export const EventStudio = {
   // Estado Reactivo Central
   state: {
     celebration: "boda",
+    customCelebrationName: "",
     location: "salon_almar",
     guests: 80,
     catering: "gala_2t",
@@ -31,7 +32,8 @@ export const EventStudio = {
       quince: { basePerPerson: 32000, label: "Quince Años de Gala", icon: "👑" },
       grado: { basePerPerson: 26000, label: "Grado & Promoción", icon: "🎓" },
       social: { basePerPerson: 24000, label: "Primera Comunión / Bautizo", icon: "🕊️" },
-      corporativo: { basePerPerson: 29000, label: "Evento Corporativo", icon: "👔" }
+      corporativo: { basePerPerson: 29000, label: "Evento Corporativo", icon: "👔" },
+      personalizado: { basePerPerson: 28000, label: "Celebración Personalizada", icon: "✨" }
     },
     locations: {
       salon_almar: { fixedFee: 0, label: "Salón de Gala Almar (Marinilla)", icon: "🏛️" },
@@ -233,7 +235,13 @@ export const EventStudio = {
     };
 
     const sumCeleb = document.getElementById("summaryCelebrationDisplay");
-    if (sumCeleb) sumCeleb.textContent = celebrationNames[this.state.celebration] || this.state.celebration;
+    if (sumCeleb) {
+      if (this.state.celebration === "personalizado") {
+        sumCeleb.textContent = this.state.customCelebrationName ? `${this.state.customCelebrationName} ✨` : "Celebración Personalizada ✨";
+      } else {
+        sumCeleb.textContent = celebrationNames[this.state.celebration] || this.state.celebration;
+      }
+    }
 
     const sumGuests = document.getElementById("summaryGuestsDisplay");
     if (sumGuests) sumGuests.textContent = `${this.state.guests} personas`;
@@ -253,13 +261,29 @@ export const EventStudio = {
 
   // Enlace de Eventos y Touch
   bindEvents() {
-    // 1. Selector de Celebración (Segmented Switch)
+    // 1. Selector de Celebración (Segmented Switch + Custom Input)
+    const customWrapper = document.getElementById("customCelebrationWrapper");
+    const customInput = document.getElementById("customCelebrationInput");
+
     document.querySelectorAll(".segment-celebration").forEach(btn => {
       btn.addEventListener("click", () => {
         this.state.celebration = btn.dataset.type;
+        if (this.state.celebration === "personalizado") {
+          if (customWrapper) customWrapper.style.display = "block";
+          if (customInput) customInput.focus();
+        } else {
+          if (customWrapper) customWrapper.style.display = "none";
+        }
         this.render();
       });
     });
+
+    if (customInput) {
+      customInput.addEventListener("input", (e) => {
+        this.state.customCelebrationName = e.target.value.trim();
+        this.render();
+      });
+    }
 
     // 2. Control de Invitados (Slider + Stepper Táctil + Presets)
     const slider = document.getElementById("guestRangeSlider");
@@ -346,7 +370,10 @@ export const EventStudio = {
   // Flujo de Registro y WhatsApp con Modal de Lujo
   handleBooking() {
     const calc = this.calculate();
-    const cel = this.pricingMatrix.celebrations[this.state.celebration];
+    const celBase = this.pricingMatrix.celebrations[this.state.celebration] || { label: "Celebración Especial", icon: "✨" };
+    const celLabel = this.state.celebration === "personalizado" && this.state.customCelebrationName
+      ? this.state.customCelebrationName
+      : celBase.label;
     const loc = this.pricingMatrix.locations[this.state.location];
     const cat = this.pricingMatrix.caterings[this.state.catering];
     const stg = this.pricingMatrix.stagings[this.state.staging];
@@ -373,7 +400,7 @@ export const EventStudio = {
             Confirmar Cotización
           </h2>
           <p style="font-size: 0.85rem; color: var(--apple-text-secondary); max-width: 420px; margin: 0.5rem auto 0;">
-            ${cel.label} para ${calc.guests} personas en ${loc.label}.
+            ${celLabel} para ${calc.guests} personas en ${loc.label}.
           </p>
         </div>
 
@@ -454,7 +481,7 @@ export const EventStudio = {
         await dbService.createQuote({
           nombre,
           telefono,
-          evento: cel.label,
+          evento: celLabel,
           locacion: loc.label,
           personas: calc.guests,
           menu: cat.label,
@@ -480,7 +507,7 @@ export const EventStudio = {
 📱 *Contacto:* ${telefono}
 📅 *Fecha Tentativa:* ${fecha}
 👥 *Invitados:* ${calc.guests} personas
-✨ *Tipo de Evento:* ${cel.label}
+✨ *Tipo de Evento:* ${celLabel}
 🏛️ *Locación:* ${loc.label}
 
 🍽️ *Gastronomía:* ${cat.label}
@@ -501,7 +528,10 @@ Solicito verificar disponibilidad de fecha en el salón de Marinilla (Calle 29 #
   // Modal con Propuesta Formal Lista para Impresión / PDF
   openFormalProposalModal() {
     const calc = this.calculate();
-    const cel = this.pricingMatrix.celebrations[this.state.celebration];
+    const celBase = this.pricingMatrix.celebrations[this.state.celebration] || { label: "Celebración Especial", icon: "✨" };
+    const celLabel = this.state.celebration === "personalizado" && this.state.customCelebrationName
+      ? this.state.customCelebrationName
+      : celBase.label;
     const loc = this.pricingMatrix.locations[this.state.location];
     const cat = this.pricingMatrix.caterings[this.state.catering];
     const stg = this.pricingMatrix.stagings[this.state.staging];
@@ -533,7 +563,7 @@ Solicito verificar disponibilidad de fecha en el salón de Marinilla (Calle 29 #
           <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; color: #ddd;">
             <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
               <td style="padding: 0.5rem 0;">Celebración:</td>
-              <td style="text-align: right; font-weight: 600; color: #fff;">${cel.label}</td>
+              <td style="text-align: right; font-weight: 600; color: #fff;">${celLabel}</td>
             </tr>
             <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
               <td style="padding: 0.5rem 0;">Número de Invitados:</td>

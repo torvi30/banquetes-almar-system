@@ -12,9 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="./css/style.css?v=20260909.1" />
-  <link rel="stylesheet" href="./css/ecommerce.css?v=20260909.1" />
-  <link rel="stylesheet" href="./css/apple-design.css?v=20260909.1" />
+  <link rel="stylesheet" href="./css/style.css?v=20260909.2" />
+  <link rel="stylesheet" href="./css/ecommerce.css?v=20260909.2" />
+  <link rel="stylesheet" href="./css/apple-design.css?v=20260909.2" />
 </head>
 <body>
 
@@ -376,7 +376,7 @@
             <div class="studio-step-header">
               <span class="studio-step-number">1</span>
               <h3 class="studio-step-title">Tipo de Celebración</h3>
-              <span class="studio-step-desc">Selecciona la ocasión especial</span>
+              <span class="studio-step-desc">Selecciona la ocasión o escribe la tuya</span>
             </div>
 
             <div class="segmented-control">
@@ -385,13 +385,29 @@
               <button type="button" class="segment-item segment-celebration" data-type="grado">🎓 Grado</button>
               <button type="button" class="segment-item segment-celebration" data-type="social">🕊️ Comunión / Bautizo</button>
               <button type="button" class="segment-item segment-celebration" data-type="corporativo">👔 Corporativo</button>
+              <button type="button" class="segment-item segment-celebration" data-type="personalizado">✨ Otra Ocasión</button>
             </div>
 
-            <!-- PASO 2: NÚMERO DE INVITADOS (REDISEÑADO CON STEPPER TÁCTIL Y PRESETS) -->
+            <!-- Input Dinámico para Ocasión Personalizada -->
+            <div class="custom-celebration-wrapper" id="customCelebrationWrapper" style="display: none;">
+              <div class="custom-celebration-card">
+                <span class="custom-celebration-icon">✍️</span>
+                <input 
+                  type="text" 
+                  id="customCelebrationInput" 
+                  class="custom-celebration-input" 
+                  placeholder="Escribe tu tipo de celebración (Ej: Aniversario, Cumpleaños 50, Baby Shower...)" 
+                  maxlength="60"
+                  autocomplete="off"
+                />
+                <span class="custom-celebration-badge">Personalizado</span>
+              </div>
+            </div>
+
+            <!-- PASO 2: NÚMERO DE INVITADOS (LIMPIO, INTUITIVO Y SIN TEXTOS TÉCNICOS) -->
             <div class="studio-step-header">
               <span class="studio-step-number">2</span>
               <h3 class="studio-step-title">Número de Invitados</h3>
-              <span class="studio-step-desc">Ajusta con precisión o toca un preset</span>
             </div>
 
             <div class="guest-dial-container">
@@ -406,7 +422,6 @@
                     <span id="guestCountDisplay">80</span>
                     <span class="guest-count-unit">invitados</span>
                   </div>
-                  <span class="guest-count-hint">Ajuste de aforo en tiempo real</span>
                 </div>
 
                 <button type="button" class="btn-guest-stepper" id="guestIncreaseBtn" title="Aumentar 5 invitados" aria-label="Aumentar 5 invitados">
@@ -414,25 +429,24 @@
                 </button>
               </div>
 
-              <!-- Presets Rápidos con Etiquetas Descriptivas -->
+              <!-- Presets Rápidos Limpios -->
               <div class="guest-presets-box">
-                <span class="guest-presets-title">Presets recomendados:</span>
-                <div class="guest-presets">
-                  <button type="button" class="preset-chip" data-guests="35">35 • Íntimo</button>
-                  <button type="button" class="preset-chip" data-guests="50">50 • Familiar</button>
-                  <button type="button" class="preset-chip active" data-guests="80">80 • Clásico</button>
-                  <button type="button" class="preset-chip" data-guests="100">100 • Gala</button>
-                  <button type="button" class="preset-chip" data-guests="150">150 • Magno</button>
-                  <button type="button" class="preset-chip" data-guests="200">200 • Pleno</button>
+                <div class="guest-presets guest-presets-clean">
+                  <button type="button" class="preset-chip" data-guests="35">35</button>
+                  <button type="button" class="preset-chip" data-guests="50">50</button>
+                  <button type="button" class="preset-chip active" data-guests="80">80</button>
+                  <button type="button" class="preset-chip" data-guests="100">100</button>
+                  <button type="button" class="preset-chip" data-guests="150">150</button>
+                  <button type="button" class="preset-chip" data-guests="200">200</button>
                 </div>
               </div>
 
               <!-- Slider de Rango con Marcadores -->
               <div class="guest-slider-container">
                 <div class="slider-labels-row">
-                  <span>20 mín.</span>
+                  <span>20</span>
                   <span>150</span>
-                  <span>300 máx.</span>
+                  <span>300</span>
                 </div>
                 <input type="range" id="guestRangeSlider" class="apple-slider" min="20" max="300" step="5" value="80" />
               </div>
@@ -939,7 +953,7 @@
   </div>
 
   <!-- SCRIPTS MODULARES -->
-  <script type="module" src="./js/app.js?v=20260909.1"></script>
-  <script type="module" src="./js/apple-configurator.js?v=20260909.1"></script>
+  <script type="module" src="./js/app.js?v=20260909.2"></script>
+  <script type="module" src="./js/apple-configurator.js?v=20260909.2"></script>
 </body>
 </html>
