@@ -105,7 +105,7 @@ export const DEFAULT_RENTAL_ITEMS = [
     precio: 7000,
     unidad: "día/evento",
     stock: 250,
-    imagen: "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80",
+    imagen: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80",
     descripcion: "Elegante silla Tiffany metálica dorada con cojín blanco acolchado. Ideal para bodas y quinceaños."
   },
   {

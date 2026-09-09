@@ -428,7 +428,20 @@ export const dbService = {
 
   // MOBILIARIO / ALQUILER
   async getRentalItems(category = "todos") {
-    const list = getLocal(STORAGE_KEYS.RENTAL);
+    let list = getLocal(STORAGE_KEYS.RENTAL);
+    if (Array.isArray(list)) {
+      let modified = false;
+      list = list.map(item => {
+        if (item.id === "silla-tiffany-dorada" && item.imagen && item.imagen.includes("photo-1503602642458-232111445657")) {
+          modified = true;
+          return { ...item, imagen: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80" };
+        }
+        return item;
+      });
+      if (modified) {
+        setLocal(STORAGE_KEYS.RENTAL, list);
+      }
+    }
     if (!category || category === "todos") return list;
     return list.filter(item => item.categoria.toLowerCase() === category.toLowerCase());
   },
