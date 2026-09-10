@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Banquetes Almar | Salón de Eventos, Catering y Alquiler en Marinilla Antioquia</title>
   <meta name="description" content="Organización de bodas, 15 años, grados, catering de gala y alquiler de mobiliario (sillas Tiffany, carpas, mesas) en Marinilla y Oriente Antioqueño." />
   
@@ -12,9 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="./css/style.css?v=20260909.5" />
-  <link rel="stylesheet" href="./css/ecommerce.css?v=20260909.5" />
-  <link rel="stylesheet" href="./css/apple-design.css?v=20260909.5" />
+  <link rel="stylesheet" href="./css/style.css?v=20260909.6" />
+  <link rel="stylesheet" href="./css/ecommerce.css?v=20260909.6" />
+  <link rel="stylesheet" href="./css/apple-design.css?v=20260909.6" />
 </head>
 <body>
 
@@ -124,7 +124,7 @@
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2rem; margin-top: 2.5rem;">
+        <div class="sedes-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 2rem; margin-top: 2.5rem;">
           
           <!-- SEDE 1: SALÓN MARINILLA -->
           <article class="package-card" style="border-color: var(--apple-border); background: var(--apple-card);">
@@ -229,7 +229,7 @@
         </div>
 
         <!-- 4 PILARES GASTRONÓMICOS -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.8rem; margin-bottom: 3.5rem;">
+        <div class="packages-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.8rem; margin-bottom: 3.5rem;">
           
           <!-- PLATO 1: CENA FORMAL 3 TIEMPOS -->
           <article class="package-card active" style="background: var(--apple-card); border-color: var(--apple-border); display: flex; flex-direction: column;">
@@ -482,7 +482,7 @@
               <span class="studio-step-desc">Salón propio o finca campestre</span>
             </div>
 
-            <div class="interactive-tiles-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+            <div class="interactive-tiles-grid" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));">
               <div class="selectable-tile tile-location active" data-location="salon_almar">
                 <span class="tile-badge">Sede Urbana</span>
                 <div>
@@ -745,6 +745,19 @@
               </div>
             </div>
           </aside>
+        </div>
+
+        <!-- BARRA FLOTANTE MÓVIL DE PRESUPUESTO EN VIVO (Exclusiva para Celulares) -->
+        <div class="mobile-cotizador-bar" id="mobileCotizadorBar">
+          <div class="mobile-cotizador-info">
+            <span class="mobile-cotizador-label">Total Estimado</span>
+            <span class="mobile-cotizador-total" id="appleTotalMobile">$0</span>
+          </div>
+          <div class="mobile-cotizador-actions">
+            <button type="button" class="btn-mobile-quote-cta" id="mobileQuoteActionBtn">
+              <span>📲 Cotizar</span>
+            </button>
+          </div>
         </div>
       </div>
     </section>

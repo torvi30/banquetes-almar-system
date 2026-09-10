@@ -36,6 +36,36 @@
       margin-bottom: 2rem;
     }
 
+    @media (max-width: 600px) {
+      .portal-container {
+        margin: 1.5rem auto;
+        padding: 0 1rem;
+      }
+      .portal-card {
+        padding: 1.4rem 1.1rem;
+        border-radius: 18px;
+        margin-bottom: 1.2rem;
+      }
+      .countdown-box {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.65rem !important;
+        margin: 1.2rem 0 !important;
+      }
+      .countdown-unit {
+        padding: 0.85rem 0.4rem !important;
+      }
+      .countdown-number {
+        font-size: 2rem !important;
+      }
+      .portal-lookup-form {
+        flex-direction: column;
+      }
+      .portal-lookup-form input,
+      .portal-lookup-form button {
+        width: 100% !important;
+      }
+    }
+
     .portal-header {
       text-align: center;
       margin-bottom: 2.5rem;
@@ -259,24 +289,26 @@
 
         <!-- TABLA DE HISTORIAL DE PAGOS -->
         <h4 style="font-size: 0.95rem; color: #fff; margin-top: 2rem;">Historial de Pagos Registrados:</h4>
-        <table class="payment-history-table">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Concepto</th>
-              <th>Método</th>
-              <th style="text-align: right;">Valor</th>
-            </tr>
-          </thead>
-          <tbody id="paymentHistoryBody">
-            <tr>
-              <td>01/09/2026</td>
-              <td>Anticipo de separación de fecha</td>
-              <td>Transferencia Bancolombia</td>
-              <td style="text-align: right; color: #2ecc71; font-weight: 700;">+$4.000.000</td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+          <table class="payment-history-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Concepto</th>
+                <th>Método</th>
+                <th style="text-align: right;">Valor</th>
+              </tr>
+            </thead>
+            <tbody id="paymentHistoryBody">
+              <tr>
+                <td>01/09/2026</td>
+                <td>Anticipo de separación de fecha</td>
+                <td>Transferencia Bancolombia</td>
+                <td style="text-align: right; color: #2ecc71; font-weight: 700;">+$4.000.000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- ACCIONES LEGALES Y DESCARGAS -->

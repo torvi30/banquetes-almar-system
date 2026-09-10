@@ -47,21 +47,64 @@ function initRevealAnimations() {
   }, 800);
 }
 
-// Navegación móvil y scroll suave
+// Navegación móvil y scroll suave de alta gama
 function initNavigation() {
   const menuToggle = document.getElementById("menuToggle");
   const navLinks = document.getElementById("navLinks");
 
   if (menuToggle && navLinks) {
-    menuToggle.addEventListener("click", () => {
-      navLinks.classList.toggle("active");
+    const closeMenu = () => {
+      navLinks.classList.remove("active");
+      menuToggle.textContent = "☰";
+      menuToggle.setAttribute("aria-expanded", "false");
+    };
+
+    const toggleMenu = () => {
+      const isOpen = navLinks.classList.toggle("active");
+      menuToggle.textContent = isOpen ? "✕" : "☰";
+      menuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    };
+
+    menuToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleMenu();
     });
 
     navLinks.querySelectorAll("a").forEach((link) => {
       link.addEventListener("click", () => {
-        navLinks.classList.remove("active");
+        closeMenu();
       });
     });
+
+    // Cerrar al tocar fuera del menú en pantallas táctiles
+    document.addEventListener("click", (e) => {
+      if (navLinks.classList.contains("active") && !navLinks.contains(e.target) && e.target !== menuToggle) {
+        closeMenu();
+      }
+    });
+
+    // Cerrar con tecla Escape
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && navLinks.classList.contains("active")) {
+        closeMenu();
+      }
+    });
+  }
+
+  // Barra flotante móvil para cotizador en tiempo real
+  const cotizadorSec = document.getElementById("cotizador");
+  const mobileBar = document.getElementById("mobileCotizadorBar");
+  if (cotizadorSec && mobileBar && "IntersectionObserver" in window) {
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          mobileBar.classList.add("visible");
+        } else {
+          mobileBar.classList.remove("visible");
+        }
+      });
+    }, { threshold: 0.08 });
+    barObserver.observe(cotizadorSec);
   }
 }
 

@@ -1916,3 +1916,472 @@ section[id] {
   padding: 0.6rem 1rem !important;
   margin-top: 0.8rem !important;
 }
+
+/* ==========================================================================
+   MOBILE MASTERY & ULTRA-RESPONSIVE ARCHITECTURE (BANQUETES ALMAR)
+   Garantiza fluidez total (100% melo) en smartphones, tablets y pantallas táctiles.
+   ========================================================================== */
+
+/* 1. Prevención de desbordamiento horizontal y safe-areas */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw;
+  position: relative;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* 2. Prevención de zoom forzado en Safari iOS */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* 3. Franja superior de prestigio en celulares */
+@media (max-width: 680px) {
+  .top-announcement-bar {
+    padding: 0.45rem 0.6rem;
+    font-size: 0.76rem;
+  }
+  .announcement-inner {
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .announcement-left {
+    display: inline;
+    text-align: center;
+    line-height: 1.35;
+  }
+  .announcement-sparkle {
+    display: inline-block;
+    margin-right: 0.2rem;
+  }
+  .announcement-highlight {
+    display: inline;
+    margin-right: 0.25rem;
+  }
+  .announcement-venues {
+    display: inline;
+  }
+  .announcement-right {
+    display: none !important;
+  }
+}
+
+/* 4. Barra de navegación y header en celulares */
+@media (max-width: 960px) {
+  .navbar-luxury {
+    min-height: 66px;
+    padding: 0 0.2rem;
+  }
+  .brand {
+    gap: 0.65rem;
+  }
+  .brand-logo {
+    width: 40px;
+    height: 40px;
+  }
+  .logo-main {
+    font-size: 1.15rem;
+    line-height: 1.1;
+  }
+  .logo-sub {
+    font-size: 0.55rem;
+    letter-spacing: 1.2px;
+  }
+  .nav-actions-group {
+    gap: 0.55rem;
+  }
+  .btn-nav-cart {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.82rem;
+  }
+  .menu-toggle {
+    width: 40px;
+    height: 40px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: #fff;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .nav-links-editorial {
+    top: 66px;
+    padding: 1.2rem 1rem;
+    gap: 0.5rem;
+    border-radius: 0 0 20px 20px;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.35);
+  }
+  .nav-editorial-link {
+    padding: 0.85rem 1rem;
+    font-size: 0.96rem;
+    border-radius: 12px;
+  }
+}
+
+/* 5. Espaciado y tipografía en secciones */
+@media (max-width: 768px) {
+  .section {
+    padding: 3.2rem 0 !important;
+  }
+  .section-heading {
+    margin-bottom: 2rem !important;
+  }
+  .section-heading h2 {
+    font-size: clamp(1.65rem, 6vw, 2.2rem) !important;
+    line-height: 1.25 !important;
+  }
+  .section-heading p {
+    font-size: 0.92rem !important;
+    line-height: 1.55 !important;
+  }
+  .section-features-bar {
+    gap: 0.45rem;
+    margin-top: 1rem;
+  }
+  .section-feature-pill {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.75rem;
+  }
+  .hero-content {
+    padding: 5rem 0.5rem 2.8rem !important;
+  }
+  .hero-content h1 {
+    font-size: clamp(1.95rem, 6.5vw, 2.75rem) !important;
+    line-height: 1.2 !important;
+  }
+  .hero-content p {
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+  }
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem !important;
+    margin-top: 1.8rem !important;
+  }
+  .hero-actions a {
+    width: 100%;
+    justify-content: center;
+    padding: 0.95rem 1.4rem !important;
+    font-size: 0.95rem !important;
+    box-sizing: border-box;
+  }
+}
+
+/* 6. Sedes y Paquetes en Celulares (Sin desbordamientos) */
+@media (max-width: 650px) {
+  .sedes-cards-grid,
+  .packages-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.4rem !important;
+  }
+  .package-card {
+    border-radius: 18px !important;
+  }
+  .package-body {
+    padding: 1.3rem !important;
+  }
+}
+
+/* 7. Cotizador Studio Configurator en Celulares */
+@media (max-width: 992px) {
+  .studio-layout {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  .studio-configurator {
+    padding: 1.4rem 1rem !important;
+    border-radius: 18px !important;
+  }
+  .studio-step-header {
+    margin: 1.6rem 0 0.85rem !important;
+    gap: 0.65rem !important;
+  }
+  .studio-step-title {
+    font-size: 1.25rem !important;
+  }
+  .celebration-selector-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.55rem !important;
+  }
+  .celebration-card {
+    height: 48px !important;
+    padding: 0 0.65rem !important;
+    gap: 0.45rem !important;
+  }
+  .celebration-card-name {
+    font-size: 0.82rem !important;
+  }
+  .celebration-card-icon {
+    font-size: 1.1rem !important;
+  }
+  .guest-stepper-panel {
+    padding: 1rem 1.1rem !important;
+    margin-bottom: 1rem !important;
+  }
+  .guest-count-display {
+    font-size: 2.3rem !important;
+  }
+  .btn-guest-stepper {
+    width: 46px !important;
+    height: 46px !important;
+    font-size: 1.5rem !important;
+  }
+  .guest-presets-clean {
+    gap: 0.45rem !important;
+  }
+  .guest-presets-clean .preset-chip {
+    min-width: 44px !important;
+    padding: 0.45rem 0.85rem !important;
+    font-size: 0.82rem !important;
+  }
+  .interactive-tiles-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+  .selectable-tile {
+    padding: 1.15rem 1rem !important;
+    border-radius: 14px !important;
+  }
+  .tile-title {
+    font-size: 1.05rem !important;
+  }
+  .tile-desc {
+    font-size: 0.82rem !important;
+    line-height: 1.45 !important;
+  }
+  .tile-badge {
+    top: 0.8rem !important;
+    right: 0.8rem !important;
+    font-size: 0.62rem !important;
+    padding: 0.2rem 0.5rem !important;
+  }
+  .addon-chips-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.65rem !important;
+  }
+  .addon-chip {
+    padding: 0.85rem 1rem !important;
+    border-radius: 12px !important;
+  }
+}
+
+/* 8. Barra flotante de presupuesto en tiempo real para móviles */
+.mobile-cotizador-bar {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .mobile-cotizador-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 998;
+    background: rgba(15, 15, 18, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(212, 175, 55, 0.35);
+    padding: 0.75rem 1.1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.6);
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+  }
+
+  .mobile-cotizador-bar.visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-cotizador-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .mobile-cotizador-label {
+    font-size: 0.7rem;
+    color: #a1a1aa;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .mobile-cotizador-total {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.1;
+  }
+
+  .btn-mobile-quote-cta {
+    background: linear-gradient(135deg, #f5d77f 0%, #d4af37 55%, #b28a1c 100%);
+    color: #09090b !important;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.65rem 1.1rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
+    white-space: nowrap;
+  }
+}
+
+/* 9. Catálogo de Mobiliario (Barra de chips con scroll táctil fluido) */
+@media (max-width: 768px) {
+  .rental-filter-bar {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+    padding: 0.2rem 0.5rem 0.8rem !important;
+    margin-bottom: 1.5rem !important;
+    gap: 0.55rem !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+  .rental-filter-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+  .rental-cat-btn {
+    flex-shrink: 0 !important;
+    padding: 0.55rem 1.1rem !important;
+    font-size: 0.82rem !important;
+    white-space: nowrap !important;
+  }
+  .rental-card .service-image-wrap {
+    height: 210px !important;
+  }
+}
+
+/* 10. Carrito de Alquiler Drawer en Móviles */
+@media (max-width: 480px) {
+  .cart-drawer {
+    width: 100vw !important;
+    right: -100vw !important;
+    border-left: none !important;
+  }
+  .cart-drawer-header {
+    padding: 1.1rem !important;
+  }
+  .cart-items-container {
+    padding: 0.8rem 1rem !important;
+  }
+  .cart-qty-btn {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 1.1rem !important;
+  }
+  .cart-drawer-footer {
+    padding: 1.1rem 1.1rem calc(1.1rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+/* 11. Botón Flotante de WhatsApp VIP en Móviles */
+@media (max-width: 680px) {
+  .whatsapp-vip-float {
+    bottom: 4.8rem !important;
+    left: 1rem !important;
+    padding: 0.35rem !important;
+    border-radius: 50% !important;
+    background: rgba(12, 12, 15, 0.95) !important;
+  }
+  .wa-vip-icon-ring {
+    width: 46px !important;
+    height: 46px !important;
+    font-size: 1.3rem !important;
+  }
+  .wa-vip-text-group {
+    display: none !important;
+  }
+}
+
+/* 12. Modales, Lightbox y SweetAlert2 en Pantallas Táctiles */
+@media (max-width: 600px) {
+  .apple-modal-content {
+    padding: 1.4rem 1.1rem !important;
+    border-radius: 18px !important;
+    max-height: 94vh !important;
+  }
+  .client-lightbox-image-stage {
+    min-height: 220px !important;
+    max-height: 38vh !important;
+    padding: 0.5rem !important;
+  }
+  .client-lightbox-details {
+    padding: 1.2rem 1rem !important;
+  }
+  .client-lightbox-title {
+    font-size: 1.25rem !important;
+  }
+  .client-lightbox-desc {
+    font-size: 0.85rem !important;
+  }
+
+  .swal2-popup {
+    width: min(94vw, 400px) !important;
+    padding: 1.6rem 1.1rem !important;
+    border-radius: 20px !important;
+  }
+  .swal2-title {
+    font-size: 1.35rem !important;
+    padding: 0.2rem 0.4rem !important;
+  }
+  .swal2-html-container {
+    font-size: 0.9rem !important;
+    margin: 0.4rem 0 1rem !important;
+  }
+  .swal2-actions {
+    flex-direction: column-reverse !important;
+    width: 100% !important;
+    gap: 0.6rem !important;
+  }
+  .swal2-confirm,
+  .swal2-cancel {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 0.85rem 1rem !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+}
+
+/* 13. Menús Administrativos y Paneles de Control en Celulares */
+@media (max-width: 600px) {
+  .admin-menu,
+  .admin-menu-fixed,
+  .admin-menu-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    margin-bottom: 1.5rem !important;
+  }
+  .menu-btn {
+    min-width: 0 !important;
+    width: 100% !important;
+    padding: 10px 8px !important;
+    font-size: 0.82rem !important;
+  }
+  .admin-summary {
+    grid-template-columns: 1fr !important;
+    gap: 0.8rem !important;
+  }
+}

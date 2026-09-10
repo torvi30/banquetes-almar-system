@@ -142,6 +142,7 @@ export const EventStudio = {
 
     // Actualizar números con animación
     this.animateNumber(calc.total, "appleTotalLive");
+    this.animateNumber(calc.total, "appleTotalMobile");
 
     const perPersonEl = document.getElementById("applePerPersonLive");
     if (perPersonEl) perPersonEl.textContent = `$${calc.perPersonFinal.toLocaleString("es-CO")}`;
@@ -358,6 +359,11 @@ export const EventStudio = {
     const bookBtn = document.getElementById("appleBookBtn");
     if (bookBtn) {
       bookBtn.addEventListener("click", () => this.handleBooking());
+    }
+
+    const mobileBookBtn = document.getElementById("mobileQuoteActionBtn");
+    if (mobileBookBtn) {
+      mobileBookBtn.addEventListener("click", () => this.handleBooking());
     }
 
     // 8. Botón Secundario: Modal de Cotización Formal Imprimible (PDF View)

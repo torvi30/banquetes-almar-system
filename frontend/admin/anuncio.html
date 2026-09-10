@@ -193,6 +193,24 @@
       border-color: var(--apple-gold);
       transform: scale(1.1);
     }
+
+    @media (max-width: 650px) {
+      .presets-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .admin-actions-bar {
+        flex-direction: column-reverse !important;
+      }
+      .admin-actions-bar button,
+      .admin-actions-bar a {
+        width: 100% !important;
+        text-align: center;
+        justify-content: center;
+      }
+      .form-grid-2 {
+        grid-template-columns: 1fr !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -393,7 +411,7 @@
           </div>
 
           <!-- BARRA DE ACCIONES DE GALA -->
-          <div style="display: flex; gap: 1rem; align-items: center; justify-content: flex-end; flex-wrap: wrap; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1.5rem;">
+          <div class="admin-actions-bar" style="display: flex; gap: 1rem; align-items: center; justify-content: flex-end; flex-wrap: wrap; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1.5rem;">
             <button type="button" class="btn btn-secondary" id="resetAnnouncementBtn">
               🔄 Restablecer Predeterminado
             </button>

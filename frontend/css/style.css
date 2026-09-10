@@ -700,9 +700,20 @@
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(230, 199, 123, 0.18);
     border-radius: 18px;
-    padding: 1rem 1.2rem;
-    min-width: 220px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  @media (max-width: 600px) {
+    .admin-summary {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 0.75rem !important;
+    }
+    .summary-card {
+      min-width: 0 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
   }
   
   .summary-title {
@@ -811,6 +822,23 @@
     flex-wrap: wrap;
     justify-content: center;
     margin-bottom: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    .admin-menu,
+    .admin-menu-fixed,
+    .admin-menu-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 8px !important;
+      margin-bottom: 1.5rem !important;
+    }
+    .menu-btn {
+      min-width: 0 !important;
+      width: 100% !important;
+      padding: 10px 8px !important;
+      font-size: 0.82rem !important;
+    }
   }
   .btn-success {
     background: transparent;
