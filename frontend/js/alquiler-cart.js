@@ -42,6 +42,18 @@ export const rentalCart = {
     this.save();
     this.renderDrawer();
     this.openDrawer();
+
+    if (window.Swal) {
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: `Agregado: ${product.nombre}`,
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+      });
+    }
   },
 
   removeItem(productId) {
@@ -184,32 +196,96 @@ export function initRentalStore() {
   // Finalizar alquiler por WhatsApp
   const checkoutBtn = document.getElementById("cartCheckoutBtn");
   if (checkoutBtn) {
-    checkoutBtn.addEventListener("click", () => {
+    checkoutBtn.addEventListener("click", async () => {
       if (rentalCart.items.length === 0) {
-        alert("El carrito está vacío. Elige artículos para tu evento.");
+        if (window.Swal) {
+          Swal.fire({
+            icon: "warning",
+            title: "Carrito Vacío",
+            text: "Elige al menos un artículo del catálogo de mobiliario para solicitar tu reserva.",
+            confirmButtonText: "Explorar Mobiliario"
+          });
+        } else {
+          alert("El carrito está vacío. Elige artículos para tu evento.");
+        }
         return;
       }
 
-      const fecha = prompt("¿Para qué fecha necesitas el mobiliario? (Ej: Sábado 14 de Noviembre):");
-      if (!fecha) return;
-
-      const municipio = prompt("¿En qué municipio o lugar será el evento? (Ej: Marinilla, Rionegro, El Retiro):") || "Marinilla";
-      const nombre = prompt("¿A nombre de quién registramos la solicitud de alquiler?:") || "Cliente";
-
       const total = rentalCart.getTotal();
+      let nombre = "Cliente";
+      let fecha = "";
+      let municipio = "Marinilla";
+
+      if (window.Swal) {
+        const { value: formValues } = await Swal.fire({
+          title: "Solicitud de Mobiliario",
+          html: `
+            <p style="color: #cbd5e1; font-size: 0.92rem; margin-bottom: 1.2rem; line-height: 1.5;">
+              Ingresa los datos del evento para verificar inventario disponible y calcular el flete hasta tu locación.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 0.9rem; text-align: left;">
+              <div>
+                <label style="color: #d4af37; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.35rem;">Tu Nombre Completo *</label>
+                <input id="swalRentNombre" class="swal2-input" style="margin: 0; width: 100%; box-sizing: border-box;" placeholder="Ej: Marcela Gómez" />
+              </div>
+              <div>
+                <label style="color: #d4af37; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.35rem;">Fecha de la Celebración *</label>
+                <input id="swalRentFecha" class="swal2-input" style="margin: 0; width: 100%; box-sizing: border-box;" placeholder="Ej: Sábado 14 de Noviembre 2026" />
+              </div>
+              <div>
+                <label style="color: #d4af37; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.35rem;">Municipio o Lugar del Evento *</label>
+                <input id="swalRentMunicipio" class="swal2-input" style="margin: 0; width: 100%; box-sizing: border-box;" placeholder="Ej: Marinilla, Rionegro, Guarne, El Retiro" value="Marinilla" />
+              </div>
+            </div>
+          `,
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonText: "Confirmar y Enviar a WhatsApp",
+          cancelButtonText: "Seguir Eligiendo",
+          preConfirm: () => {
+            const n = document.getElementById("swalRentNombre")?.value.trim();
+            const f = document.getElementById("swalRentFecha")?.value.trim();
+            const m = document.getElementById("swalRentMunicipio")?.value.trim() || "Marinilla";
+            if (!n) {
+              Swal.showValidationMessage("Por favor ingresa tu nombre");
+              return false;
+            }
+            if (!f) {
+              Swal.showValidationMessage("Por favor indica la fecha de tu evento");
+              return false;
+            }
+            return { nombre: n, fecha: f, municipio: m };
+          }
+        });
+
+        if (!formValues) return;
+        nombre = formValues.nombre;
+        fecha = formValues.fecha;
+        municipio = formValues.municipio;
+      } else {
+        fecha = prompt("¿Para qué fecha necesitas el mobiliario? (Ej: Sábado 14 de Noviembre):");
+        if (!fecha) return;
+        municipio = prompt("¿En qué municipio o lugar será el evento? (Ej: Marinilla, Rionegro, El Retiro):") || "Marinilla";
+        nombre = prompt("¿A nombre de quién registramos la solicitud de alquiler?:") || "Cliente";
+      }
+
       const itemsListText = rentalCart.items.map(i => `• ${i.quantity}x ${i.nombre} ($${(i.precio * i.quantity).toLocaleString("es-CO")})`).join("\n");
 
       // Guardar también en cotizaciones de Firestore
-      dbService.createQuote({
-        nombre,
-        telefono: "Alquiler Online",
-        evento: `Alquiler de Mobiliario (${municipio})`,
-        personas: rentalCart.getItemCount(),
-        mensaje: `Items solicitados:\n${itemsListText}`,
-        totalEstimado: total,
-        fechaEvento: fecha,
-        origen: "carrito_alquiler"
-      });
+      try {
+        dbService.createQuote({
+          nombre,
+          telefono: "Alquiler Online",
+          evento: `Alquiler de Mobiliario (${municipio})`,
+          personas: rentalCart.getItemCount(),
+          mensaje: `Items solicitados:\n${itemsListText}`,
+          totalEstimado: total,
+          fechaEvento: fecha,
+          origen: "carrito_alquiler"
+        });
+      } catch (e) {
+        console.warn("No se pudo guardar la cotización preliminar en Firestore:", e);
+      }
 
       const mensaje = 
 `🪑 *SOLICITUD DE ALQUILER DE MOBILIARIO - BANQUETES ALMAR* 🪑
@@ -232,7 +308,17 @@ Solicito confirmación de disponibilidad para esta fecha en Banquetes Almar (Cal
       rentalCart.save();
       rentalCart.renderDrawer();
       rentalCart.closeDrawer();
-      alert("¡Tu pedido de alquiler ha sido enviado a WhatsApp! Te responderemos con la confirmación de disponibilidad y logística de flete.");
+
+      if (window.Swal) {
+        Swal.fire({
+          icon: "success",
+          title: "¡Pedido de Alquiler Enviado!",
+          html: `<p style="color: #cbd5e1; margin-bottom: 0.5rem;">Tu solicitud por <strong>$${total.toLocaleString("es-CO")} COP</strong> fue transferida a nuestro WhatsApp oficial.</p><p style="color: #94a3b8; font-size: 0.88rem;">Te responderemos enseguida con la disponibilidad de inventario y logística de flete.</p>`,
+          confirmButtonText: "Entendido"
+        });
+      } else {
+        alert("¡Tu pedido de alquiler ha sido enviado a WhatsApp! Te responderemos con la confirmación de disponibilidad y logística de flete.");
+      }
     });
   }
 }

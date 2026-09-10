@@ -149,7 +149,16 @@ export function initCotizadorEcommerce() {
     const notas = document.getElementById("cotNotas")?.value.trim() || "";
 
     if (!nombre || !telefono) {
-      alert("Por favor ingresa al menos tu nombre y número de teléfono.");
+      if (window.Swal) {
+        Swal.fire({
+          icon: "warning",
+          title: "Datos Incompletos",
+          text: "Por favor ingresa al menos tu nombre y número de contacto para enviarte la propuesta formal de tu evento.",
+          confirmButtonText: "Completar Datos"
+        });
+      } else {
+        alert("Por favor ingresa al menos tu nombre y número de teléfono.");
+      }
       return;
     }
 
@@ -218,14 +227,32 @@ Enviado desde la plataforma web Banquetes Almar (Marinilla, Antioquia).`;
       // Redirigir a WhatsApp en nueva pestaña
       window.open(urlWhatsApp, "_blank");
 
-      // Feedback al usuario
-      alert(`¡Excelente ${nombre}! Tu cotización por $${calc.totalGeneral.toLocaleString("es-CO")} ha sido registrada y enviada al WhatsApp oficial de Banquetes Almar. Un asesor te responderá enseguida.`);
+      // Feedback de gala al usuario
+      if (window.Swal) {
+        Swal.fire({
+          icon: "success",
+          title: "¡Cotización Registrada con Éxito!",
+          html: `<p style="color: #cbd5e1; margin-bottom: 0.6rem;">¡Excelente <strong>${nombre}</strong>! Tu propuesta estimada por <strong>$${calc.totalGeneral.toLocaleString("es-CO")} COP</strong> ha sido registrada y enviada a nuestro WhatsApp oficial.</p><p style="color: #94a3b8; font-size: 0.88rem;">Un asesor de Banquetes Almar se comunicará contigo de inmediato.</p>`,
+          confirmButtonText: "Entendido"
+        });
+      } else {
+        alert(`¡Excelente ${nombre}! Tu cotización por $${calc.totalGeneral.toLocaleString("es-CO")} ha sido registrada y enviada al WhatsApp oficial de Banquetes Almar. Un asesor te responderá enseguida.`);
+      }
 
       form.reset();
       calcularPresupuesto();
     } catch (err) {
       console.error("Error al guardar cotización:", err);
-      alert("Hubo un detalle al registrar la cotización, pero puedes escribirnos directamente al WhatsApp: " + BUSINESS_INFO.telefonoPrincipal);
+      if (window.Swal) {
+        Swal.fire({
+          icon: "info",
+          title: "Contacto Directo",
+          text: "Hubo un detalle al registrar la cotización, pero puedes escribirnos directamente al WhatsApp: " + BUSINESS_INFO.telefonoPrincipal,
+          confirmButtonText: "Entendido"
+        });
+      } else {
+        alert("Hubo un detalle al registrar la cotización, pero puedes escribirnos directamente al WhatsApp: " + BUSINESS_INFO.telefonoPrincipal);
+      }
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;

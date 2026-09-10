@@ -191,7 +191,16 @@ function initQuoteForm() {
     const mensaje = document.getElementById("mensaje")?.value.trim();
 
     if (!nombre || !telefono || !evento || !personas || !mensaje) {
-      alert("Completa todos los campos.");
+      if (window.Swal) {
+        Swal.fire({
+          icon: "warning",
+          title: "Campos Requeridos",
+          text: "Por favor completa todos los campos para procesar tu solicitud.",
+          confirmButtonText: "Entendido"
+        });
+      } else {
+        alert("Completa todos los campos.");
+      }
       return;
     }
 
@@ -226,11 +235,29 @@ function initQuoteForm() {
 
       window.open(whatsappUrl, "_blank");
 
-      alert("Solicitud enviada correctamente.");
+      if (window.Swal) {
+        Swal.fire({
+          icon: "success",
+          title: "¡Solicitud Enviada con Éxito!",
+          text: "Tu solicitud ha sido registrada y enviada a WhatsApp.",
+          confirmButtonText: "Aceptar"
+        });
+      } else {
+        alert("Solicitud enviada correctamente.");
+      }
       quoteForm.reset();
     } catch (error) {
       console.error("ERROR ENVIANDO COTIZACIÓN:", error);
-      alert("No se pudo conectar con el servidor.");
+      if (window.Swal) {
+        Swal.fire({
+          icon: "error",
+          title: "Error de Conexión",
+          text: "No se pudo conectar con el servidor. Puedes escribirnos directamente a WhatsApp.",
+          confirmButtonText: "Aceptar"
+        });
+      } else {
+        alert("No se pudo conectar con el servidor.");
+      }
     }
   });
 }

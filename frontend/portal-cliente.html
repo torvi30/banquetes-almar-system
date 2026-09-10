@@ -11,9 +11,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="./css/style.css" />
-  <link rel="stylesheet" href="./css/ecommerce.css" />
-  <link rel="stylesheet" href="./css/apple-design.css" />
+  <link rel="stylesheet" href="./css/style.css?v=20260909.5" />
+  <link rel="stylesheet" href="./css/ecommerce.css?v=20260909.5" />
+  <link rel="stylesheet" href="./css/apple-design.css?v=20260909.5" />
+
+  <!-- SweetAlert2 & Alertas de Gala -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="./js/alerts-luxury.js?v=20260909.5"></script>
 
   <style>
     .portal-container {
@@ -544,6 +548,15 @@
         // 2. Cerrar Modal y refrescar vista
         paymentModal.classList.remove("open");
         await consultarEvento(queryInput.value.trim() || reservaActual.telefono);
+
+        if (window.Swal) {
+          Swal.fire({
+            icon: "success",
+            title: "¡Abono Registrado!",
+            html: `<p style="color: #cbd5e1;">Tu reporte de abono por <strong>$${monto.toLocaleString("es-CO")} COP</strong> ha sido registrado.</p><p style="color: #94a3b8; font-size: 0.88rem; margin-top: 0.4rem;">Enseguida se abrirá WhatsApp para que adjuntes la captura de tu comprobante.</p>`,
+            confirmButtonText: "Entendido"
+          });
+        }
 
         // 3. Abrir WhatsApp para enviar el comprobante fotográfico
         const msg = 
