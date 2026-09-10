@@ -10,6 +10,7 @@ import { BUSINESS_INFO } from "./firebase/seed-data.js";
 import { EventStudio } from "./apple-configurator.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+  await initAnnouncementBar();
   initNavigation();
   initSecretAdminAccess();
   initCotizadorEcommerce();
@@ -355,5 +356,51 @@ async function cargarGaleria() {
     }
   } catch (err) {
     console.error("Error cargando galería:", err);
+  }
+}
+
+// Franja editorial de anuncio superior en vivo
+async function initAnnouncementBar() {
+  const bar = document.getElementById("topAnnouncementBar");
+  if (!bar) return;
+
+  try {
+    const data = await dbService.getAnnouncement();
+    if (!data || data.activo === false) {
+      bar.style.display = "none";
+      document.body.classList.add("no-announcement-bar");
+      return;
+    }
+
+    bar.style.display = "";
+    document.body.classList.remove("no-announcement-bar");
+
+    const iconEl = document.getElementById("announcementIcon");
+    const titleEl = document.getElementById("announcementTitle");
+    const msgEl = document.getElementById("announcementMessage");
+    const badgeEl = document.getElementById("announcementBadge");
+    const dotEl = document.getElementById("announcementDot");
+    const subtextEl = document.getElementById("announcementSubtext");
+    const rightGroup = document.getElementById("announcementRightGroup");
+
+    if (iconEl) iconEl.textContent = data.icono || "✨";
+    if (titleEl) titleEl.textContent = data.titulo || "";
+    if (msgEl) msgEl.textContent = data.mensaje || "";
+    if (badgeEl) {
+      badgeEl.textContent = data.badge || "";
+      badgeEl.style.display = data.badge ? "inline-block" : "none";
+    }
+    if (subtextEl) {
+      subtextEl.textContent = data.subtexto || "";
+      subtextEl.style.display = data.subtexto ? "inline-block" : "none";
+    }
+    if (dotEl) {
+      dotEl.style.display = (data.badge && data.subtexto) ? "inline" : "none";
+    }
+    if (rightGroup) {
+      rightGroup.style.display = (!data.badge && !data.subtexto) ? "none" : "";
+    }
+  } catch (err) {
+    console.warn("Error cargando anuncio superior:", err);
   }
 }

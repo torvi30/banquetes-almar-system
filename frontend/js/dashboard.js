@@ -235,10 +235,50 @@ async function cargarAlertasCobro() {
   }
 }
 
+// Cargar widget de anuncio superior en vivo
+async function cargarAnuncioSuperiorWidget() {
+  const dashIcon = document.getElementById("dashIcon");
+  const dashTitle = document.getElementById("dashTitle");
+  const dashMsg = document.getElementById("dashMsg");
+  const dashBadge = document.getElementById("dashBadge");
+  const dashStatus = document.getElementById("dashAnnouncementStatus");
+
+  if (!dashTitle) return;
+
+  try {
+    const data = await dbService.getAnnouncement();
+    if (data) {
+      if (dashIcon) dashIcon.textContent = data.icono || "✨";
+      if (dashTitle) dashTitle.textContent = data.titulo || "";
+      if (dashMsg) dashMsg.textContent = data.mensaje || "";
+      if (dashBadge) {
+        dashBadge.textContent = data.badge || "Activo";
+        dashBadge.style.display = data.badge ? "inline-block" : "none";
+      }
+      if (dashStatus) {
+        if (data.activo !== false) {
+          dashStatus.style.background = "rgba(52, 199, 89, 0.15)";
+          dashStatus.style.color = "#34c759";
+          dashStatus.style.borderColor = "rgba(52, 199, 89, 0.3)";
+          dashStatus.textContent = "🟢 En Vivo";
+        } else {
+          dashStatus.style.background = "rgba(255, 69, 58, 0.15)";
+          dashStatus.style.color = "#ff453a";
+          dashStatus.style.borderColor = "rgba(255, 69, 58, 0.3)";
+          dashStatus.textContent = "⚪ En Pausa (Oculto)";
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("Error cargando widget de anuncio en dashboard:", err);
+  }
+}
+
 // Inicialización de la Torre de Control
 (async function initDashboard() {
   await cargarMetricas();
   await Promise.all([
+    cargarAnuncioSuperiorWidget(),
     cargarSolicitudesPendientes(),
     cargarProximosEventos(),
     cargarAlertasCobro()

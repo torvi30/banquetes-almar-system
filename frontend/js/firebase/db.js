@@ -7,7 +7,7 @@
  */
 
 import { firebaseConfig, isFirebaseConfigured } from "./config.js";
-import { DEFAULT_PACKAGES, DEFAULT_RENTAL_ITEMS } from "./seed-data.js";
+import { DEFAULT_PACKAGES, DEFAULT_RENTAL_ITEMS, DEFAULT_ANNOUNCEMENT } from "./seed-data.js";
 
 // Claves de almacenamiento local para fallback/caché
 const STORAGE_KEYS = {
@@ -21,7 +21,8 @@ const STORAGE_KEYS = {
   GALLERY: "almar_galeria",
   GALLERY_CATEGORIES: "almar_galeria_categorias",
   SERVICES: "almar_servicios",
-  INVENTORY_CATEGORIES: "almar_inventario_categorias"
+  INVENTORY_CATEGORIES: "almar_inventario_categorias",
+  ANNOUNCEMENT: "almar_anuncio_superior"
 };
 
 // Inicialización de datos semilla si el almacenamiento local está vacío
@@ -33,6 +34,9 @@ function initLocalStore() {
   }
   if (!localStorage.getItem(STORAGE_KEYS.RENTAL)) {
     localStorage.setItem(STORAGE_KEYS.RENTAL, JSON.stringify(DEFAULT_RENTAL_ITEMS));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.ANNOUNCEMENT)) {
+    localStorage.setItem(STORAGE_KEYS.ANNOUNCEMENT, JSON.stringify(DEFAULT_ANNOUNCEMENT));
   }
   if (!localStorage.getItem(STORAGE_KEYS.QUOTES)) {
     const initialQuotes = [
@@ -1055,5 +1059,63 @@ export const dbService = {
       ingresos: totalIngresos,
       pendiente: totalPendiente
     };
+  },
+
+  // FRANJA DE ANUNCIO SUPERIOR (CABECERA WEB)
+  async getAnnouncement() {
+    let item = getLocal(STORAGE_KEYS.ANNOUNCEMENT);
+    if (!item) {
+      item = { ...DEFAULT_ANNOUNCEMENT };
+      setLocal(STORAGE_KEYS.ANNOUNCEMENT, item);
+    }
+    if (db) {
+      try {
+        const docRef = doc(db, "configuracion", "anuncio_superior");
+        const snap = await getDoc(docRef);
+        if (snap.exists()) {
+          item = snap.data();
+          setLocal(STORAGE_KEYS.ANNOUNCEMENT, item);
+        }
+      } catch (err) {
+        console.warn("Firestore getAnnouncement error:", err.message);
+      }
+    }
+    return item;
+  },
+
+  async saveAnnouncement(data) {
+    const clean = {
+      activo: data.activo !== false,
+      icono: String(data.icono || "✨").trim(),
+      titulo: String(data.titulo || "").trim(),
+      mensaje: String(data.mensaje || "").trim(),
+      badge: String(data.badge || "").trim(),
+      subtexto: String(data.subtexto || "").trim(),
+      updatedAt: new Date().toISOString()
+    };
+    setLocal(STORAGE_KEYS.ANNOUNCEMENT, clean);
+    if (db) {
+      try {
+        const docRef = doc(db, "configuracion", "anuncio_superior");
+        await setDoc(docRef, clean, { merge: true });
+      } catch (err) {
+        console.warn("Firestore saveAnnouncement error:", err.message);
+      }
+    }
+    return clean;
+  },
+
+  async resetAnnouncement() {
+    const clean = { ...DEFAULT_ANNOUNCEMENT, updatedAt: new Date().toISOString() };
+    setLocal(STORAGE_KEYS.ANNOUNCEMENT, clean);
+    if (db) {
+      try {
+        const docRef = doc(db, "configuracion", "anuncio_superior");
+        await setDoc(docRef, clean, { merge: true });
+      } catch (err) {
+        console.warn("Firestore resetAnnouncement error:", err.message);
+      }
+    }
+    return clean;
   }
 };

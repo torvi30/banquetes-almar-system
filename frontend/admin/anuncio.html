@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Configurar Franja de Anuncio Superior | Banquetes Almar</title>
+  
+  <!-- Fuentes Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="../css/style.css?v=20260909.4" />
+  <link rel="stylesheet" href="../css/ecommerce.css?v=20260909.4" />
+  <link rel="stylesheet" href="../css/apple-design.css?v=20260909.4" />
+
+  <style>
+    /* Estilos exclusivos del panel de configuración de anuncio */
+    .announcement-editor-card {
+      background: rgba(18, 18, 22, 0.75);
+      border: 1.5px solid rgba(212, 175, 55, 0.22);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+      margin-bottom: 2rem;
+    }
+
+    .preview-stage-container {
+      background: #09090b;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin: 1.2rem 0 2rem 0;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6);
+    }
+
+    .preview-header-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--apple-gold-light);
+      font-weight: 700;
+    }
+
+    .preview-status-pill {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .preview-status-pill.active {
+      background: rgba(52, 199, 89, 0.15);
+      color: #34c759;
+      border: 1px solid rgba(52, 199, 89, 0.3);
+    }
+    .preview-status-pill.inactive {
+      background: rgba(255, 69, 58, 0.15);
+      color: #ff453a;
+      border: 1px solid rgba(255, 69, 58, 0.3);
+    }
+
+    /* Emulación exacta de la franja superior */
+    .live-preview-box {
+      width: 100%;
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.12) 0%, rgba(18, 18, 22, 0.95) 50%, rgba(212, 175, 55, 0.12) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 8px;
+      padding: 0.65rem 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      transition: all 0.3s ease;
+    }
+
+    .presets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .preset-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: left;
+    }
+    .preset-card:hover {
+      background: rgba(212, 175, 55, 0.08);
+      border-color: rgba(212, 175, 55, 0.4);
+      transform: translateY(-2px);
+    }
+    .preset-card h4 {
+      margin: 0 0 0.35rem 0;
+      color: #ffffff;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .preset-card p {
+      margin: 0;
+      font-size: 0.82rem;
+      color: #a1a1aa;
+      line-height: 1.4;
+    }
+
+    /* Interruptor Switch iOS Luxury */
+    .switch-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 1rem 1.5rem;
+      border-radius: 14px;
+      margin-bottom: 1.8rem;
+    }
+    .switch-toggle {
+      position: relative;
+      display: inline-block;
+      width: 54px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+    .switch-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .switch-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.15);
+      transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .switch-slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+    input:checked + .switch-slider {
+      background: var(--apple-gold-gradient);
+      border-color: rgba(212, 175, 55, 0.6);
+    }
+    input:checked + .switch-slider:before {
+      transform: translateX(24px);
+      background-color: #09090b;
+    }
+
+    /* Botones de emoji rápido */
+    .emoji-pill-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 1.15rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .emoji-pill-btn:hover,
+    .emoji-pill-btn.active {
+      background: rgba(212, 175, 55, 0.2);
+      border-color: var(--apple-gold);
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <section class="section admin-panel">
+    <div class="container">
+      <div class="section-heading">
+        <p class="section-label">📢 COMUNICACIÓN EDITORIAL DE ALTA GAMA</p>
+        <h2>Configurar Franja de Anuncio Superior</h2>
+        <p>Personaliza el texto, badge e icono del banner superior de la página web con vista previa en tiempo real.</p>
+      </div>
+
+      <!-- NAVEGACIÓN MAESTRA UNIFICADA -->
+      <div class="admin-menu admin-menu-grid">
+        <a href="./dashboard.html" class="btn btn-secondary menu-btn">📊 Dashboard</a>
+        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">💬 Cotizaciones</a>
+        <a href="./reservas.html" class="btn btn-secondary menu-btn">📅 Eventos & Agenda</a>
+        <a href="./pagos.html" class="btn btn-secondary menu-btn">💵 Pagos & Finanzas</a>
+        <a href="./inventario.html" class="btn btn-secondary menu-btn">📦 Inventario</a>
+        <a href="./galeria.html?v=20260908.2" class="btn btn-secondary menu-btn">✨ Catálogo Web</a>
+        <a href="./anuncio.html" class="btn btn-secondary menu-btn active-menu">📢 Anuncio Superior</a>
+        <a href="./clientes.html" class="btn btn-secondary menu-btn">👥 Clientes</a>
+        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
+      </div>
+
+      <!-- PESTAÑAS CATÁLOGO WEB & COMUNICACIÓN -->
+      <div class="catalog-tabs-bar">
+        <a href="./galeria.html?v=20260908.2" class="catalog-tab-btn">📸 Galería de Gala</a>
+        <a href="./paquetes.html?v=20260908.2" class="catalog-tab-btn">💎 Paquetes Todo Incluido</a>
+        <a href="./servicios.html?v=20260908.2" class="catalog-tab-btn">🛎️ Servicios & Banquetería</a>
+        <a href="./anuncio.html" class="catalog-tab-btn active">📢 Franja de Anuncio Web</a>
+      </div>
+
+      <!-- ÁREA DE VISTA PREVIA EN VIVO (LIVE PREVIEW) -->
+      <div class="preview-stage-container">
+        <div class="preview-header-label">
+          <span>👁️ Vista Previa en Vivo (Exactamente como se ve en la Web pública)</span>
+          <span id="previewStatusPill" class="preview-status-pill active">🟢 Visible en la Web</span>
+        </div>
+
+        <div class="live-preview-box" id="livePreviewBanner">
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span id="pvIcon" style="font-size: 1.05rem;">✨</span>
+            <strong id="pvTitle" style="color: #f5d77f; font-weight: 700; letter-spacing: 0.02em;">Temporada de Eventos 2026-2027:</strong>
+            <span id="pvMessage" style="color: #e4e4e7; font-weight: 500;">Salón de Gala en Marinilla & Finca Campestre en El Peñol</span>
+          </div>
+          <div id="pvRightGroup" style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: #a1a1aa; margin-left: auto;">
+            <span id="pvBadge" style="background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.4); color: #f5d77f; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600;">Oriente Antioqueño</span>
+            <span id="pvDot">•</span>
+            <span id="pvSubtext">Degustación Previa de Menú Incluida</span>
+          </div>
+        </div>
+
+        <div id="pausedNotice" style="display: none; margin-top: 0.75rem; text-align: center; color: #ff9f0a; font-size: 0.85rem; font-weight: 500;">
+          ⚠️ La franja está en pausa. Actualmente está oculta en la página web pública.
+        </div>
+      </div>
+
+      <!-- PLANTILLAS RÁPIDAS DE 1 CLIC (IDEAS DE GALA) -->
+      <div style="margin-bottom: 1.5rem;">
+        <h3 style="color: #fff; font-size: 1.25rem; font-family: 'Playfair Display', serif; margin-bottom: 0.4rem;">
+          ✨ Plantillas de Gala Recomendadas (Aplica con 1 Clic)
+        </h3>
+        <p style="color: #a1a1aa; font-size: 0.88rem; margin: 0 0 1rem 0;">
+          Selecciona una propuesta comercial preconfigurada o personaliza libremente cada campo a continuación.
+        </p>
+
+        <div class="presets-grid">
+          <div class="preset-card" data-preset="temporada">
+            <h4>✨ Temporada 2026-2027</h4>
+            <p>Salón de Gala en Marinilla & Finca Campestre en El Peñol • Degustación incluida.</p>
+          </div>
+
+          <div class="preset-card" data-preset="bodas">
+            <h4>💍 Especial Bodas de Gala</h4>
+            <p>Reserva tu fecha nupcial este mes y recibe degustación VIP + 10% en mobiliario.</p>
+          </div>
+
+          <div class="preset-card" data-preset="quince">
+            <h4>👑 Quince Años de Ensueño</h4>
+            <p>Paquetes todo incluido con pista LED, luces robóticas y banquete de autor.</p>
+          </div>
+
+          <div class="preset-card" data-preset="ultimas_fechas">
+            <h4>⏳ Últimas Fechas Disponibles</h4>
+            <p>Agenda de fin de año con alta demanda. Separa tu fecha hoy con el 30%.</p>
+          </div>
+
+          <div class="preset-card" data-preset="degustacion">
+            <h4>🥂 Degustación de Gala</h4>
+            <p>Agenda tu visita guiada al salón en Marinilla y prueba nuestro menú sin costo.</p>
+          </div>
+
+          <div class="preset-card" data-preset="campestre">
+            <h4>🌄 Finca Campestre El Peñol</h4>
+            <p>Naturaleza y atardeceres frente a la represa. Cupos limitados para bodas campestres.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULARIO DE EDICIÓN -->
+      <div class="announcement-editor-card">
+        <form id="announcementForm">
+          <!-- INTERRUPTOR ON/OFF -->
+          <div class="switch-wrapper">
+            <label class="switch-toggle">
+              <input type="checkbox" id="announcementActive" checked />
+              <span class="switch-slider"></span>
+            </label>
+            <div>
+              <strong style="color: #ffffff; font-size: 1.05rem; display: block;">Mostrar Franja Superior en la Web</strong>
+              <span style="color: #a1a1aa; font-size: 0.85rem;">Si lo desactivas, la barra se ocultará inmediatamente en la página principal.</span>
+            </div>
+          </div>
+
+          <!-- FILA 1: ICONO / EMOJI -->
+          <div class="form-group full-width" style="margin-bottom: 1.5rem;">
+            <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+              <span>Icono o Emoji del Anuncio</span>
+              <span style="color: var(--apple-gold-light); font-size: 0.82rem;">Toca un emoji rápido o escribe el tuyo</span>
+            </label>
+            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.6rem;">
+              <button type="button" class="emoji-pill-btn" data-emoji="✨">✨</button>
+              <button type="button" class="emoji-pill-btn" data-emoji="💍">💍</button>
+              <button type="button" class="emoji-pill-btn" data-emoji="👑">👑</button>
+              <button type="button" class="emoji-pill-btn" data-emoji="🎉">🎉</button>
+              <button type="button" class="emoji-pill-btn" data-emoji="🥂">🥂</button>
+              <button type="button" class="emoji-pill-btn" data-emoji="🔥">🔥</button>
+              <button type="button" class="emoji-pill-btn" data-emoji="📢">📢</button>
+              <button type="button" class="emoji-pill-btn" data-emoji="🌟">🌟</button>
+              <button type="button" class="emoji-pill-btn" data-emoji="🎪">🎪</button>
+              <button type="button" class="emoji-pill-btn" data-emoji="🍽️">🍽️</button>
+              <input type="text" id="announcementIconInput" maxlength="4" style="width: 70px; text-align: center; font-size: 1.2rem; padding: 0.4rem;" value="✨" title="Emoji personalizado" />
+            </div>
+          </div>
+
+          <!-- FILA 2: TÍTULO DESTACADO Y MENSAJE PRINCIPAL -->
+          <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 1.2rem; margin-bottom: 1.5rem;">
+            <div class="form-group">
+              <label for="announcementTitleInput">
+                Título / Frase Destacada (Dorado)
+              </label>
+              <input 
+                type="text" 
+                id="announcementTitleInput" 
+                placeholder="Ej: Temporada de Eventos 2026-2027:" 
+                value="Temporada de Eventos 2026-2027:" 
+                maxlength="60"
+                required 
+              />
+              <small style="color: #71717a; font-size: 0.78rem;">Se resalta en negrita dorada de gala.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="announcementMessageInput">
+                Mensaje Principal del Anuncio
+              </label>
+              <input 
+                type="text" 
+                id="announcementMessageInput" 
+                placeholder="Ej: Salón de Gala en Marinilla & Finca Campestre en El Peñol" 
+                value="Salón de Gala en Marinilla & Finca Campestre en El Peñol" 
+                maxlength="120"
+                required 
+              />
+              <small style="color: #71717a; font-size: 0.78rem;">El texto principal que acompaña el título.</small>
+            </div>
+          </div>
+
+          <!-- FILA 3: BADGE LATERAL Y SUBTEXTO DERECHO -->
+          <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 1.2rem; margin-bottom: 2rem;">
+            <div class="form-group">
+              <label for="announcementBadgeInput">
+                Insignia / Badge Lateral (Píldora)
+              </label>
+              <input 
+                type="text" 
+                id="announcementBadgeInput" 
+                placeholder="Ej: Oriente Antioqueño" 
+                value="Oriente Antioqueño" 
+                maxlength="30"
+              />
+              <small style="color: #71717a; font-size: 0.78rem;">Aparece como etiqueta destacada (opcional).</small>
+            </div>
+
+            <div class="form-group">
+              <label for="announcementSubtextInput">
+                Detalle Complementario Derecho
+              </label>
+              <input 
+                type="text" 
+                id="announcementSubtextInput" 
+                placeholder="Ej: Degustación Previa de Menú Incluida" 
+                value="Degustación Previa de Menú Incluida" 
+                maxlength="80"
+              />
+              <small style="color: #71717a; font-size: 0.78rem;">Texto secundario después de la viñeta (opcional).</small>
+            </div>
+          </div>
+
+          <!-- BARRA DE ACCIONES DE GALA -->
+          <div style="display: flex; gap: 1rem; align-items: center; justify-content: flex-end; flex-wrap: wrap; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1.5rem;">
+            <button type="button" class="btn btn-secondary" id="resetAnnouncementBtn">
+              🔄 Restablecer Predeterminado
+            </button>
+            <a href="../index.html" target="_blank" class="btn btn-secondary">
+              🌐 Ver en la Web
+            </a>
+            <button type="submit" class="btn btn-primary" style="padding: 0.8rem 2rem; font-size: 1rem;">
+              💾 Guardar y Publicar en Vivo
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SweetAlert2 para notificaciones de gala -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Lógica modular del panel -->
+  <script type="module" src="../js/anuncio-admin.js?v=20260909.1"></script>
+</body>
+</html>

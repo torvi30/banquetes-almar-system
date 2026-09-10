@@ -235,3 +235,13 @@ export const BUSINESS_INFO = {
   cobertura: ["Marinilla", "El Peñol", "Guatapé", "Rionegro", "Guarne", "El Carmen de Viboral", "El Retiro", "La Ceja", "El Santuario"],
   sedes: ["Salón Marinilla", "Finca Campestre El Peñol"]
 };
+
+export const DEFAULT_ANNOUNCEMENT = {
+  activo: true,
+  icono: "✨",
+  titulo: "Temporada de Eventos 2026-2027:",
+  mensaje: "Salón de Gala en Marinilla & Finca Campestre en El Peñol",
+  badge: "Oriente Antioqueño",
+  subtexto: "Degustación Previa de Menú Incluida"
+};
+
