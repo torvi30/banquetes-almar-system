@@ -1068,10 +1068,12 @@ export const dbService = {
       item = { ...DEFAULT_ANNOUNCEMENT };
       setLocal(STORAGE_KEYS.ANNOUNCEMENT, item);
     }
-    if (db) {
+    const live = await initFirestoreLive();
+    if (live) {
       try {
-        const docRef = doc(db, "configuracion", "anuncio_superior");
-        const snap = await getDoc(docRef);
+        const { db, ops } = live;
+        const docRef = ops.doc(db, "configuracion", "anuncio_superior");
+        const snap = await ops.getDoc(docRef);
         if (snap.exists()) {
           item = snap.data();
           setLocal(STORAGE_KEYS.ANNOUNCEMENT, item);
@@ -1094,10 +1096,12 @@ export const dbService = {
       updatedAt: new Date().toISOString()
     };
     setLocal(STORAGE_KEYS.ANNOUNCEMENT, clean);
-    if (db) {
+    const live = await initFirestoreLive();
+    if (live) {
       try {
-        const docRef = doc(db, "configuracion", "anuncio_superior");
-        await setDoc(docRef, clean, { merge: true });
+        const { db, ops } = live;
+        const docRef = ops.doc(db, "configuracion", "anuncio_superior");
+        await ops.setDoc(docRef, clean, { merge: true });
       } catch (err) {
         console.warn("Firestore saveAnnouncement error:", err.message);
       }
@@ -1108,10 +1112,12 @@ export const dbService = {
   async resetAnnouncement() {
     const clean = { ...DEFAULT_ANNOUNCEMENT, updatedAt: new Date().toISOString() };
     setLocal(STORAGE_KEYS.ANNOUNCEMENT, clean);
-    if (db) {
+    const live = await initFirestoreLive();
+    if (live) {
       try {
-        const docRef = doc(db, "configuracion", "anuncio_superior");
-        await setDoc(docRef, clean, { merge: true });
+        const { db, ops } = live;
+        const docRef = ops.doc(db, "configuracion", "anuncio_superior");
+        await ops.setDoc(docRef, clean, { merge: true });
       } catch (err) {
         console.warn("Firestore resetAnnouncement error:", err.message);
       }
