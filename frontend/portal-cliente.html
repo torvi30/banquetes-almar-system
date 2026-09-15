@@ -609,8 +609,13 @@ Adjunto en esta conversación la captura/foto del comprobante de transferencia p
       });
     }
 
-    // Consulta inicial predeterminada
-    consultarEvento("3117892233");
+    // Consulta inicial: lee parámetros de URL (?tel=, ?id=, ?query=) o usa demostración
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialQuery = urlParams.get("query") || urlParams.get("tel") || urlParams.get("id") || "3117892233";
+    if (initialQuery) {
+      if (queryInput) queryInput.value = initialQuery;
+      consultarEvento(initialQuery);
+    }
   </script>
 </body>
 </html>

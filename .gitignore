@@ -1,31 +1,32 @@
 # Node modules
 node_modules/
+**/node_modules/
 
-# Environment variables
+# Environment variables & secrets
 .env
+**/.env
+.env.local
+.env.*.local
+Untitled
+**/Untitled
 
 # Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
 
-# System files
+# System & OS files
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
 
 # Editor folders
 .vscode/
 .idea/
 
-# Build folders
+# Build & Deploy
 dist/
 build/
-
-# OS files
-*.swp
-*.swo
-node_modules/
-.env
-uploads/
-.DS_Store
 .firebase/

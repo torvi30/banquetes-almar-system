@@ -1,8 +1,8 @@
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 
 const inventoryRoutes = require("./routes/inventory.routes");
 const inventoryProRoutes = require("./routes/inventoryPro.routes");
@@ -12,7 +12,6 @@ const quoteRoutes = require("./routes/quotes.routes");
 const galleryRoutes = require("./routes/gallery.routes");
 const servicesRoutes = require("./routes/services.routes");
 const eventsRoutes = require("./routes/events.routes");
-const eventsPublicRoutes = require("./routes/eventsPublic.routes");
 const statsRoutes = require("./routes/stats.routes");
 const paymentsRoutes = require("./routes/payments.routes");
 const clientDetailRoutes = require("./routes/clientDetail.routes");
@@ -41,7 +40,6 @@ app.use("/api/quotes", quoteRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/services", servicesRoutes);
 app.use("/api/events", eventsRoutes);
-app.use("/api/public-events", eventsPublicRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/payments", paymentsRoutes);
 app.use("/api/client-detail", clientDetailRoutes);

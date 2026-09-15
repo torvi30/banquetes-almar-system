@@ -2,10 +2,10 @@
   "name": "banquetes-almar-backend",
   "version": "1.0.0",
   "description": "Backend de Banquetes Almar",
-  "main": "server.js",
+  "main": "backend/server.js",
   "scripts": {
-    "dev": "nodemon server.js",
-    "start": "node server.js"
+    "dev": "nodemon backend/server.js",
+    "start": "node backend/server.js"
   },
   "author": "Alejandro",
   "license": "ISC",
