@@ -7,28 +7,17 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Galería | Banquetes Almar</title>
-  <link rel="stylesheet" href="../css/style.css?v=20260908.2" />
-  <link rel="stylesheet" href="../css/apple-design.css?v=20260908.2" />
+  <link rel="stylesheet" href="../css/tailwind.css" />
 </head>
 <body>
+  <header id="adminNavbar"></header>
+
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
         <p class="section-label">Panel Admin</p>
         <h2>Administrar galería</h2>
         <p>Crea categorías y sube imágenes organizadas profesionalmente.</p>
-      </div>
-
-      <div class="admin-menu admin-menu-grid">
-        <a href="./dashboard.html" class="btn btn-secondary menu-btn">📊 Dashboard</a>
-        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">💬 Cotizaciones</a>
-        <a href="./reservas.html" class="btn btn-secondary menu-btn">📅 Eventos & Agenda</a>
-        <a href="./pagos.html" class="btn btn-secondary menu-btn">💵 Pagos & Finanzas</a>
-        <a href="./inventario.html" class="btn btn-secondary menu-btn">📦 Inventario</a>
-        <a href="./galeria.html?v=20260908.2" class="btn btn-secondary menu-btn active-menu">✨ Catálogo Web</a>
-        <a href="./anuncio.html" class="btn btn-secondary menu-btn">📢 Anuncio Superior</a>
-        <a href="./clientes.html" class="btn btn-secondary menu-btn">👥 Clientes</a>
-        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
       </div>
 
       <!-- PESTAÑAS CATÁLOGO WEB: GALERÍA VS PAQUETES VS SERVICIOS VS ANUNCIO -->
@@ -296,6 +285,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="module" src="../js/components/admin-navbar.js"></script>
   <script type="module" src="../js/galeria-admin.js?v=20260907.18"></script>
 </body>
 </html>

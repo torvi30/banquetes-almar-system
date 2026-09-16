@@ -7,29 +7,17 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Dashboard Ejecutivo | Banquetes Almar</title>
-  <link rel="stylesheet" href="../css/style.css?v=20260908.2" />
-  <link rel="stylesheet" href="../css/apple-design.css?v=20260908.2" />
+  <link rel="stylesheet" href="../css/tailwind.css" />
 </head>
 <body>
+  <header id="adminNavbar"></header>
+
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
         <p class="section-label">Suite Ejecutiva</p>
         <h2>Torre de Control Almar</h2>
         <p id="adminWelcome">Bienvenido al centro de operaciones y agenda de gala.</p>
-      </div>
-
-      <!-- NAVEGACIÓN MAESTRA UNIFICADA (MÓDULOS DE GALA) -->
-      <div class="admin-menu admin-menu-grid">
-        <a href="./dashboard.html" class="btn btn-secondary menu-btn active-menu">📊 Dashboard</a>
-        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">💬 Cotizaciones</a>
-        <a href="./reservas.html" class="btn btn-secondary menu-btn">📅 Eventos & Agenda</a>
-        <a href="./pagos.html" class="btn btn-secondary menu-btn">💵 Pagos & Finanzas</a>
-        <a href="./inventario.html" class="btn btn-secondary menu-btn">📦 Inventario</a>
-        <a href="./galeria.html?v=20260908.2" class="btn btn-secondary menu-btn">✨ Catálogo Web</a>
-        <a href="./anuncio.html" class="btn btn-secondary menu-btn">📢 Anuncio Superior</a>
-        <a href="./clientes.html" class="btn btn-secondary menu-btn">👥 Clientes</a>
-        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
       </div>
 
       <!-- TARJETAS DE MÉTRICAS CLAVE (KPIs ESTRATÉGICOS) -->
@@ -128,6 +116,7 @@
   </section>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="module" src="../js/components/admin-navbar.js"></script>
   <script type="module" src="../js/dashboard.js?v=20260909.2"></script>
 </body>
 </html>

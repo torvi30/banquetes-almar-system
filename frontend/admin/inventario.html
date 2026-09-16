@@ -4,28 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Inventario & Mobiliario | Banquetes Almar</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/tailwind.css" />
 </head>
 <body>
+  <header id="adminNavbar"></header>
+
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
         <p class="section-label">Suite Ejecutiva</p>
         <h2>Inventario & Menaje de Gala</h2>
         <p>Control de silletería Tiffany, mantelería, carpas, vajilla y disponibilidad de alquiler.</p>
-      </div>
-
-      <!-- NAVEGACIÓN MAESTRA UNIFICADA (6 MÓDULOS DE GALA) -->
-      <div class="admin-menu admin-menu-grid">
-        <a href="./dashboard.html" class="btn btn-secondary menu-btn">📊 Dashboard</a>
-        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">💬 Cotizaciones</a>
-        <a href="./reservas.html" class="btn btn-secondary menu-btn">📅 Eventos & Agenda</a>
-        <a href="./pagos.html" class="btn btn-secondary menu-btn">💵 Pagos & Finanzas</a>
-        <a href="./inventario.html" class="btn btn-secondary menu-btn active-menu">📦 Inventario</a>
-        <a href="./galeria.html" class="btn btn-secondary menu-btn">✨ Catálogo Web</a>
-        <a href="./anuncio.html" class="btn btn-secondary menu-btn">📢 Anuncio Superior</a>
-        <a href="./clientes.html" class="btn btn-secondary menu-btn">👥 Clientes</a>
-        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
       </div>
 
       <div class="gallery-admin-layout" style="display: grid; grid-template-columns: 1fr 2.4fr; gap: 2rem; margin-bottom: 2.5rem;">
@@ -147,6 +136,7 @@
   </section>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="module" src="../js/components/admin-navbar.js"></script>
   <script type="module" src="../js/inventario-admin.js?v=20260907.35"></script>
 </body>
 </html>

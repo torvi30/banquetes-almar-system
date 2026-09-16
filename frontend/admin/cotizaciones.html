@@ -4,27 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cotizaciones | Banquetes Almar</title>
-  <link rel="stylesheet" href="../css/style.css?v=20260907.6" />
+  <link rel="stylesheet" href="../css/tailwind.css" />
 </head>
 <body>
+  <header id="adminNavbar"></header>
+
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
         <p class="section-label">Panel Admin</p>
         <h2>Tablero de cotizaciones</h2>
         <p>Gestiona cotizaciones y reservas sin llenar el dashboard principal.</p>
-      </div>
-
-      <div class="admin-menu admin-menu-grid">
-        <a href="./dashboard.html" class="btn btn-secondary menu-btn">📊 Dashboard</a>
-        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn active-menu">💬 Cotizaciones</a>
-        <a href="./reservas.html" class="btn btn-secondary menu-btn">📅 Eventos & Agenda</a>
-        <a href="./pagos.html" class="btn btn-secondary menu-btn">💵 Pagos & Finanzas</a>
-        <a href="./inventario.html" class="btn btn-secondary menu-btn">📦 Inventario</a>
-        <a href="./galeria.html" class="btn btn-secondary menu-btn">✨ Catálogo Web</a>
-        <a href="./anuncio.html" class="btn btn-secondary menu-btn">📢 Anuncio Superior</a>
-        <a href="./clientes.html" class="btn btn-secondary menu-btn">👥 Clientes</a>
-        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
       </div>
 
       <!-- METRICAS DE PIPELINE CRM -->
@@ -137,6 +127,7 @@
   </section>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="module" src="../js/components/admin-navbar.js"></script>
   <script type="module" src="../js/cotizaciones-admin.js?v=20260907.6"></script>
 </body>
 </html>

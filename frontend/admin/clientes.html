@@ -4,28 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Clientes | Banquetes Almar</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/tailwind.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
+  <header id="adminNavbar"></header>
+
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
         <p class="section-label">Panel Admin</p>
         <h2>Clientes</h2>
         <p>Administra y busca clientes por id, nombre o teléfono.</p>
-      </div>
-
-      <div class="admin-menu admin-menu-grid">
-        <a href="./dashboard.html" class="btn btn-secondary menu-btn">📊 Dashboard</a>
-        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">💬 Cotizaciones</a>
-        <a href="./reservas.html" class="btn btn-secondary menu-btn">📅 Eventos & Agenda</a>
-        <a href="./pagos.html" class="btn btn-secondary menu-btn">💵 Pagos & Finanzas</a>
-        <a href="./inventario.html" class="btn btn-secondary menu-btn">📦 Inventario</a>
-        <a href="./galeria.html" class="btn btn-secondary menu-btn">✨ Catálogo Web</a>
-        <a href="./anuncio.html" class="btn btn-secondary menu-btn">📢 Anuncio Superior</a>
-        <a href="./clientes.html" class="btn btn-secondary menu-btn active-menu">👥 Clientes</a>
-        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
       </div>
 
       <div style="display:flex; justify-content:center; margin: 1.5rem 0 2rem 0;">
@@ -82,6 +72,7 @@
     </div>
   </section>
 
+  <script type="module" src="../js/components/admin-navbar.js"></script>
   <script type="module" src="../js/clientes-admin.js"></script>
 </body>
 </html>

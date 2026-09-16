@@ -4,32 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calendario | Banquetes Almar</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/tailwind.css" />
   <script>
     window.location.replace("./reservas.html?tab=calendario");
   </script>
 </head>
 <body>
+  <header id="adminNavbar"></header>
+
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
         <p class="section-label">Panel Admin</p>
         <h2>Calendario general</h2>
-        <p>Visualiza reservas y eventos en un solo lugar.</p>
-      </div>
-
-      <div class="admin-menu admin-menu-grid">
-        <a href="./dashboard.html" class="btn btn-secondary menu-btn">Dashboard</a>
-        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">Cotizaciones</a>
-        <a href="./galeria.html" class="btn btn-secondary menu-btn">Galería</a>
-        <a href="./servicios.html" class="btn btn-secondary menu-btn">Servicios</a>
-        <a href="./reservas.html" class="btn btn-secondary menu-btn">Reservas</a>
-        <a href="./eventos.html" class="btn btn-secondary menu-btn">Eventos</a>
-        <a href="./calendario.html" class="btn btn-secondary menu-btn active-menu">Calendario</a>
-        <a href="./inventario.html" class="btn btn-secondary menu-btn">Inventario</a>
-        <a href="./clientes.html" class="btn btn-secondary menu-btn">Clientes</a>
-        <a href="./pagos.html" class="btn btn-secondary menu-btn">Pagos</a>
-        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">Cerrar sesión</button>
+        <p>Redirigiendo a la vista unificada de eventos y agenda...</p>
       </div>
 
       <div class="calendar-legend">
@@ -62,6 +50,6 @@
   </section>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script type="module" src="../js/calendario-admin.js"></script>
+  <script type="module" src="../js/components/admin-navbar.js"></script>
 </body>
 </html>

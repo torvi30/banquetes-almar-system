@@ -14,9 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="../css/style.css?v=20260909.4" />
-  <link rel="stylesheet" href="../css/ecommerce.css?v=20260909.4" />
-  <link rel="stylesheet" href="../css/apple-design.css?v=20260909.4" />
+  <link rel="stylesheet" href="../css/tailwind.css" />
 
   <style>
     /* Estilos exclusivos del panel de configuración de anuncio */
@@ -214,25 +212,14 @@
   </style>
 </head>
 <body>
+  <header id="adminNavbar"></header>
+
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
         <p class="section-label">📢 COMUNICACIÓN EDITORIAL DE ALTA GAMA</p>
         <h2>Configurar Franja de Anuncio Superior</h2>
         <p>Personaliza el texto, badge e icono del banner superior de la página web con vista previa en tiempo real.</p>
-      </div>
-
-      <!-- NAVEGACIÓN MAESTRA UNIFICADA -->
-      <div class="admin-menu admin-menu-grid">
-        <a href="./dashboard.html" class="btn btn-secondary menu-btn">📊 Dashboard</a>
-        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">💬 Cotizaciones</a>
-        <a href="./reservas.html" class="btn btn-secondary menu-btn">📅 Eventos & Agenda</a>
-        <a href="./pagos.html" class="btn btn-secondary menu-btn">💵 Pagos & Finanzas</a>
-        <a href="./inventario.html" class="btn btn-secondary menu-btn">📦 Inventario</a>
-        <a href="./galeria.html?v=20260908.2" class="btn btn-secondary menu-btn">✨ Catálogo Web</a>
-        <a href="./anuncio.html" class="btn btn-secondary menu-btn active-menu">📢 Anuncio Superior</a>
-        <a href="./clientes.html" class="btn btn-secondary menu-btn">👥 Clientes</a>
-        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
       </div>
 
       <!-- PESTAÑAS CATÁLOGO WEB & COMUNICACIÓN -->
@@ -430,6 +417,7 @@
 
   <!-- SweetAlert2 para notificaciones de gala -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="module" src="../js/components/admin-navbar.js"></script>
   <!-- Lógica modular del panel -->
   <script type="module" src="../js/anuncio-admin.js?v=20260909.2"></script>
 </body>

@@ -1,41 +1,43 @@
+/**
+ * Detalle de Galería de Portafolio - Banquetes Almar
+ * Consume los montajes directamente desde Firebase Cloud Firestore NoSQL.
+ */
+
+import { dbService } from "./firebase/db.js";
+
 const params = new URLSearchParams(window.location.search);
-const categoriaId = params.get("categoria_id");
-const nombre = params.get("nombre");
+const categoriaParam = params.get("categoria") || params.get("nombre") || "";
 
 const detalleTitulo = document.getElementById("detalleTitulo");
 const detalleTexto = document.getElementById("detalleTexto");
 const publicGalleryGrid = document.getElementById("publicGalleryGrid");
 
 if (detalleTitulo) {
-  detalleTitulo.textContent = nombre || "Servicio";
+  detalleTitulo.textContent = categoriaParam || "Catálogo de Montajes";
 }
 
 if (detalleTexto) {
-  detalleTexto.textContent = nombre
-    ? `Explora todas las imágenes de la sección ${nombre}.`
-    : "Explora todas las imágenes de esta categoría.";
+  detalleTexto.textContent = categoriaParam
+    ? `Explora los montajes de gala y decoración para ${categoriaParam}.`
+    : "Explora todas las fotografías y montajes de Banquetes Almar.";
 }
 
 async function cargarDetalleGaleria() {
   if (!publicGalleryGrid) return;
 
   try {
-    const url = categoriaId
-      ? `http://localhost:3001/api/gallery/public/items?categoria_id=${categoriaId}`
-      : `http://localhost:3001/api/gallery/public/items`;
+    const allItems = await dbService.getGallery();
 
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "No se pudo cargar la galería");
-    }
+    const data = categoriaParam
+      ? allItems.filter(item => String(item.categoria || "").trim().toLowerCase() === categoriaParam.trim().toLowerCase())
+      : allItems;
 
     if (!Array.isArray(data) || !data.length) {
       publicGalleryGrid.innerHTML = `
-        <div class="empty-state-card">
-          <h3>Sin imágenes</h3>
-          <p>No hay imágenes en esta sección.</p>
+        <div class="empty-state-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+          <h3>Sin imágenes disponibles</h3>
+          <p>Aún no hay fotos registradas para ${categoriaParam || "esta sección"}.</p>
+          <a href="./portafolio-servicios.html" class="btn btn-secondary" style="margin-top: 1rem;">← Volver al portafolio</a>
         </div>
       `;
       return;
@@ -45,28 +47,29 @@ async function cargarDetalleGaleria() {
       <article class="gallery-card-pro gallery-card-public gallery-detail-card">
         <div class="gallery-card-image-wrap gallery-detail-image-wrap">
           <img
-            src="http://localhost:3001/uploads/${item.imagen}"
-            alt="${item.titulo || "Imagen"}"
+            src="${item.imagen}"
+            alt="${item.titulo || "Montaje Almar"}"
             class="gallery-card-image public-gallery-view"
-            data-imagen="http://localhost:3001/uploads/${item.imagen}"
-            data-titulo="${item.titulo || "Imagen"}"
+            loading="lazy"
+            data-imagen="${item.imagen}"
+            data-titulo="${item.titulo || "Montaje Almar"}"
             data-descripcion="${item.descripcion || ""}"
           />
         </div>
 
         <div class="gallery-card-content gallery-detail-content">
-          <span class="event-chip">${item.categoria_nombre || "Sin categoría"}</span>
-          <h3>${item.titulo || "Sin título"}</h3>
-          <p>${item.descripcion || "Sin descripción"}</p>
+          <span class="event-chip">${item.categoria || "Gala"}</span>
+          <h3>${item.titulo || "Montaje de Evento"}</h3>
+          <p>${item.descripcion || ""}</p>
 
           <button
             type="button"
             class="btn btn-secondary public-gallery-open-btn public-gallery-view"
-            data-imagen="http://localhost:3001/uploads/${item.imagen}"
-            data-titulo="${item.titulo || "Imagen"}"
+            data-imagen="${item.imagen}"
+            data-titulo="${item.titulo || "Montaje Almar"}"
             data-descripcion="${item.descripcion || ""}"
           >
-            Ver imagen
+            Ver en alta resolución
           </button>
         </div>
       </article>
@@ -82,11 +85,11 @@ async function cargarDetalleGaleria() {
       });
     });
   } catch (error) {
-    console.error("ERROR DETALLE GALERÍA:", error);
+    console.error("ERROR DETALLE GALERÍA DESDE FIRESTORE:", error);
     publicGalleryGrid.innerHTML = `
       <div class="empty-state-card">
-        <h3>Error</h3>
-        <p>No se pudieron cargar las imágenes.</p>
+        <h3>Error de conexión</h3>
+        <p>No se pudieron cargar las fotos desde Firebase Firestore.</p>
       </div>
     `;
   }
@@ -126,4 +129,4 @@ function cerrarModalImagen() {
   if (modal) modal.classList.remove("show");
 }
 
-cargarDetalleGaleria();
+document.addEventListener("DOMContentLoaded", cargarDetalleGaleria);

@@ -14,9 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="../css/style.css?v=20260908.2" />
-  <link rel="stylesheet" href="../css/ecommerce.css?v=20260908.2" />
-  <link rel="stylesheet" href="../css/apple-design.css?v=20260908.2" />
+  <link rel="stylesheet" href="../css/tailwind.css" />
 
   <style>
     .package-inclusions-manager {
@@ -79,25 +77,14 @@
   </style>
 </head>
 <body>
+  <header id="adminNavbar"></header>
+
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
         <span class="section-label">💎 Panel de Control de Gala</span>
         <h2>Administrar Paquetes Todo Incluido</h2>
         <p>Crea, edita y publica las experiencias completas de bodas, quinceañeras y grados. Todo cambio se refleja al instante en la landing page del cliente.</p>
-      </div>
-
-      <!-- NAVEGACIÓN MAESTRA UNIFICADA -->
-      <div class="admin-menu admin-menu-grid">
-        <a href="./dashboard.html" class="btn btn-secondary menu-btn">📊 Dashboard</a>
-        <a href="./cotizaciones.html" class="btn btn-secondary menu-btn">💬 Cotizaciones</a>
-        <a href="./reservas.html" class="btn btn-secondary menu-btn">📅 Eventos & Agenda</a>
-        <a href="./pagos.html" class="btn btn-secondary menu-btn">💵 Pagos & Finanzas</a>
-        <a href="./inventario.html" class="btn btn-secondary menu-btn">📦 Inventario</a>
-        <a href="./galeria.html?v=20260908.2" class="btn btn-secondary menu-btn active-menu">✨ Catálogo Web</a>
-        <a href="./anuncio.html" class="btn btn-secondary menu-btn">📢 Anuncio Superior</a>
-        <a href="./clientes.html" class="btn btn-secondary menu-btn">👥 Clientes</a>
-        <button id="logoutBtn" class="btn btn-secondary menu-btn" type="button">🚪 Cerrar sesión</button>
       </div>
 
       <!-- PESTAÑAS CATÁLOGO WEB: GALERÍA VS PAQUETES VS SERVICIOS VS ANUNCIO -->
@@ -287,6 +274,7 @@
 
   <!-- SweetAlert2 para diálogos de gala -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="module" src="../js/components/admin-navbar.js"></script>
   <!-- Lógica modular del panel -->
   <script type="module" src="../js/paquetes-admin.js?v=20260908.1"></script>
 </body>

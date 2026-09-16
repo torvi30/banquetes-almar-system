@@ -5,6 +5,7 @@
 
 import { authService } from "./firebase/auth.js";
 import { dbService } from "./firebase/db.js";
+import { uploadImageToCloudinary } from "./services/cloudinary-service.js";
 
 authService.requireAuth("./login.html");
 
@@ -425,6 +426,22 @@ if (form) {
     let finalImage = base64Preview || (imagenUrlInput ? imagenUrlInput.value.trim() : "") || inventoryCurrentImage.value;
     if (!finalImage) {
       finalImage = "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80";
+    }
+
+    // Subida automática a Cloudinary para imágenes personalizadas (evita Base64 en Firestore)
+    if (finalImage && finalImage.startsWith("data:image/")) {
+      try {
+        if (saveInventoryBtn) {
+          saveInventoryBtn.disabled = true;
+          saveInventoryBtn.textContent = "Subiendo imagen a Cloudinary...";
+        }
+        const uploadResult = await uploadImageToCloudinary(finalImage, { folder: "inventario" });
+        if (uploadResult?.url) {
+          finalImage = uploadResult.url;
+        }
+      } catch (uploadErr) {
+        console.warn("Cloudinary upload fallback:", uploadErr.message);
+      }
     }
 
     const payload = {

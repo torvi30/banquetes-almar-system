@@ -5,6 +5,7 @@
 
 import { authService } from "./firebase/auth.js";
 import { dbService } from "./firebase/db.js";
+import { uploadImageToCloudinary } from "./services/cloudinary-service.js";
 
 authService.requireAuth("./login.html");
 
@@ -946,6 +947,27 @@ if (galleryForm) {
       }
     }
 
+    // Upload custom user images or framed canvas to Cloudinary CDN
+    if (finalImage && finalImage.startsWith("data:image/")) {
+      try {
+        if (saveGalleryBtn) {
+          saveGalleryBtn.disabled = true;
+          saveGalleryBtn.textContent = "Subiendo a Cloudinary...";
+        }
+        const uploadResult = await uploadImageToCloudinary(finalImage, { folder: "galeria" });
+        if (uploadResult?.url) {
+          finalImage = uploadResult.url;
+        }
+      } catch (uploadErr) {
+        console.warn("Cloudinary upload fallback:", uploadErr.message);
+      } finally {
+        if (saveGalleryBtn) {
+          saveGalleryBtn.disabled = false;
+          saveGalleryBtn.textContent = id ? "Guardar Cambios" : "+ Agregar a Galería";
+        }
+      }
+    }
+
     try {
       if (id) {
         // Edit mode
@@ -1227,6 +1249,18 @@ if (editModalForm) {
         }
       } catch (err) {
         console.warn("Could not export framed modal image:", err);
+      }
+    }
+
+    // Upload custom image to Cloudinary if new image is data URL
+    if (newImagen && newImagen.startsWith("data:image/")) {
+      try {
+        const uploadResult = await uploadImageToCloudinary(newImagen, { folder: "galeria" });
+        if (uploadResult?.url) {
+          newImagen = uploadResult.url;
+        }
+      } catch (uploadErr) {
+        console.warn("Cloudinary modal upload fallback:", uploadErr.message);
       }
     }
 

@@ -7,7 +7,7 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Paquetes y catálogo de mobiliario: Público puede leer, solo Admin puede editar
+    // Catálogo público: Visitantes pueden ver, solo Admin puede crear/modificar/eliminar
     match /paquetes/{document} {
       allow read: if true;
       allow write: if isAdmin();
@@ -18,19 +18,43 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /inventario/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /servicios/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     match /galeria/{document} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Cotizaciones: Cualquier visitante puede crear una cotización (create), solo Admin puede leer o modificar
+    match /anuncio/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /anuncios/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Cotizaciones: Cualquier visitante puede enviar una solicitud (create), solo Admin gestiona
     match /cotizaciones/{document} {
       allow create: if true;
       allow read, update, delete: if isAdmin();
     }
 
-    // Reservas, Clientes y Pagos: Privados para administración
+    // Operaciones administrativas confidenciales: Solo Admin autenticado
     match /reservas/{document} {
+      allow read, write: if isAdmin();
+    }
+
+    match /eventos/{document} {
       allow read, write: if isAdmin();
     }
 
@@ -39,6 +63,10 @@ service cloud.firestore {
     }
 
     match /pagos/{document} {
+      allow read, write: if isAdmin();
+    }
+
+    match /admins/{document} {
       allow read, write: if isAdmin();
     }
   }
