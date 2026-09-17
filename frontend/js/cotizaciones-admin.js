@@ -271,6 +271,16 @@ function crearCardPipeline(item) {
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
             </svg>
           </a>
+
+          <a href="./contrato.html?id=${item.id}" target="_blank" class="btn-icon-secondary" title="Generar Contrato / Minuta Oficial" style="color: var(--gold-light); border-color: rgba(200, 155, 60, 0.4);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </a>
         </div>
 
         ${stageActionHtml}
@@ -469,6 +479,9 @@ function abrirMenuOpciones(id) {
         <button id="swalMoveCancelado" class="btn btn-secondary" style="font-size: 0.85rem; text-align: left; padding: 10px; color: #94a3b8;">
           ⚪ Marcar como Cancelado
         </button>
+        <a href="./contrato.html?id=${id}" target="_blank" class="btn btn-secondary" style="font-size: 0.85rem; text-align: left; padding: 10px; color: var(--gold-light); display: flex; align-items: center; gap: 8px; text-decoration: none;">
+          📜 Generar Contrato / Minuta Oficial
+        </a>
         <button id="swalDeleteQuote" class="btn btn-secondary" style="font-size: 0.85rem; text-align: left; padding: 10px; color: #ef4444; border-color: rgba(239,68,68,0.3);">
           🗑️ Eliminar cotización del tablero
         </button>

@@ -167,7 +167,7 @@ async function cargarProximosEventos() {
           <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #888; margin-top: 0.6rem;">
             <span style="color: #ffffff; font-weight: 600;">🗓️ ${formatearFecha(ev.fecha_evento)}</span>
             <div style="display: flex; gap: 0.6rem;">
-              <a href="./contrato.html?id=${ev.id}" style="color: #a0c4ff; font-weight: 600; text-decoration: none;">📄 Contrato</a>
+              <a href="./contrato.html?id=${ev.id}" target="_blank" style="color: #a0c4ff; font-weight: 600; text-decoration: none;">📄 Contrato</a>
               <a href="./reservas.html" style="color: var(--gold-light); font-weight: 600; text-decoration: none;">Detalles ➔</a>
             </div>
           </div>
