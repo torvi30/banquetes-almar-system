@@ -6,6 +6,7 @@
 import { authService } from "./firebase/auth.js";
 import { dbService } from "./firebase/db.js";
 import { openWhatsAppModal } from "./components/whatsapp-concierge.js";
+import { uploadImageToCloudinary } from "./services/cloudinary-service.js";
 
 authService.requireAuth("./login.html");
 
@@ -32,6 +33,11 @@ const montoInput = document.getElementById("monto");
 const metodoInput = document.getElementById("metodo");
 const fechaPagoInput = document.getElementById("fechaPago");
 const comprobanteInput = document.getElementById("comprobante");
+const comprobanteArchivoInput = document.getElementById("comprobanteArchivo");
+const comprobanteUrlInput = document.getElementById("comprobanteUrl");
+const comprobantePreviewWrap = document.getElementById("comprobantePreviewWrap");
+const comprobantePreviewImg = document.getElementById("comprobantePreviewImg");
+const btnQuitarVoucher = document.getElementById("btnQuitarVoucher");
 const notaInput = document.getElementById("nota");
 const pillPagarSaldo = document.getElementById("pillPagarSaldo");
 
@@ -56,6 +62,32 @@ let pagosCache = [];
 let selectedEvento = null;
 let filtroSoloEvento = false;
 let currentReceiptData = null;
+let voucherBase64 = "";
+
+// Event listeners para carga de voucher
+if (comprobanteArchivoInput) {
+  comprobanteArchivoInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        voucherBase64 = ev.target.result;
+        if (comprobantePreviewImg) comprobantePreviewImg.src = voucherBase64;
+        if (comprobantePreviewWrap) comprobantePreviewWrap.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
+
+if (btnQuitarVoucher) {
+  btnQuitarVoucher.addEventListener("click", () => {
+    voucherBase64 = "";
+    if (comprobanteArchivoInput) comprobanteArchivoInput.value = "";
+    if (comprobanteUrlInput) comprobanteUrlInput.value = "";
+    if (comprobantePreviewWrap) comprobantePreviewWrap.style.display = "none";
+  });
+}
 
 // Inicializar fecha de pago por defecto (hoy)
 if (fechaPagoInput) {
@@ -82,6 +114,10 @@ function limpiarFormulario() {
   if (fechaPagoInput) fechaPagoInput.value = new Date().toISOString().slice(0, 10);
   if (comprobanteInput) comprobanteInput.value = "";
   if (notaInput) notaInput.value = "";
+  voucherBase64 = "";
+  if (comprobanteArchivoInput) comprobanteArchivoInput.value = "";
+  if (comprobanteUrlInput) comprobanteUrlInput.value = "";
+  if (comprobantePreviewWrap) comprobantePreviewWrap.style.display = "none";
   
   if (savePaymentBtn) savePaymentBtn.innerHTML = "💰 Registrar Abono";
   if (formActionTitle) formActionTitle.textContent = "2. Registrar Nuevo Abono";
@@ -408,6 +444,24 @@ if (form) {
     }
 
     try {
+      let voucherUrl = comprobanteUrlInput?.value.trim() || "";
+
+      // Subir voucher a Cloudinary si se seleccionó archivo local
+      if (voucherBase64 && voucherBase64.startsWith("data:image/")) {
+        try {
+          if (savePaymentBtn) {
+            savePaymentBtn.disabled = true;
+            savePaymentBtn.innerHTML = "☁️ Subiendo comprobante a Cloudinary...";
+          }
+          const uploadRes = await uploadImageToCloudinary(voucherBase64, { folder: "comprobantes" });
+          if (uploadRes?.url) {
+            voucherUrl = uploadRes.url;
+          }
+        } catch (uploadErr) {
+          console.warn("Cloudinary voucher upload fallback:", uploadErr.message);
+        }
+      }
+
       if (editId) {
         // ACTUALIZAR PAGO EXISTENTE
         await dbService.updatePayment(editId, {
@@ -415,6 +469,7 @@ if (form) {
           metodo,
           fecha,
           comprobante,
+          comprobanteUrl: voucherUrl,
           concepto: nota,
           reservaId: resId,
           cliente
@@ -434,6 +489,7 @@ if (form) {
           metodo,
           fecha,
           comprobante,
+          comprobanteUrl: voucherUrl,
           concepto: nota,
           reservaId: resId,
           cliente
@@ -528,6 +584,14 @@ function renderPagos() {
             <p style="margin: 0 0 0.3rem 0;">💳 <strong>Método:</strong> <span style="color: #fff;">${p.metodo || "Transferencia"}</span></p>
             <p style="margin: 0 0 0.3rem 0;">📅 <strong>Fecha:</strong> ${p.fecha || "Sin fecha"}</p>
             ${p.comprobante ? `<p style="margin: 0 0 0.3rem 0;">🔖 <strong>Comprobante:</strong> <span style="color: var(--gold-light);">${p.comprobante}</span></p>` : ""}
+            ${p.comprobanteUrl ? `
+              <p style="margin: 0 0 0.3rem 0;">
+                📎 <strong>Soporte / Voucher:</strong> 
+                <a href="${p.comprobanteUrl}" target="_blank" rel="noopener" style="color: #60a5fa; text-decoration: underline; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                  Ver imagen en Cloudinary ↗
+                </a>
+              </p>
+            ` : ""}
             <p style="margin: 0;">📝 <strong>Concepto:</strong> ${p.concepto || p.nota || "Abono general"}</p>
           </div>
         </div>
@@ -612,6 +676,14 @@ function cargarPagoParaEditar(id) {
   if (fechaPagoInput) fechaPagoInput.value = pago.fecha || new Date().toISOString().slice(0, 10);
   if (comprobanteInput) comprobanteInput.value = pago.comprobante || "";
   if (notaInput) notaInput.value = pago.concepto || pago.nota || "";
+  if (comprobanteUrlInput) comprobanteUrlInput.value = pago.comprobanteUrl || "";
+
+  if (pago.comprobanteUrl) {
+    if (comprobantePreviewImg) comprobantePreviewImg.src = pago.comprobanteUrl;
+    if (comprobantePreviewWrap) comprobantePreviewWrap.style.display = "block";
+  } else {
+    if (comprobantePreviewWrap) comprobantePreviewWrap.style.display = "none";
+  }
 
   if (pago.reservaId) {
     seleccionarEventoPorId(pago.reservaId);

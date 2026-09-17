@@ -6,6 +6,7 @@
 import { authService } from "./firebase/auth.js";
 import { dbService } from "./firebase/db.js";
 import { openWhatsAppModal } from "./components/whatsapp-concierge.js";
+import { uploadImageToCloudinary } from "./services/cloudinary-service.js";
 
 // Proteger ruta con autenticación
 authService.requireAuth("./login.html");
@@ -420,6 +421,20 @@ async function guardarPaquete(e) {
       confirmButtonColor: "#d4af37"
     });
     return;
+  }
+
+  // Subir imagen a Cloudinary si se seleccionó un archivo local (evita Base64 en Firestore)
+  if (imagen && imagen.startsWith("data:image/")) {
+    try {
+      saveBtn.disabled = true;
+      saveBtn.textContent = "☁️ Subiendo a Cloudinary...";
+      const uploadResult = await uploadImageToCloudinary(imagen, { folder: "paquetes" });
+      if (uploadResult?.url) {
+        imagen = uploadResult.url;
+      }
+    } catch (uploadErr) {
+      console.warn("Cloudinary upload fallback:", uploadErr.message);
+    }
   }
 
   const pkgData = {

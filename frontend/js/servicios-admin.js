@@ -5,6 +5,7 @@
 
 import { authService } from "./firebase/auth.js";
 import { dbService } from "./firebase/db.js";
+import { uploadImageToCloudinary } from "./services/cloudinary-service.js";
 
 authService.requireAuth("./login.html");
 
@@ -280,6 +281,20 @@ form.addEventListener("submit", async (e) => {
     else if (badge.label === "Mobiliario") finalImage = "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80";
     else if (badge.label === "Locación") finalImage = "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80";
     else finalImage = "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80";
+  }
+
+  // Subir a Cloudinary si es una imagen local (Base64)
+  if (finalImage && finalImage.startsWith("data:image/")) {
+    try {
+      saveServiceBtn.disabled = true;
+      saveServiceBtn.textContent = "☁️ Subiendo a Cloudinary...";
+      const uploadResult = await uploadImageToCloudinary(finalImage, { folder: "servicios" });
+      if (uploadResult?.url) {
+        finalImage = uploadResult.url;
+      }
+    } catch (uploadErr) {
+      console.warn("Cloudinary upload fallback:", uploadErr.message);
+    }
   }
 
   const payload = {

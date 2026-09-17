@@ -268,6 +268,24 @@
         </div>
 
         <div class="form-group full-width">
+          <label for="comprobanteArchivo" style="color: #fff; font-weight: 600;">Foto o Captura del Comprobante (Voucher)</label>
+          <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            <input type="file" id="comprobanteArchivo" accept="image/*" style="max-width: 320px;" />
+            <span style="color: var(--text-soft); font-size: 0.8rem;">☁️ Se alojará automáticamente en Cloudinary</span>
+          </div>
+          <input type="hidden" id="comprobanteUrl" />
+          <div id="comprobantePreviewWrap" style="display: none; margin-top: 0.6rem;">
+            <div style="display: inline-flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 6px 12px; border-radius: 10px;">
+              <img id="comprobantePreviewImg" src="" alt="Voucher" style="height: 50px; width: 50px; object-fit: cover; border-radius: 6px;" />
+              <div>
+                <span id="comprobantePreviewName" style="font-size: 0.82rem; color: #fff; display: block; font-weight: 600;">Voucher cargado</span>
+                <button type="button" id="btnQuitarVoucher" style="background: none; border: none; color: #ff6b6b; font-size: 0.75rem; cursor: pointer; padding: 0;">Quitar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group full-width">
           <label for="nota">Concepto o Nota del Abono</label>
           <textarea id="nota" rows="2" placeholder="Ej: Anticipo 30% separación de fecha, segundo abono vajilla..."></textarea>
         </div>
