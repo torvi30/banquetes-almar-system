@@ -3,48 +3,172 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cliente | Banquetes Almar</title>
+  <title>Ficha Integral de Cliente | Banquetes Almar</title>
   <link rel="stylesheet" href="../css/tailwind.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="../js/alerts-luxury.js?v=20260909.5"></script>
+  <style>
+    .client-profile-hero {
+      background: var(--bg-soft, #111111);
+      border: 1px solid rgba(230, 199, 123, 0.25);
+      border-radius: 20px;
+      padding: 2.2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    .client-profile-hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #c89b3c 0%, #e6c77b 50%, #c89b3c 100%);
+    }
+
+    .profile-hero-content {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profile-avatar-large {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #332a18 0%, #151410 100%);
+      border: 2px solid var(--gold, #c89b3c);
+      color: #e6c77b;
+      font-size: 1.8rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(200, 155, 60, 0.25);
+      flex-shrink: 0;
+    }
+
+    .profile-header-meta {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .profile-header-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .client-info-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.2rem;
+      font-size: 0.86rem;
+      color: #cbd5e1;
+      margin-top: 0.75rem;
+    }
+
+    .client-pill-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .client-pill-item a {
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .client-pill-item a:hover {
+      color: #e6c77b;
+    }
+
+    .history-card-luxury {
+      background: var(--bg-soft, #111111);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 1.4rem;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .history-card-luxury:hover {
+      border-color: rgba(200, 155, 60, 0.4);
+      transform: translateY(-2px);
+    }
+  </style>
 </head>
 <body>
   <header id="adminNavbar"></header>
 
   <section class="section admin-panel">
     <div class="container">
-      <div class="section-heading">
-        <p class="section-label">Ficha de cliente</p>
-        <h2>Detalle del cliente</h2>
-        <p>Historial de eventos, pagos y resumen general.</p>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
+        <a href="./clientes.html" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 6px;">
+          ← Volver al Directorio de Clientes
+        </a>
+        <a href="./reservas.html" class="btn btn-secondary btn-sm" style="color: var(--gold-light);">
+          📅 Agenda & Calendario de Eventos
+        </a>
       </div>
 
-      <div class="quote-card-actions" style="margin: 1.5rem 0 2rem 0;">
-        <a href="./clientes.html" class="btn btn-secondary">← Volver a clientes</a>
-        <a href="./reservas.html" class="btn btn-primary">Ir a eventos & agenda</a>
+      <!-- HERO PERFIL DEL CLIENTE -->
+      <div id="clienteHeroCard" class="client-profile-hero">
+        <div style="text-align: center; padding: 2rem 0; color: #94a3b8;">
+          Cargando ficha del cliente...
+        </div>
       </div>
 
-      <div id="clienteInfo" class="calendar-panel" style="margin-bottom: 1.5rem;">
-        <p>Cargando cliente...</p>
+      <!-- TARJETAS DE RESUMEN FINANCIERO -->
+      <div class="pipeline-metrics-banner" id="clientFinancialSummary" style="margin-bottom: 2.5rem;">
+        <div class="pipeline-metric-card">
+          <span class="pipeline-metric-label">📅 Eventos Registrados</span>
+          <strong id="kpiEventosCount" class="pipeline-metric-val">0</strong>
+        </div>
+
+        <div class="pipeline-metric-card">
+          <span class="pipeline-metric-label">💰 Facturación Total (LTV)</span>
+          <strong id="kpiTotalContratado" class="pipeline-metric-val highlight-gold">$0</strong>
+        </div>
+
+        <div class="pipeline-metric-card">
+          <span class="pipeline-metric-label">💵 Total Pagado / Abonos</span>
+          <strong id="kpiTotalPagado" class="pipeline-metric-val" style="color: #10b981;">$0</strong>
+        </div>
+
+        <div class="pipeline-metric-card">
+          <span class="pipeline-metric-label">⏳ Saldo Pendiente</span>
+          <strong id="kpiSaldoPendiente" class="pipeline-metric-val" style="color: #ef4444;">$0</strong>
+        </div>
       </div>
 
-      <div id="resumenCards" class="admin-summary" style="margin-bottom: 2rem;"></div>
-
-      <div class="section-heading" style="margin-top: 2rem;">
-        <h2>Eventos del cliente</h2>
-        <p>Todos los eventos asociados a este cliente.</p>
+      <!-- SECCIÓN 1: EVENTOS Y RESERVAS DEL CLIENTE -->
+      <div class="section-heading" style="margin-top: 2.5rem; margin-bottom: 1.2rem;">
+        <p class="section-label">Historial Operativo</p>
+        <h2>Eventos y Celebraciones del Cliente</h2>
+        <p>Recepciones, bodas, quinceaños y alquiler de mobiliario asociados a este anfitrión.</p>
       </div>
-      <div id="eventosCliente" class="quotes-grid"></div>
+      <div id="eventosCliente" class="quotes-grid" style="margin-bottom: 3rem;"></div>
 
-      <div class="section-heading" style="margin-top: 2rem;">
-        <h2>Pagos del cliente</h2>
-        <p>Todos los pagos realizados por este cliente.</p>
+      <!-- SECCIÓN 2: HISTORIAL DE PAGOS Y ABONOS -->
+      <div class="section-heading" style="margin-top: 2.5rem; margin-bottom: 1.2rem;">
+        <p class="section-label">Libro Contable</p>
+        <h2>Comprobantes y Pagos Registrados</h2>
+        <p>Registro de anticipos, abonos parciales y liquidaciones de saldo.</p>
       </div>
       <div id="pagosCliente" class="quotes-grid"></div>
     </div>
   </section>
 
   <script type="module" src="../js/components/admin-navbar.js"></script>
-  <script type="module" src="../js/cliente-admin.js"></script>
+  <script type="module" src="../js/cliente-admin.js?v=20260917.1"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 /**
- * Detalle y Ficha del Cliente - Banquetes Almar
- * Conectado con Firebase Cloud Firestore y dbService.
+ * Ficha Integral y Expediente de Cliente - Banquetes Almar
+ * Conectado en vivo con Firebase Cloud Firestore y dbService.
  */
 
 import { authService } from "./firebase/auth.js";
@@ -11,180 +11,401 @@ authService.requireAuth("./login.html");
 const params = new URLSearchParams(window.location.search);
 const clienteId = params.get("id");
 
-const clienteInfo = document.getElementById("clienteInfo");
-const resumenCards = document.getElementById("resumenCards");
+const clienteHeroCard = document.getElementById("clienteHeroCard");
+const kpiEventosCount = document.getElementById("kpiEventosCount");
+const kpiTotalContratado = document.getElementById("kpiTotalContratado");
+const kpiTotalPagado = document.getElementById("kpiTotalPagado");
+const kpiSaldoPendiente = document.getElementById("kpiSaldoPendiente");
 const eventosCliente = document.getElementById("eventosCliente");
 const pagosCliente = document.getElementById("pagosCliente");
-const logoutBtn = document.getElementById("logoutBtn");
 
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    authService.logout();
-    window.location.href = "./login.html";
-  });
+let currentCliente = null;
+
+// Formateador de moneda en pesos colombianos
+function formatMoney(amount) {
+  return "$" + Number(amount || 0).toLocaleString("es-CO");
 }
 
-function formatearDinero(valor) {
-  return `$${Number(valor || 0).toLocaleString("es-CO")}`;
-}
-
-function formatearFecha(fecha) {
-  if (!fecha) return "Sin fecha";
-  const d = new Date(fecha);
-  if (Number.isNaN(d.getTime())) return String(fecha).slice(0, 10);
-  return d.toLocaleDateString("es-CO", {
-    year: "numeric",
-    month: "short",
-    day: "numeric"
-  });
-}
-
-function renderCliente(cliente) {
-  clienteInfo.innerHTML = `
-    <h2>${cliente.nombre || "Sin nombre"}</h2>
-    <p><strong>ID:</strong> ${cliente.id}</p>
-    <p><strong>Teléfono:</strong> ${cliente.telefono || "No definido"}</p>
-    <p><strong>Correo:</strong> ${cliente.email || "No definido"}</p>
-    <p><strong>Documento:</strong> ${cliente.documento || "No definido"}</p>
-    <p><strong>Dirección:</strong> ${cliente.direccion || "No definida"}</p>
-    <p><strong>Tipo:</strong> <span class="badge" style="background: rgba(212,175,55,0.15); color: #d4af37; padding: 2px 8px; border-radius: 6px;">${cliente.tipo_cliente || "Cliente"}</span></p>
-  `;
-}
-
-function renderResumen(resumen, totalEventosCount, totalPagosCount) {
-  resumenCards.innerHTML = `
-    <div class="summary-card">
-      <span class="summary-title">Eventos</span>
-      <strong>${totalEventosCount}</strong>
-    </div>
-
-    <div class="summary-card">
-      <span class="summary-title">Pagos registrados</span>
-      <strong>${totalPagosCount}</strong>
-    </div>
-
-    <div class="summary-card">
-      <span class="summary-title">Total eventos</span>
-      <strong>${formatearDinero(resumen.totalEventos)}</strong>
-    </div>
-
-    <div class="summary-card">
-      <span class="summary-title">Total pagado</span>
-      <strong>${formatearDinero(resumen.totalPagado)}</strong>
-    </div>
-
-    <div class="summary-card">
-      <span class="summary-title">Saldo pendiente</span>
-      <strong>${formatearDinero(resumen.saldo)}</strong>
-    </div>
-  `;
-}
-
-function renderEventos(eventos) {
-  if (!eventos.length) {
-    eventosCliente.innerHTML = `
-      <div class="empty-state-card">
-        <h3>Sin eventos</h3>
-        <p>Este cliente aún no tiene eventos registrados en el sistema.</p>
-      </div>
-    `;
-    return;
-  }
-
-  eventosCliente.innerHTML = eventos.map(evento => `
-    <article class="quote-card">
-      <h3>${evento.tipo_evento || "Evento"}</h3>
-      <p><strong>ID reserva:</strong> ${evento.id}</p>
-      <p><strong>Fecha:</strong> ${formatearFecha(evento.fecha_evento)}</p>
-      <p><strong>Lugar:</strong> ${evento.locacion || evento.lugar || "Por definir"}</p>
-      <p><strong>Personas:</strong> ${evento.personas || 0}</p>
-      <p><strong>Total:</strong> ${formatearDinero(evento.total || evento.valor_total)}</p>
-      <p><strong>Anticipo:</strong> ${formatearDinero(evento.anticipo || evento.abono)}</p>
-      <p><strong>Saldo:</strong> ${formatearDinero(evento.saldo)}</p>
-      <p><strong>Estado:</strong> <span class="badge">${evento.estado || "Confirmada"}</span></p>
-      <p><strong>Observaciones:</strong> ${evento.observaciones || "Sin observaciones"}</p>
-
-      <div class="quote-card-actions">
-        <a href="./pagos.html?reserva_id=${evento.id}" class="btn btn-secondary">Ver pagos</a>
-        <a href="./reservas.html" class="btn btn-success">Ir a reservas</a>
-      </div>
-    </article>
-  `).join("");
-}
-
-function renderPagos(pagos) {
-  if (!pagos.length) {
-    pagosCliente.innerHTML = `
-      <div class="empty-state-card">
-        <h3>Sin pagos</h3>
-        <p>Este cliente aún no tiene pagos registrados.</p>
-      </div>
-    `;
-    return;
-  }
-
-  pagosCliente.innerHTML = pagos.map(pago => `
-    <article class="quote-card">
-      <h3>${formatearDinero(pago.monto)}</h3>
-      <p><strong>ID pago:</strong> ${pago.id}</p>
-      <p><strong>Concepto:</strong> ${pago.concepto || pago.tipo_evento || "Abono a evento"}</p>
-      <p><strong>Método:</strong> ${pago.metodo || "Transferencia"}</p>
-      <p><strong>Fecha pago:</strong> ${formatearFecha(pago.fecha || pago.createdAt)}</p>
-      <p><strong>Estado:</strong> ${pago.estado || "Aprobado"}</p>
-    </article>
-  `).join("");
-}
-
-async function cargarCliente() {
-  if (!clienteId) {
-    clienteInfo.innerHTML = `<p>No se especificó ningún ID de cliente.</p>`;
-    return;
-  }
-
+// Formateador de fecha
+function formatDate(dateStr) {
+  if (!dateStr) return "Por definir";
   try {
-    const cliente = await dbService.getClientById(clienteId);
+    const parts = String(dateStr).split("-");
+    if (parts.length === 3) {
+      const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      return d.toLocaleDateString("es-CO", { day: "numeric", month: "short", year: "numeric" });
+    }
+    const d = new Date(dateStr);
+    if (!isNaN(d.getTime())) {
+      return d.toLocaleDateString("es-CO", { day: "numeric", month: "short", year: "numeric" });
+    }
+  } catch (e) {}
+  return String(dateStr);
+}
+
+// Iniciales
+function getInitials(name) {
+  if (!name) return "CL";
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!clienteId) {
+    clienteHeroCard.innerHTML = `
+      <div style="text-align: center; padding: 2rem;">
+        <h3 style="color: #ef4444; font-size: 1.3rem; margin-bottom: 0.5rem;">Falta el identificador de cliente</h3>
+        <p style="color: #94a3b8; margin-bottom: 1.2rem;">Por favor regresa al directorio y selecciona un cliente.</p>
+        <a href="./clientes.html" class="btn btn-primary">Ir al Directorio de Clientes</a>
+      </div>
+    `;
+    return;
+  }
+
+  await loadClientDossier();
+});
+
+async function loadClientDossier() {
+  try {
+    // 1. Obtener datos del cliente
+    let cliente = await dbService.getClientById(clienteId);
+
+    // Fallback si no encuentra por ID directo
+    if (!cliente) {
+      const all = await dbService.getClients();
+      cliente = all.find(c => String(c.id) === String(clienteId));
+    }
 
     if (!cliente) {
-      clienteInfo.innerHTML = `<div class="empty-state-card"><h3>Cliente no encontrado</h3><p>El ID "${clienteId}" no existe en la base de datos.</p></div>`;
-      resumenCards.innerHTML = "";
-      eventosCliente.innerHTML = "";
-      pagosCliente.innerHTML = "";
+      clienteHeroCard.innerHTML = `
+        <div style="text-align: center; padding: 2rem;">
+          <h3 style="color: #ef4444; font-size: 1.3rem; margin-bottom: 0.5rem;">Cliente no encontrado</h3>
+          <p style="color: #94a3b8; margin-bottom: 1.2rem;">El cliente con ID "${clienteId}" no existe o fue eliminado.</p>
+          <a href="./clientes.html" class="btn btn-primary">Volver al Directorio</a>
+        </div>
+      `;
       return;
     }
 
-    renderCliente(cliente);
+    currentCliente = cliente;
 
-    // Cargar eventos y pagos cruzados del cliente
-    const [reservas, pagos] = await Promise.all([
-      dbService.getReservations(),
-      dbService.getPayments()
-    ]);
+    // 2. Obtener reservas asociadas
+    const allReservations = await dbService.getReservations().catch(() => []);
+    const clientReservations = allReservations.filter(r => {
+      if (r.cliente_id && String(r.cliente_id) === String(cliente.id)) return true;
+      if (r.cliente && cliente.nombre && r.cliente.toLowerCase() === cliente.nombre.toLowerCase()) return true;
+      return false;
+    });
 
-    const clienteNombreLower = (cliente.nombre || "").toLowerCase().trim();
+    // 3. Obtener pagos asociados
+    const allPayments = await dbService.getPayments().catch(() => []);
+    const eventIdsSet = new Set(clientReservations.map(r => String(r.id)));
 
-    const eventosDelCliente = reservas.filter(r => 
-      String(r.clienteId || r.cliente_id || "") === String(cliente.id) ||
-      (r.cliente && r.cliente.toLowerCase().includes(clienteNombreLower))
-    );
+    const clientPayments = allPayments.filter(p => {
+      if (p.cliente_id && String(p.cliente_id) === String(cliente.id)) return true;
+      if (p.evento_id && eventIdsSet.has(String(p.evento_id))) return true;
+      if (p.cliente && cliente.nombre && p.cliente.toLowerCase() === cliente.nombre.toLowerCase()) return true;
+      return false;
+    });
 
-    const pagosDelCliente = pagos.filter(p => 
-      String(p.clienteId || p.cliente_id || "") === String(cliente.id) ||
-      (p.cliente && p.cliente.toLowerCase().includes(clienteNombreLower)) ||
-      eventosDelCliente.some(e => e.id === p.reservaId)
-    );
+    // 4. Renderizar componentes
+    renderHero(cliente);
+    renderFinancialStats(clientReservations, clientPayments);
+    renderEventsList(clientReservations);
+    renderPaymentsList(clientPayments);
 
-    const totalEventos = eventosDelCliente.reduce((acc, e) => acc + Number(e.total || e.valor_total || 0), 0);
-    const totalPagado = pagosDelCliente.reduce((acc, p) => acc + Number(p.monto || 0), 0);
-    const saldo = Math.max(0, totalEventos - totalPagado);
-
-    renderResumen({ totalEventos, totalPagado, saldo }, eventosDelCliente.length, pagosDelCliente.length);
-    renderEventos(eventosDelCliente);
-    renderPagos(pagosDelCliente);
-
-  } catch (error) {
-    console.error("ERROR CARGANDO CLIENTE:", error);
-    clienteInfo.innerHTML = `<p>Error cargando los datos del cliente: ${error.message}</p>`;
+  } catch (err) {
+    console.error("Error cargando ficha del cliente:", err);
+    clienteHeroCard.innerHTML = `
+      <div style="text-align: center; color: #ef4444; padding: 2rem;">
+        Error al cargar la ficha: ${err.message}
+      </div>
+    `;
   }
 }
 
-cargarCliente();
+// Renderizar cabecera de perfil
+function renderHero(cliente) {
+  const initials = getInitials(cliente.nombre);
+  const tipo = cliente.tipo_cliente || "Cliente";
+  let badgeClass = "badge-estandar";
+  let typeIcon = "👤";
+
+  if (tipo.toLowerCase().includes("vip")) {
+    badgeClass = "badge-vip";
+    typeIcon = "👑";
+  } else if (tipo.toLowerCase().includes("empresa")) {
+    badgeClass = "badge-empresa";
+    typeIcon = "🏢";
+  }
+
+  const cleanPhone = String(cliente.telefono || "").replace(/\D/g, "");
+  const waUrl = cleanPhone
+    ? `https://wa.me/57${cleanPhone}?text=${encodeURIComponent(`¡Hola ${cliente.nombre}! ✨ Te saludamos desde Banquetes Almar (Marinilla, Antioquia).`)}`
+    : "";
+
+  clienteHeroCard.innerHTML = `
+    <div class="profile-hero-content">
+      <div class="profile-avatar-large">${initials}</div>
+
+      <div class="profile-header-meta">
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <h1 style="font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin: 0;">${cliente.nombre}</h1>
+          <span class="client-type-badge ${badgeClass}" style="font-size: 0.78rem;">${typeIcon} ${tipo}</span>
+        </div>
+
+        <div class="client-info-pills">
+          <div class="client-pill-item">
+            <span>🪪</span>
+            <span>Doc: <strong>${cliente.documento || "No registrado"}</strong></span>
+          </div>
+
+          <div class="client-pill-item">
+            <span>📱</span>
+            ${cleanPhone ? `<a href="tel:${cleanPhone}"><strong>${cliente.telefono}</strong></a>` : `<span style="color: #64748b;">Sin teléfono</span>`}
+          </div>
+
+          ${cliente.email ? `
+            <div class="client-pill-item">
+              <span>✉️</span>
+              <a href="mailto:${cliente.email}">${cliente.email}</a>
+            </div>
+          ` : ""}
+
+          ${cliente.direccion ? `
+            <div class="client-pill-item">
+              <span>📍</span>
+              <span>${cliente.direccion}</span>
+            </div>
+          ` : ""}
+        </div>
+      </div>
+
+      <div class="profile-header-actions">
+        ${waUrl ? `
+          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="background: #10b981; color: #fff; font-weight: 700; border: none;">
+            💬 WhatsApp
+          </a>
+        ` : ""}
+
+        <button id="btnEditProfile" class="btn btn-secondary" style="color: var(--gold-light); border-color: rgba(230,199,123,0.35);">
+          ✏️ Editar Datos
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("btnEditProfile")?.addEventListener("click", openEditModal);
+}
+
+// Renderizar métricas financieras
+function renderFinancialStats(reservations, payments) {
+  let totalContracted = 0;
+  let totalPaid = 0;
+
+  reservations.forEach(r => {
+    totalContracted += Number(r.total || r.valor_total || 0);
+  });
+
+  if (payments.length > 0) {
+    payments.forEach(p => {
+      totalPaid += Number(p.monto || p.valor || 0);
+    });
+  } else {
+    // Si no hay libro contable explícito, sumar anticipos de las reservas
+    reservations.forEach(r => {
+      totalPaid += Number(r.anticipo || r.abono || 0);
+    });
+  }
+
+  const balance = Math.max(0, totalContracted - totalPaid);
+
+  if (kpiEventosCount) kpiEventosCount.textContent = reservations.length;
+  if (kpiTotalContratado) kpiTotalContratado.textContent = formatMoney(totalContracted);
+  if (kpiTotalPagado) kpiTotalPagado.textContent = formatMoney(totalPaid);
+  if (kpiSaldoPendiente) kpiSaldoPendiente.textContent = formatMoney(balance);
+}
+
+// Renderizar lista de eventos
+function renderEventsList(reservations) {
+  if (!reservations.length) {
+    eventosCliente.innerHTML = `
+      <div class="empty-state-card" style="grid-column: 1 / -1; padding: 2.5rem; text-align: center;">
+        <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">📅</span>
+        <h3>Sin eventos registrados</h3>
+        <p>Este cliente no tiene reservas confirmadas en la agenda actualmente.</p>
+      </div>
+    `;
+    return;
+  }
+
+  eventosCliente.innerHTML = reservations.map(ev => {
+    const total = Number(ev.total || ev.valor_total || 0);
+    const anticipo = Number(ev.anticipo || ev.abono || 0);
+    const saldo = Math.max(0, total - anticipo);
+
+    return `
+      <article class="history-card-luxury">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: #f8fafc; margin-bottom: 2px;">
+                ${ev.tipo_evento || "Evento Social"}
+              </h3>
+              <span style="font-size: 0.75rem; color: #94a3b8;">Folio: ALM-${String(ev.id).toUpperCase().slice(-6)}</span>
+            </div>
+            <span style="font-size: 0.72rem; padding: 2px 8px; border-radius: 6px; background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); font-weight: 700;">
+              ${ev.estado || "Confirmada"}
+            </span>
+          </div>
+
+          <div style="font-size: 0.84rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem;">
+            <div>🗓️ <strong>${formatDate(ev.fecha_evento)}</strong> ${ev.hora_evento ? `• ${ev.hora_evento}` : ""}</div>
+            <div>📍 ${ev.locacion || ev.lugar || "Salón Almar Marinilla"}</div>
+            <div>👥 <strong>${ev.personas || 0}</strong> invitados</div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); font-size: 0.83rem; margin-bottom: 1.1rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+              <span style="color: #94a3b8;">Total Evento:</span>
+              <strong style="color: var(--gold-light);">${formatMoney(total)}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+              <span style="color: #94a3b8;">Anticipo:</span>
+              <span style="color: #10b981; font-weight: 600;">${formatMoney(anticipo)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #94a3b8;">Saldo:</span>
+              <span style="color: ${saldo > 0 ? '#ef4444' : '#10b981'}; font-weight: 700;">${formatMoney(saldo)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.8rem;">
+          <a href="./contrato.html?id=${ev.id}" target="_blank" class="btn btn-secondary btn-sm" style="color: var(--gold-light); border-color: rgba(200,155,60,0.4); font-weight: 700;">
+            📄 Contrato Oficial
+          </a>
+          <a href="./pagos.html?reserva_id=${ev.id}" class="btn btn-secondary btn-sm" style="color: #93c5fd;">
+            💵 Ver Abonos
+          </a>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+// Renderizar lista de pagos
+function renderPaymentsList(payments) {
+  if (!payments.length) {
+    pagosCliente.innerHTML = `
+      <div class="empty-state-card" style="grid-column: 1 / -1; padding: 2.5rem; text-align: center;">
+        <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">💵</span>
+        <h3>Sin pagos registrados</h3>
+        <p>No se registran transacciones bancarias o recibos para este cliente.</p>
+      </div>
+    `;
+    return;
+  }
+
+  pagosCliente.innerHTML = payments.map(p => `
+    <article class="history-card-luxury">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.6rem;">
+          <strong style="font-size: 1.25rem; color: #10b981;">${formatMoney(p.monto || p.valor)}</strong>
+          <span style="font-size: 0.72rem; padding: 2px 8px; border-radius: 6px; background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.3); font-weight: 700;">
+            ${p.estado || "Aprobado"}
+          </span>
+        </div>
+
+        <div style="font-size: 0.84rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 0.35rem;">
+          <div>📝 Concepto: <strong>${p.concepto || p.tipo_evento || "Abono de evento"}</strong></div>
+          <div>💳 Método: ${p.metodo || "Transferencia Bancaria (Bancolombia)"}</div>
+          <div>🗓️ Fecha: ${formatDate(p.fecha || p.createdAt)}</div>
+          ${p.id ? `<div style="font-size: 0.75rem; color: #64748b;">Comprobante ID: ${p.id}</div>` : ""}
+        </div>
+      </div>
+    </article>
+  `).join("");
+}
+
+// Modal para editar datos del cliente
+async function openEditModal() {
+  if (!currentCliente) return;
+
+  const { value: formValues } = await Swal.fire({
+    title: "Editar Ficha de Cliente",
+    html: `
+      <div style="display: flex; flex-direction: column; gap: 10px; text-align: left; font-size: 0.85rem;">
+        <div>
+          <label style="color: #aaa; display: block; margin-bottom: 3px;">Nombre Completo:</label>
+          <input id="swalNombre" class="swal2-input" style="margin: 0; width: 100%;" value="${currentCliente.nombre || ""}">
+        </div>
+        <div>
+          <label style="color: #aaa; display: block; margin-bottom: 3px;">Teléfono:</label>
+          <input id="swalTelefono" class="swal2-input" style="margin: 0; width: 100%;" value="${currentCliente.telefono || ""}">
+        </div>
+        <div>
+          <label style="color: #aaa; display: block; margin-bottom: 3px;">Cédula o NIT:</label>
+          <input id="swalDocumento" class="swal2-input" style="margin: 0; width: 100%;" value="${currentCliente.documento || ""}">
+        </div>
+        <div>
+          <label style="color: #aaa; display: block; margin-bottom: 3px;">Correo Electrónico:</label>
+          <input id="swalEmail" class="swal2-input" style="margin: 0; width: 100%;" value="${currentCliente.email || ""}">
+        </div>
+        <div>
+          <label style="color: #aaa; display: block; margin-bottom: 3px;">Dirección / Municipio:</label>
+          <input id="swalDireccion" class="swal2-input" style="margin: 0; width: 100%;" value="${currentCliente.direccion || ""}">
+        </div>
+        <div>
+          <label style="color: #aaa; display: block; margin-bottom: 3px;">Perfil de Cliente:</label>
+          <select id="swalTipo" class="swal2-input" style="margin: 0; width: 100%;">
+            <option value="Cliente" ${currentCliente.tipo_cliente === "Cliente" ? "selected" : ""}>👤 Cliente Estándar</option>
+            <option value="VIP" ${currentCliente.tipo_cliente === "VIP" ? "selected" : ""}>👑 Cliente VIP</option>
+            <option value="Empresarial" ${currentCliente.tipo_cliente === "Empresarial" ? "selected" : ""}>🏢 Corporativo / Empresa</option>
+          </select>
+        </div>
+      </div>
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: "Guardar Cambios",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#c89b3c",
+    preConfirm: () => {
+      const nombre = document.getElementById("swalNombre").value.trim();
+      const telefono = document.getElementById("swalTelefono").value.trim();
+      if (!nombre || !telefono) {
+        Swal.showValidationMessage("El nombre y el teléfono son requeridos.");
+        return false;
+      }
+      return {
+        nombre,
+        telefono,
+        documento: document.getElementById("swalDocumento").value.trim(),
+        email: document.getElementById("swalEmail").value.trim(),
+        direccion: document.getElementById("swalDireccion").value.trim(),
+        tipo_cliente: document.getElementById("swalTipo").value
+      };
+    }
+  });
+
+  if (!formValues) return;
+
+  try {
+    await dbService.updateClient(currentCliente.id, formValues);
+    Swal.fire({
+      icon: "success",
+      title: "Cliente actualizado",
+      timer: 1200,
+      showConfirmButton: false
+    });
+    await loadClientDossier();
+  } catch (err) {
+    Swal.fire({
+      icon: "error",
+      title: "Error al actualizar",
+      text: err.message
+    });
+  }
+}

@@ -3,9 +3,212 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clientes | Banquetes Almar</title>
+  <title>Directorio de Clientes | Banquetes Almar</title>
   <link rel="stylesheet" href="../css/tailwind.css" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    /* ESTILOS DE LUJO PARA EL DIRECTORIO DE CLIENTES */
+    .client-card-luxury {
+      background: var(--bg-soft, #111111);
+      border: 1px solid rgba(230, 199, 123, 0.2);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .client-card-luxury:hover {
+      transform: translateY(-3px);
+      border-color: rgba(200, 155, 60, 0.5);
+      box-shadow: 0 12px 32px rgba(200, 155, 60, 0.12);
+    }
+
+    .client-card-luxury::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #c89b3c, transparent);
+      opacity: 0.4;
+    }
+
+    .client-header-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .client-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2a2517 0%, #151410 100%);
+      border: 1.5px solid var(--gold, #c89b3c);
+      color: #e6c77b;
+      font-weight: 800;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(200, 155, 60, 0.2);
+    }
+
+    .client-meta-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .client-name-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f8fafc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.3;
+    }
+
+    .client-type-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-top: 3px;
+    }
+
+    .badge-vip {
+      background: rgba(200, 155, 60, 0.18);
+      color: #e6c77b;
+      border: 1px solid rgba(230, 199, 123, 0.4);
+    }
+
+    .badge-empresa {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .badge-estandar {
+      background: rgba(148, 163, 184, 0.12);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .client-details-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.84rem;
+      color: #cbd5e1;
+      margin-bottom: 1.25rem;
+      padding: 0.8rem 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .client-detail-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .client-detail-item a {
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .client-detail-item a:hover {
+      color: #e6c77b;
+    }
+
+    .client-action-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 0.5rem;
+    }
+
+    /* MODAL DE REGISTRO / EDICIÓN DE CLIENTES */
+    .client-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .client-modal-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .client-modal-card {
+      background: #141416;
+      border: 1px solid rgba(200, 155, 60, 0.35);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 580px;
+      padding: 2.2rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      transform: translateY(20px);
+      transition: transform 0.25s ease;
+      position: relative;
+    }
+
+    .client-modal-overlay.is-open .client-modal-card {
+      transform: translateY(0);
+    }
+
+    .client-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 1rem;
+    }
+
+    .client-modal-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+
+    .client-modal-close {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.6rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .client-modal-close:hover {
+      color: #f8fafc;
+    }
+  </style>
 </head>
 <body>
   <header id="adminNavbar"></header>
@@ -13,66 +216,133 @@
   <section class="section admin-panel">
     <div class="container">
       <div class="section-heading">
-        <p class="section-label">Panel Admin</p>
-        <h2>Clientes</h2>
-        <p>Administra y busca clientes por id, nombre o teléfono.</p>
+        <p class="section-label">Gestión de Clientes & CRM</p>
+        <h2>Directorio Ejecutivo de Clientes</h2>
+        <p>Base de datos unificada de clientes particulares, parejas nupciales, quinceañeras y cuentas corporativas.</p>
       </div>
 
-      <div style="display:flex; justify-content:center; margin: 1.5rem 0 2rem 0;">
-        <button id="btnBuscarCliente" class="btn btn-primary" type="button">
-          🔎 Buscar cliente
-        </button>
+      <!-- BANNER DE MÉTRICAS KPI -->
+      <div class="pipeline-metrics-banner">
+        <div class="pipeline-metric-card">
+          <span class="pipeline-metric-label">👥 Total Clientes</span>
+          <strong id="metricTotalClientes" class="pipeline-metric-val">0</strong>
+        </div>
+
+        <div class="pipeline-metric-card">
+          <span class="pipeline-metric-label">👑 Clientes VIP & Corp.</span>
+          <strong id="metricClientesVip" class="pipeline-metric-val" style="color: #e6c77b;">0</strong>
+        </div>
+
+        <div class="pipeline-metric-card">
+          <span class="pipeline-metric-label">💰 Facturación Total (LTV)</span>
+          <strong id="metricTotalLtv" class="pipeline-metric-val highlight-gold">$0</strong>
+        </div>
+
+        <div class="pipeline-metric-card">
+          <span class="pipeline-metric-label">📅 Con Eventos Activos</span>
+          <strong id="metricConEventos" class="pipeline-metric-val" style="color: #10b981;">0</strong>
+        </div>
       </div>
 
-      <form id="clientForm" class="quote-form">
-        <input type="hidden" id="clientId" />
-
-        <div class="form-group">
-          <label for="nombre">Nombre</label>
-          <input type="text" id="nombre" required />
+      <!-- BARRA DE HERRAMIENTAS EJECUTIVA: BÚSQUEDA, FILTROS Y NUEVO CLIENTE -->
+      <div class="cotizaciones-toolbar" style="margin-bottom: 2rem;">
+        <div class="form-group" style="flex: 2;">
+          <label for="searchClienteInput">Buscar en el directorio</label>
+          <input type="text" id="searchClienteInput" placeholder="Buscar por nombre, teléfono, cédula/NIT, correo o ciudad..." />
         </div>
 
         <div class="form-group">
-          <label for="telefono">Teléfono / celular</label>
-          <input type="text" id="telefono" />
+          <label for="filterTipoCliente">Categoría / Perfil</label>
+          <select id="filterTipoCliente">
+            <option value="">Todos los perfiles</option>
+            <option value="VIP">👑 Clientes VIP</option>
+            <option value="Empresarial">🏢 Corporativos / Empresas</option>
+            <option value="Cliente">👤 Clientes Estándar</option>
+          </select>
         </div>
 
         <div class="form-group">
-          <label for="email">Correo</label>
-          <input type="email" id="email" />
+          <label for="sortClientes">Ordenar por</label>
+          <select id="sortClientes">
+            <option value="recientes" selected>⚡ Más recientes primero</option>
+            <option value="az">🔤 Alfabético (A - Z)</option>
+            <option value="za">🔤 Alfabético (Z - A)</option>
+          </select>
         </div>
 
-        <div class="form-group">
-          <label for="documento">Documento</label>
-          <input type="text" id="documento" />
+        <div style="display: flex; gap: 8px; align-self: flex-end;">
+          <button id="btnOpenNewClientModal" class="btn btn-primary" style="padding: 10px 18px; font-size: 0.88rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+            ✨ + Nuevo Cliente
+          </button>
         </div>
-
-        <div class="form-group">
-          <label for="direccion">Dirección</label>
-          <input type="text" id="direccion" />
-        </div>
-
-        <div class="form-group">
-          <label for="tipo_cliente">Tipo</label>
-          <input type="text" id="tipo_cliente" value="Cliente" />
-        </div>
-
-        <div class="form-group full-width event-form-actions">
-          <button type="submit" class="btn btn-primary" id="saveClientBtn">Guardar cliente</button>
-          <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancelar edición</button>
-        </div>
-      </form>
-
-      <div class="section-heading" style="margin-top: 2.5rem;">
-        <h2>Listado de clientes</h2>
-        <p>Aquí puedes ver todos los clientes registrados.</p>
       </div>
 
-      <div id="clientsGrid" class="quotes-grid" style="margin-top: 1.5rem;"></div>
+      <!-- CUADRÍCULA DE CLIENTES -->
+      <div id="clientsGrid" class="quotes-grid">
+        <!-- Renderizado dinámico desde clientes-admin.js -->
+      </div>
     </div>
   </section>
 
+  <!-- MODAL DE CREACIÓN / EDICIÓN DE CLIENTE -->
+  <div class="client-modal-overlay" id="clientModalOverlay">
+    <div class="client-modal-card">
+      <div class="client-modal-header">
+        <h3 class="client-modal-title" id="clientModalTitle">Registrar Nuevo Cliente</h3>
+        <button type="button" class="client-modal-close" id="btnCloseClientModal">&times;</button>
+      </div>
+
+      <form id="clientForm">
+        <input type="hidden" id="clientId" />
+
+        <div class="form-group">
+          <label for="nombre">Nombre Completo o Razón Social *</label>
+          <input type="text" id="nombre" placeholder="Ej: Valentina Muñoz & Juan Esteban" required />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label for="telefono">Teléfono Móvil (WhatsApp) *</label>
+            <input type="tel" id="telefono" placeholder="Ej: 311 789 2233" required />
+          </div>
+
+          <div class="form-group">
+            <label for="documento">Cédula de Ciudadanía o NIT</label>
+            <input type="text" id="documento" placeholder="Ej: 1.036.945.112" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label for="email">Correo Electrónico</label>
+            <input type="email" id="email" placeholder="cliente@banquetesalmar.com" />
+          </div>
+
+          <div class="form-group">
+            <label for="tipo_cliente">Perfil / Categoría</label>
+            <select id="tipo_cliente">
+              <option value="Cliente" selected>👤 Cliente Estándar</option>
+              <option value="VIP">👑 Cliente VIP</option>
+              <option value="Empresarial">🏢 Cuenta Corporativa / Empresarial</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="direccion">Dirección y Municipio</label>
+          <input type="text" id="direccion" placeholder="Ej: Calle 30 # 29-15, Marinilla (Antioquia)" />
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+          <button type="button" class="btn btn-secondary" id="btnCancelModal">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="saveClientBtn">Guardar Cliente</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script type="module" src="../js/components/admin-navbar.js"></script>
-  <script type="module" src="../js/clientes-admin.js"></script>
+  <script type="module" src="../js/clientes-admin.js?v=20260917.1"></script>
 </body>
 </html>
