@@ -20,28 +20,28 @@
         <p>Control de silletería Tiffany, mantelería, carpas, vajilla y disponibilidad de alquiler.</p>
       </div>
 
-      <div class="gallery-admin-layout" style="display: grid; grid-template-columns: 1fr 2.4fr; gap: 2rem; margin-bottom: 2.5rem;">
+      <div class="gallery-admin-layout grid grid-cols-1 lg:grid-cols-[1fr_2.4fr] gap-8 mb-10">
         <!-- PANEL LATERAL: CATEGORÍAS -->
-        <section class="dashboard-panel" style="height: fit-content;">
+        <section class="dashboard-panel h-fit">
           <div class="dashboard-panel-head">
             <div>
               <p class="dashboard-mini-label">Organización</p>
-              <h3 style="color: #fff; font-size: 1.15rem; margin: 0;">Categorías</h3>
+              <h3 class="text-white text-lg m-0 font-medium">Categorías</h3>
             </div>
           </div>
 
-          <div style="padding: 1.4rem;">
-            <form id="categoryForm" style="margin-bottom: 1.5rem;">
-              <div class="form-group" style="margin-bottom: 0.8rem;">
-                <label for="newCategoryName" style="font-size: 0.85rem;">Nueva categoría</label>
-                <input type="text" id="newCategoryName" placeholder="Ej: Carpas Luxury, Salas Lounge" required style="width: 100%; box-sizing: border-box;" />
+          <div class="p-5">
+            <form id="categoryForm" class="mb-6">
+              <div class="form-group mb-3">
+                <label for="newCategoryName" class="text-sm">Nueva categoría</label>
+                <input type="text" id="newCategoryName" placeholder="Ej: Carpas Luxury, Salas Lounge" required class="w-full box-border" />
               </div>
-              <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.65rem;">
+              <button type="submit" class="btn btn-primary w-full justify-center py-2.5">
                 + Agregar Categoría
               </button>
             </form>
 
-            <div id="categoriesChipsList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <div id="categoriesChipsList" class="flex flex-col gap-2">
               <!-- Categorías activas -->
             </div>
           </div>
@@ -52,11 +52,11 @@
           <div class="dashboard-panel-head">
             <div>
               <p class="dashboard-mini-label">Gestión de Mobiliario</p>
-              <h3 id="formItemTitle" style="color: #fff; font-size: 1.15rem; margin: 0;">Agregar nuevo artículo</h3>
+              <h3 id="formItemTitle" class="text-white text-lg m-0 font-medium">Agregar nuevo artículo</h3>
             </div>
           </div>
 
-          <form id="inventoryForm" class="quote-form" style="padding: 1.4rem;">
+          <form id="inventoryForm" class="quote-form p-5">
             <input type="hidden" id="inventoryId" />
             <input type="hidden" id="inventoryCurrentImage" />
 
@@ -107,30 +107,30 @@
               <input type="url" id="imagenUrl" placeholder="https://ejemplo.com/foto-silla.jpg" />
             </div>
 
-            <div class="form-group full-width" id="previewWrapper" style="display: none;">
+            <div class="form-group full-width hidden" id="previewWrapper">
               <label>Vista previa de la imagen</label>
-              <div style="width: 100%; max-width: 320px; height: 180px; border-radius: 12px; overflow: hidden; border: 1px solid var(--apple-border); background: #0c0c0e;">
-                <img id="imagePreview" src="" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover;" />
+              <div class="w-full max-w-[320px] h-[180px] rounded-xl overflow-hidden border border-white/10 bg-[#0c0c0e]">
+                <img id="imagePreview" src="" alt="Vista previa" class="w-full h-full object-cover" />
               </div>
             </div>
 
             <div class="form-group full-width event-form-actions">
               <button type="submit" class="btn btn-primary" id="saveInventoryBtn">Guardar artículo</button>
-              <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display: none;">Cancelar edición</button>
+              <button type="button" class="btn btn-secondary hidden" id="cancelEditBtn">Cancelar edición</button>
             </div>
           </form>
         </section>
       </div>
 
       <!-- BARRA DE BÚSQUEDA Y FILTROS -->
-      <div style="background: #111115; border: 1px solid var(--apple-border); border-radius: 16px; padding: 1.2rem; margin-bottom: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;">
-        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; flex-grow: 1;">
-          <input type="text" id="searchInventoryInput" placeholder="🔍 Buscar por nombre o descripción..." style="min-width: 250px; flex-grow: 1; padding: 0.6rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff;" />
-          <select id="filterCategorySelect" style="padding: 0.6rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff;">
+      <div class="bg-[#111115] border border-white/10 rounded-2xl p-5 mb-8 flex flex-wrap gap-4 items-center justify-between">
+        <div class="flex gap-3 flex-wrap flex-grow">
+          <input type="text" id="searchInventoryInput" placeholder="🔍 Buscar por nombre o descripción..." class="min-w-[250px] flex-grow px-4 py-2.5 rounded-full bg-white/5 border border-white/10 text-white outline-none focus:border-amber-400" />
+          <select id="filterCategorySelect" class="px-4 py-2.5 rounded-full bg-stone-900 border border-white/10 text-white outline-none focus:border-amber-400">
             <option value="todos">Todas las categorías</option>
           </select>
         </div>
-        <p id="inventoryCounter" style="color: var(--apple-text-secondary); font-size: 0.88rem; margin: 0;">Cargando inventario...</p>
+        <p id="inventoryCounter" class="text-white/60 text-sm m-0">Cargando inventario...</p>
       </div>
 
       <!-- CUADRÍCULA DE ITEMS -->

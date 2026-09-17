@@ -34,12 +34,12 @@
 
         <div class="pipeline-metric-card">
           <span class="pipeline-metric-label">⚡ Por Contactar</span>
-          <strong id="metricNewQuotes" class="pipeline-metric-val" style="color: #f59e0b;">0</strong>
+          <strong id="metricNewQuotes" class="pipeline-metric-val text-amber-500">0</strong>
         </div>
 
         <div class="pipeline-metric-card">
           <span class="pipeline-metric-label">🏆 Convertidas a Reserva</span>
-          <strong id="metricConverted" class="pipeline-metric-val" style="color: #10b981;">0</strong>
+          <strong id="metricConverted" class="pipeline-metric-val text-emerald-500">0</strong>
         </div>
       </div>
 
@@ -69,8 +69,8 @@
           </select>
         </div>
 
-        <div style="display: flex; gap: 8px; align-self: flex-end;">
-          <button id="btnRefreshBoard" class="btn btn-secondary" style="padding: 10px 14px; font-size: 0.85rem;" title="Recargar tablero">
+        <div class="flex gap-2 self-end">
+          <button id="btnRefreshBoard" class="btn btn-secondary px-3.5 py-2.5 text-xs" title="Recargar tablero">
             🔄 Refrescar
           </button>
         </div>
@@ -82,7 +82,7 @@
         <section class="pipeline-column" data-status="nuevo">
           <div class="pipeline-column-head">
             <div class="pipeline-column-title">
-              <span class="pipeline-status-dot" style="color: #f59e0b; background: #f59e0b;"></span>
+              <span class="pipeline-status-dot bg-amber-500 text-amber-500"></span>
               <h3>Nuevos / Pendientes</h3>
             </div>
             <span id="countNuevos" class="pipeline-count">0</span>
@@ -94,7 +94,7 @@
         <section class="pipeline-column" data-status="contactado">
           <div class="pipeline-column-head">
             <div class="pipeline-column-title">
-              <span class="pipeline-status-dot" style="color: #0ea5e9; background: #0ea5e9;"></span>
+              <span class="pipeline-status-dot bg-sky-500 text-sky-500"></span>
               <h3>En Seguimiento</h3>
             </div>
             <span id="countContactados" class="pipeline-count">0</span>
@@ -106,7 +106,7 @@
         <section class="pipeline-column" data-status="convertido">
           <div class="pipeline-column-head">
             <div class="pipeline-column-title">
-              <span class="pipeline-status-dot" style="color: #10b981; background: #10b981;"></span>
+              <span class="pipeline-status-dot bg-emerald-500 text-emerald-500"></span>
               <h3>Convertidos a Reserva</h3>
             </div>
             <span id="countConvertidos" class="pipeline-count">0</span>
@@ -118,7 +118,7 @@
         <section class="pipeline-column" data-status="cancelado">
           <div class="pipeline-column-head">
             <div class="pipeline-column-title">
-              <span class="pipeline-status-dot" style="color: #64748b; background: #64748b;"></span>
+              <span class="pipeline-status-dot bg-slate-500 text-slate-500"></span>
               <h3>Cancelados</h3>
             </div>
             <span id="countCancelados" class="pipeline-count">0</span>

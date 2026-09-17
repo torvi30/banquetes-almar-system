@@ -25,7 +25,7 @@
       <a href="./reservas.html" class="btn-toolbar btn-toolbar-back" id="btnBack">
         ← Volver
       </a>
-      <div style="display: flex; align-items: center; gap: 6px; margin-left: 8px;">
+      <div class="flex items-center gap-1.5 ml-2">
         <span class="selector-label">Cargar Evento:</span>
         <select id="eventSelector" class="event-select" title="Seleccionar reserva o cotización"></select>
       </div>
@@ -35,7 +35,7 @@
       <button id="btnToggleEdit" class="btn-toolbar btn-toolbar-edit" title="Habilitar edición rápida en pantalla">
         ✏️ Modo Edición
       </button>
-      <button id="btnSaveChanges" class="btn-toolbar" style="display: none; background: #10b981; color: #fff; font-weight: 700; border: none; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);" title="Guardar los cambios en el sistema">
+      <button id="btnSaveChanges" class="btn-toolbar hidden bg-emerald-500 text-white font-bold border-0 shadow-lg shadow-emerald-500/35" title="Guardar los cambios en el sistema">
         💾 Guardar Cambios
       </button>
       <button id="btnShareWhatsapp" class="btn-toolbar btn-toolbar-whatsapp" title="Abrir Centro de Plantillas de WhatsApp">
@@ -142,7 +142,7 @@
         <span class="data-label">Aforo de Invitados:</span>
         <span class="data-val editable" id="contratoPersonas">100 personas</span>
       </div>
-      <div class="data-row" style="grid-column: span 2;">
+      <div class="data-row col-span-2">
         <span class="data-label">Sede / Locación Contratada:</span>
         <span class="data-val editable" id="contratoLocacion">Finca Campestre Almar (El Peñol, Antioquia)</span>
       </div>
@@ -155,7 +155,7 @@
     <div class="services-box">
       <div class="package-header">
         <span class="package-name" id="contratoPaqueteNombre">Paquete Todo Incluido Premium</span>
-        <span style="font-size: 0.75rem; color: var(--gold-dark); font-weight: 700;">PRODUCCIÓN INTEGRAL</span>
+        <span class="text-xs text-amber-600 font-bold">PRODUCCIÓN INTEGRAL</span>
       </div>
       <ul class="services-list" id="contratoServiciosLista">
         <li>Adecuación y alquiler exclusivo de la sede según horario acordado.</li>
@@ -229,7 +229,7 @@
       </div>
 
       <div class="signature-block">
-        <span class="sign-stamp-badge" style="color: #475569; border-color: #cbd5e1;">ACEPTACIÓN DEL CLIENTE</span>
+        <span class="sign-stamp-badge text-slate-600 border-slate-300">ACEPTACIÓN DEL CLIENTE</span>
         <div class="signature-line"></div>
         <div class="sign-name" id="signClienteNombre">VALENTINA MUÑOZ</div>
         <div class="sign-role">El Contratante</div>
@@ -248,7 +248,7 @@
           <div>Folio de seguridad: <span id="folioHashText">ALM-SEC-89412</span> • Válido para trámites legales y de reserva.</div>
         </div>
       </div>
-      <div style="text-align: right;">
+      <div class="text-right">
         <div>Página 1 de 1</div>
         <div>www.banquetesalmar.com</div>
       </div>
@@ -521,7 +521,10 @@
           sheet.classList.add("is-editing");
           btnToggleEdit.classList.add("active");
           btnToggleEdit.innerHTML = "💾 Finalizar Edición";
-          if (btnSaveChanges) btnSaveChanges.style.display = "inline-flex";
+          if (btnSaveChanges) {
+            btnSaveChanges.classList.remove("hidden");
+            btnSaveChanges.style.display = "inline-flex";
+          }
           document.querySelectorAll(".editable").forEach(el => {
             el.setAttribute("contenteditable", "true");
           });
@@ -529,7 +532,10 @@
           sheet.classList.remove("is-editing");
           btnToggleEdit.classList.remove("active");
           btnToggleEdit.innerHTML = "✏️ Modo Edición";
-          if (btnSaveChanges) btnSaveChanges.style.display = "none";
+          if (btnSaveChanges) {
+            btnSaveChanges.classList.add("hidden");
+            btnSaveChanges.style.display = "none";
+          }
           document.querySelectorAll(".editable").forEach(el => {
             el.removeAttribute("contenteditable");
           });

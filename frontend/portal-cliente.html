@@ -31,13 +31,13 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="./js/alerts-luxury.js?v=20260909.5"></script>
 </head>
-<body style="background: var(--apple-canvas); min-height: 100vh;">
+<body class="bg-zinc-950 min-h-screen text-zinc-100 font-sans">
 
   <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
-  <header class="header" style="position: sticky; top: 0; z-index: 100; backdrop-filter: var(--apple-blur); background: rgba(9, 9, 11, 0.85); border-bottom: 1px solid var(--apple-border);">
+  <header class="header sticky top-0 z-50 backdrop-blur-xl bg-zinc-950/85 border-b border-zinc-800/80">
     <nav class="navbar container">
       <a href="./index.html" class="brand">
-        <img src="./images/logo-almar.png" alt="Logo Banquetes Almar" class="brand-logo" onerror="this.style.display='none'" />
+        <img src="./images/logo-almar.png" alt="Logo Banquetes Almar" class="brand-logo" onerror="this.classList.add('hidden')" />
         <div class="brand-text">
           <span class="logo-main">Banquetes Almar</span>
           <span class="logo-sub">Portal del Anfitrión VIP</span>
@@ -46,7 +46,7 @@
 
       <ul class="nav-links">
         <li><a href="./index.html">← Volver al Sitio</a></li>
-        <li><a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20tengo%20una%20consulta%20sobre%20mi%20evento" target="_blank" class="btn-apple-secondary" style="padding: 0.45rem 1rem; font-size: 0.85rem;">💬 Asesor WhatsApp</a></li>
+        <li><a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20tengo%20una%20consulta%20sobre%20mi%20evento" target="_blank" class="btn-apple-secondary py-2 px-4 text-xs font-medium">💬 Asesor WhatsApp</a></li>
       </ul>
     </nav>
   </header>
@@ -57,61 +57,61 @@
     <div class="portal-card" id="lookupCard">
       <div class="portal-header">
         <span class="section-label">Acceso Exclusivo para Anfitriones</span>
-        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-top: 0.4rem; color: #fff;">
+        <h1 class="font-serif text-3xl sm:text-4xl text-white font-bold mt-2">
           Mi Celebración Banquetes Almar
         </h1>
-        <p style="color: var(--apple-text-secondary); max-width: 600px; margin: 0.8rem auto 0;">
+        <p class="text-zinc-400 max-w-xl mx-auto mt-3 text-sm sm:text-base leading-relaxed">
           Ingresa tu número de celular o código de reserva para ver la cuenta regresiva, tus abonos registrados y tu contrato oficial.
         </p>
       </div>
 
-      <form id="portalLookupForm" style="display: flex; gap: 0.8rem; max-width: 500px; margin: 0 auto; flex-wrap: wrap;">
+      <form id="portalLookupForm" class="flex gap-3 max-w-lg mx-auto flex-wrap mt-6">
         <input 
           type="text" 
           id="lookupQuery" 
           placeholder="Ingresa tu celular (ej: 311 789 2233) o código ALM-..." 
           required 
-          style="flex: 1; min-width: 240px; padding: 0.9rem 1.2rem; background: #151518; border: 1px solid var(--apple-border); border-radius: var(--apple-radius-pill); color: #fff; font-size: 0.95rem;" 
+          class="flex-1 min-w-[240px] px-5 py-3.5 bg-zinc-900 border border-zinc-700/80 rounded-full text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400 text-sm" 
         />
-        <button type="submit" class="btn-apple-primary" style="padding: 0.9rem 1.8rem;">
+        <button type="submit" class="btn-apple-primary px-7 py-3.5 text-sm font-semibold rounded-full">
           Consultar
         </button>
       </form>
 
       <!-- MENSAJE DE NO ENCONTRADO -->
-      <div id="eventNotFound" style="display: none; text-align: center; padding: 2.2rem 1.5rem; background: rgba(22,22,26,0.9); border: 1px dashed rgba(212,175,55,0.3); border-radius: 18px; margin-top: 1.5rem;">
-        <span style="font-size: 2.5rem; display: block; margin-bottom: 0.6rem;">🔍</span>
-        <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.4rem;">No encontramos una reserva con esos datos</h3>
-        <p style="color: var(--apple-text-secondary); max-width: 480px; margin: 0 auto 1.2rem; font-size: 0.88rem;">
+      <div id="eventNotFound" class="hidden text-center p-8 bg-zinc-900/90 border border-dashed border-amber-500/30 rounded-2xl mt-6">
+        <span class="text-4xl block mb-2">🔍</span>
+        <h3 class="text-white text-lg font-bold mb-1">No encontramos una reserva con esos datos</h3>
+        <p class="text-zinc-400 max-w-md mx-auto mb-5 text-sm">
           Verifica que el número de celular o código coincida con el registrado en tu contrato, o comunícate directamente con nuestro equipo de coordinación.
         </p>
-        <a href="https://wa.me/573104458892?text=Hola%20Banquetes%20Almar,%20necesito%20apoyo%20para%20consultar%20mi%20evento%20en%20el%20portal" target="_blank" class="btn-apple-primary" style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.88rem;">
+        <a href="https://wa.me/573104458892?text=Hola%20Banquetes%20Almar,%20necesito%20apoyo%20para%20consultar%20mi%20evento%20en%20el%20portal" target="_blank" class="btn-apple-primary inline-flex items-center gap-2 text-sm px-6 py-2.5">
           💬 Contactar a mi Asesor
         </a>
       </div>
     </div>
 
     <!-- VISTA PRINCIPAL DEL CLIENTE (SE MUESTRA TRAS CONSULTAR) -->
-    <div id="eventDetailsSection" style="display: none;">
+    <div id="eventDetailsSection" class="hidden">
       
       <!-- HERO DE LA RESERVA & CUENTA REGRESIVA -->
       <div class="portal-card">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+        <div class="flex justify-between items-start flex-wrap gap-4">
           <div>
-            <span class="tile-badge" id="clientStatusBadge" style="position: static; display: inline-block; margin-bottom: 0.8rem;">
+            <span class="tile-badge static inline-block mb-3" id="clientStatusBadge">
               Reserva Confirmada
             </span>
-            <h2 id="clientEventTitle" style="font-family: 'Playfair Display', serif; font-size: 2rem; color: #fff;">
+            <h2 id="clientEventTitle" class="font-serif text-2xl sm:text-3xl font-bold text-white">
               Boda Imperial • Valentina & Juan Esteban
             </h2>
-            <p id="clientVenueText" style="color: var(--apple-gold-light); font-size: 1rem; margin-top: 0.3rem;">
+            <p id="clientVenueText" class="text-amber-300 text-sm sm:text-base mt-1">
               📍 Finca Campestre Almar (El Peñol, Antioquia)
             </p>
           </div>
 
-          <div style="text-align: right;">
-            <span style="font-size: 0.85rem; color: var(--apple-text-secondary);">Código de Evento:</span>
-            <div id="clientCodeDisplay" style="font-family: monospace; font-size: 1.2rem; font-weight: 700; color: var(--apple-gold-light);">
+          <div class="text-right">
+            <span class="text-xs text-zinc-400 block">Código de Evento:</span>
+            <div id="clientCodeDisplay" class="font-mono text-lg font-bold text-amber-300">
               ALM-RES201
             </div>
           </div>
@@ -137,69 +137,69 @@
           </div>
         </div>
 
-        <div style="background: rgba(212, 175, 55, 0.08); border: 1px dashed var(--apple-gold); padding: 1rem 1.4rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;">
+        <div class="bg-amber-500/10 border border-dashed border-amber-500/40 p-4 rounded-xl flex justify-between items-center flex-wrap gap-3 mt-6">
           <div>
-            <strong style="color: #fff; font-size: 0.95rem;">📅 Fecha de la Celebración:</strong>
-            <span id="clientEventDate" style="color: var(--apple-gold-light); font-weight: 600; margin-left: 0.5rem;">Sábado, 05 de Diciembre de 2026</span>
+            <strong class="text-white text-sm font-semibold">📅 Fecha de la Celebración:</strong>
+            <span id="clientEventDate" class="text-amber-300 font-semibold ml-2">Sábado, 05 de Diciembre de 2026</span>
           </div>
           <div>
-            <strong style="color: #fff; font-size: 0.95rem;">👥 Invitados:</strong>
-            <span id="clientGuestsCount" style="color: var(--apple-gold-light); font-weight: 600; margin-left: 0.5rem;">100 personas</span>
+            <strong class="text-white text-sm font-semibold">👥 Invitados:</strong>
+            <span id="clientGuestsCount" class="text-amber-300 font-semibold ml-2">100 personas</span>
           </div>
         </div>
       </div>
 
       <!-- ESTADO FINANCIERO Y ABONOS -->
       <div class="portal-card">
-        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #fff; margin-bottom: 0.5rem;">
+        <h3 class="font-serif text-xl font-bold text-white mb-2">
           Estado Financiero y Pagos
         </h3>
-        <p style="font-size: 0.85rem; color: var(--apple-text-secondary); margin-bottom: 1.5rem;">
+        <p class="text-xs text-zinc-400 mb-6">
           Control transparente de inversión, anticipo y saldo de tu evento.
         </p>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--apple-border); border-radius: 12px; padding: 1.2rem;">
-            <span style="font-size: 0.8rem; color: var(--apple-text-secondary); text-transform: uppercase;">Inversión Total</span>
-            <div id="totalInversionDisplay" style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-top: 0.3rem;">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div class="bg-white/5 border border-zinc-800 rounded-xl p-5">
+            <span class="text-xs text-zinc-400 uppercase tracking-wider block">Inversión Total</span>
+            <div id="totalInversionDisplay" class="text-2xl font-extrabold text-white mt-1">
               $11.800.000
             </div>
           </div>
 
-          <div style="background: rgba(39, 174, 96, 0.08); border: 1px solid rgba(39, 174, 96, 0.3); border-radius: 12px; padding: 1.2rem;">
-            <span style="font-size: 0.8rem; color: #a8d5ba; text-transform: uppercase;">Abonado a la Fecha</span>
-            <div id="totalAbonadoDisplay" style="font-size: 1.5rem; font-weight: 800; color: #2ecc71; margin-top: 0.3rem;">
+          <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-5">
+            <span class="text-xs text-emerald-300 uppercase tracking-wider block">Abonado a la Fecha</span>
+            <div id="totalAbonadoDisplay" class="text-2xl font-extrabold text-emerald-400 mt-1">
               $4.000.000
             </div>
           </div>
 
-          <div style="background: rgba(231, 76, 60, 0.08); border: 1px solid rgba(231, 76, 60, 0.3); border-radius: 12px; padding: 1.2rem;">
-            <span style="font-size: 0.8rem; color: #e74c3c; text-transform: uppercase;">Saldo Pendiente</span>
-            <div id="saldoPendienteDisplay" style="font-size: 1.5rem; font-weight: 800; color: #e74c3c; margin-top: 0.3rem;">
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-xl p-5">
+            <span class="text-xs text-rose-400 uppercase tracking-wider block">Saldo Pendiente</span>
+            <div id="saldoPendienteDisplay" class="text-2xl font-extrabold text-rose-400 mt-1">
               $7.800.000
             </div>
           </div>
         </div>
 
         <!-- BARRA DE PROGRESO DE PAGO -->
-        <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--apple-text-secondary);">
+        <div class="flex justify-between text-xs text-zinc-400 mb-1">
           <span>Progreso de Pago</span>
           <span id="paymentPercentageText">34% Completado</span>
         </div>
         <div class="progress-bar-wrap">
-          <div class="progress-bar-fill" id="paymentProgressBar" style="width: 34%;"></div>
+          <div class="progress-bar-fill" id="paymentProgressBar"></div>
         </div>
 
         <!-- TABLA DE HISTORIAL DE PAGOS -->
-        <h4 style="font-size: 0.95rem; color: #fff; margin-top: 2rem;">Historial de Pagos Registrados:</h4>
-        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+        <h4 class="text-sm font-semibold text-white mt-8 mb-3">Historial de Pagos Registrados:</h4>
+        <div class="overflow-x-auto w-full">
           <table class="payment-history-table">
             <thead>
               <tr>
                 <th>Fecha</th>
                 <th>Concepto</th>
                 <th>Método</th>
-                <th style="text-align: right;">Valor</th>
+                <th class="text-right">Valor</th>
               </tr>
             </thead>
             <tbody id="paymentHistoryBody">
@@ -207,7 +207,7 @@
                 <td>01/09/2026</td>
                 <td>Anticipo de separación de fecha</td>
                 <td>Transferencia Bancolombia</td>
-                <td style="text-align: right; color: #2ecc71; font-weight: 700;">+$4.000.000</td>
+                <td class="text-right text-emerald-400 font-bold">+$4.000.000</td>
               </tr>
             </tbody>
           </table>
@@ -215,21 +215,21 @@
       </div>
 
       <!-- ACCIONES LEGALES Y DESCARGAS -->
-      <div class="portal-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; background: linear-gradient(135deg, rgba(35,30,18,0.7) 0%, rgba(18,18,22,0.95) 100%);">
+      <div class="portal-card flex justify-between items-center flex-wrap gap-6 bg-gradient-to-r from-zinc-900/80 via-zinc-950 to-amber-950/20 border border-amber-500/30">
         <div>
-          <h3 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff;">
+          <h3 class="font-serif text-xl font-bold text-white">
             Contrato y Documentación Legal
           </h3>
-          <p style="font-size: 0.85rem; color: var(--apple-text-secondary); margin-top: 0.2rem;">
+          <p class="text-xs text-zinc-400 mt-1">
             Descarga tu contrato formal vigente con el respaldo de Banquetes Almar.
           </p>
         </div>
 
-        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+        <div class="flex gap-3 flex-wrap">
           <a href="./admin/contrato.html?id=res-201" id="btnDownloadContract" target="_blank" class="btn-apple-primary">
             📄 Descargar Contrato Oficial (PDF)
           </a>
-          <button type="button" id="btnOpenPaymentModal" class="btn-apple-secondary" style="cursor: pointer;">
+          <button type="button" id="btnOpenPaymentModal" class="btn-apple-secondary cursor-pointer">
             💳 Realizar o Reportar Abono
           </button>
         </div>
@@ -237,64 +237,64 @@
 
       <!-- MODAL DE MEDIOS DE PAGO Y REPORTAR ABONO -->
       <div id="paymentModal" class="apple-modal-overlay">
-        <div class="apple-modal-content" style="max-width: 650px;">
+        <div class="apple-modal-content max-w-2xl">
           <button class="apple-modal-close" id="btnClosePaymentModal">&times;</button>
           
-          <div style="text-align: center; margin-bottom: 1.5rem;">
-            <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--apple-gold-light); font-weight: 700;">Canales Financieros Oficiales</span>
-            <h2 style="font-family: 'Playfair Display', serif; color: #fff; font-size: 1.8rem; margin-top: 0.3rem;">
+          <div class="text-center mb-6">
+            <span class="text-[11px] uppercase tracking-wider text-amber-300 font-bold">Canales Financieros Oficiales</span>
+            <h2 class="font-serif text-white text-2xl font-bold mt-1">
               Medios de Pago y Abonos
             </h2>
-            <p style="font-size: 0.85rem; color: var(--apple-text-secondary); max-width: 460px; margin: 0.5rem auto 0;">
+            <p class="text-xs text-zinc-400 max-w-md mx-auto mt-2">
               Realiza transferencias seguras directas a las cuentas oficiales de Banquetes Almar en Marinilla.
             </p>
           </div>
 
           <!-- TARJETAS DE MÉTODOS DE PAGO -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <!-- BANCOLOMBIA -->
-            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--apple-border); border-radius: 12px; padding: 1.2rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <strong style="color: #fff; font-size: 0.95rem;">🟡 Bancolombia</strong>
-                <span style="font-size: 0.75rem; color: var(--apple-gold-light); background: rgba(212,175,55,0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">Ahorros</span>
+            <div class="bg-white/5 border border-zinc-800 rounded-xl p-5">
+              <div class="flex justify-between items-center mb-2">
+                <strong class="text-white text-sm font-semibold">🟡 Bancolombia</strong>
+                <span class="text-[11px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Ahorros</span>
               </div>
-              <p style="font-size: 0.8rem; color: var(--apple-text-secondary); margin-bottom: 0.3rem;">Cuenta de Ahorros Oficial:</p>
-              <div style="display: flex; justify-content: space-between; align-items: center; background: #121214; padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                <span style="font-family: monospace; font-size: 1rem; color: #fff; font-weight: 700;" id="bancolombiaAcc">108-923847-12</span>
-                <button type="button" class="btn-copy" onclick="navigator.clipboard.writeText('10892384712'); this.textContent='¡Copiado!'; setTimeout(()=>this.textContent='Copiar', 2000);" style="background: transparent; border: none; color: var(--apple-gold-light); font-size: 0.75rem; cursor: pointer; text-decoration: underline;">Copiar</button>
+              <p class="text-xs text-zinc-400 mb-1">Cuenta de Ahorros Oficial:</p>
+              <div class="flex justify-between items-center bg-zinc-950 px-3 py-2 rounded-lg border border-white/5">
+                <span class="font-mono text-sm text-white font-bold" id="bancolombiaAcc">108-923847-12</span>
+                <button type="button" class="btn-copy text-xs text-amber-300 underline cursor-pointer hover:text-amber-200" onclick="navigator.clipboard.writeText('10892384712'); this.textContent='¡Copiado!'; setTimeout(()=>this.textContent='Copiar', 2000);">Copiar</button>
               </div>
-              <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-top: 0.5rem;">Titular: Banquetes Almar S.A.S. • NIT: 901.458.231-8</p>
+              <p class="text-[11px] text-zinc-500 mt-2">Titular: Banquetes Almar S.A.S. • NIT: 901.458.231-8</p>
             </div>
 
             <!-- NEQUI / DAVIPLATA -->
-            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--apple-border); border-radius: 12px; padding: 1.2rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <strong style="color: #fff; font-size: 0.95rem;">🟣 Nequi / Daviplata / Bre-B</strong>
-                <span style="font-size: 0.75rem; color: #a855f7; background: rgba(168,85,247,0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">Digital</span>
+            <div class="bg-white/5 border border-zinc-800 rounded-xl p-5">
+              <div class="flex justify-between items-center mb-2">
+                <strong class="text-white text-sm font-semibold">🟣 Nequi / Daviplata / Bre-B</strong>
+                <span class="text-[11px] text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">Digital</span>
               </div>
-              <p style="font-size: 0.8rem; color: var(--apple-text-secondary); margin-bottom: 0.3rem;">Línea Corporativa Oficial:</p>
-              <div style="display: flex; justify-content: space-between; align-items: center; background: #121214; padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                <span style="font-family: monospace; font-size: 1rem; color: #fff; font-weight: 700;" id="nequiAcc">310 445 8892</span>
-                <button type="button" class="btn-copy" onclick="navigator.clipboard.writeText('3104458892'); this.textContent='¡Copiado!'; setTimeout(()=>this.textContent='Copiar', 2000);" style="background: transparent; border: none; color: var(--apple-gold-light); font-size: 0.75rem; cursor: pointer; text-decoration: underline;">Copiar</button>
+              <p class="text-xs text-zinc-400 mb-1">Línea Corporativa Oficial:</p>
+              <div class="flex justify-between items-center bg-zinc-950 px-3 py-2 rounded-lg border border-white/5">
+                <span class="font-mono text-sm text-white font-bold" id="nequiAcc">310 445 8892</span>
+                <button type="button" class="btn-copy text-xs text-amber-300 underline cursor-pointer hover:text-amber-200" onclick="navigator.clipboard.writeText('3104458892'); this.textContent='¡Copiado!'; setTimeout(()=>this.textContent='Copiar', 2000);">Copiar</button>
               </div>
-              <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-top: 0.5rem;">Acepta transferencias directas por Bre-B, Transfiya y Nequi</p>
+              <p class="text-[11px] text-zinc-500 mt-2">Acepta transferencias directas por Bre-B, Transfiya y Nequi</p>
             </div>
           </div>
 
           <!-- FORMULARIO REPORTAR ABONO -->
-          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--apple-border); border-radius: 12px; padding: 1.5rem;">
-            <h4 style="font-size: 0.95rem; color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+          <div class="bg-white/5 border border-zinc-800 rounded-xl p-6">
+            <h4 class="text-sm font-semibold text-white mb-4 flex items-center gap-2">
               <span>📝</span> Reportar Abono o Comprobante Realizado
             </h4>
-            <form id="reportPaymentForm" style="display: flex; flex-direction: column; gap: 0.8rem;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+            <form id="reportPaymentForm" class="flex flex-col gap-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label style="display: block; font-size: 0.78rem; color: #ccc; margin-bottom: 0.3rem;">Monto Abonado (COP) *</label>
-                  <input type="number" id="abonoMonto" required placeholder="Ej: 2000000" min="10000" step="50000" style="width: 100%; padding: 0.75rem 1rem; background: #121214; border: 1px solid var(--apple-border); border-radius: 8px; color: #fff; font-size: 0.9rem;" />
+                  <label class="block text-xs font-semibold text-zinc-300 mb-1">Monto Abonado (COP) *</label>
+                  <input type="number" id="abonoMonto" required placeholder="Ej: 2000000" min="10000" step="50000" class="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-700/80 rounded-lg text-white text-sm focus:outline-none focus:border-amber-400" />
                 </div>
                 <div>
-                  <label style="display: block; font-size: 0.78rem; color: #ccc; margin-bottom: 0.3rem;">Canal Utilizado *</label>
-                  <select id="abonoMetodo" style="width: 100%; padding: 0.75rem 1rem; background: #121214; border: 1px solid var(--apple-border); border-radius: 8px; color: #fff; font-size: 0.9rem;">
+                  <label class="block text-xs font-semibold text-zinc-300 mb-1">Canal Utilizado *</label>
+                  <select id="abonoMetodo" class="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-700/80 rounded-lg text-white text-sm focus:outline-none focus:border-amber-400">
                     <option value="Transferencia Bancolombia">Transferencia Bancolombia</option>
                     <option value="Nequi">Nequi</option>
                     <option value="Daviplata">Daviplata</option>
@@ -304,11 +304,11 @@
               </div>
 
               <div>
-                <label style="display: block; font-size: 0.78rem; color: #ccc; margin-bottom: 0.3rem;">Número de Comprobante / Aprobación (Opcional)</label>
-                <input type="text" id="abonoReferencia" placeholder="Ej: Comprobante #1048293 o últimos 4 dígitos" style="width: 100%; padding: 0.75rem 1rem; background: #121214; border: 1px solid var(--apple-border); border-radius: 8px; color: #fff; font-size: 0.9rem;" />
+                <label class="block text-xs font-semibold text-zinc-300 mb-1">Número de Comprobante / Aprobación (Opcional)</label>
+                <input type="text" id="abonoReferencia" placeholder="Ej: Comprobante #1048293 o últimos 4 dígitos" class="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-700/80 rounded-lg text-white text-sm focus:outline-none focus:border-amber-400" />
               </div>
 
-              <button type="submit" class="btn-apple-primary" style="margin-top: 0.5rem; padding: 0.9rem; justify-content: center;">
+              <button type="submit" class="btn-apple-primary w-full justify-center py-3 text-sm font-semibold mt-2">
                 📲 Registrar y Enviar Soporte por WhatsApp
               </button>
             </form>
@@ -439,13 +439,13 @@
             <td>${p.fecha || new Date().toISOString().slice(0, 10)}</td>
             <td>${p.concepto || p.nota || "Abono"}</td>
             <td>${p.metodo || "Transferencia"}</td>
-            <td style="text-align: right; color: #2ecc71; font-weight: 700;">+$${Number(p.monto || 0).toLocaleString("es-CO")}</td>
+            <td class="text-right text-emerald-400 font-bold">+$${Number(p.monto || 0).toLocaleString("es-CO")}</td>
           </tr>
         `).join("");
       } else {
         paymentHistoryBody.innerHTML = `
           <tr>
-            <td colspan="4" style="text-align: center; color: var(--apple-text-secondary); padding: 1.5rem;">
+            <td colspan="4" class="text-center text-zinc-400 p-6">
               No se registran abonos en el sistema aún para esta reserva.
             </td>
           </tr>
@@ -522,7 +522,7 @@
           Swal.fire({
             icon: "success",
             title: "¡Abono Registrado!",
-            html: `<p style="color: #cbd5e1;">Tu reporte de abono por <strong>$${monto.toLocaleString("es-CO")} COP</strong> ha sido registrado.</p><p style="color: #94a3b8; font-size: 0.88rem; margin-top: 0.4rem;">Enseguida se abrirá WhatsApp para que adjuntes la captura de tu comprobante.</p>`,
+            html: `<p class="text-slate-300">Tu reporte de abono por <strong>$${monto.toLocaleString("es-CO")} COP</strong> ha sido registrado.</p><p class="text-slate-400 text-sm mt-1">Enseguida se abrirá WhatsApp para que adjuntes la captura de tu comprobante.</p>`,
             confirmButtonText: "Entendido"
           });
         }

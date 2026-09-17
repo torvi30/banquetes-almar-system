@@ -66,9 +66,9 @@
             <input type="hidden" id="galleryId" />
 
             <div class="form-group full-width">
-              <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label class="flex justify-between items-center mb-1.5">
                 <span>Categoría del evento</span>
-                <span style="font-size: 0.8rem; color: var(--gold-light);">Toca una opción</span>
+                <span class="text-xs text-amber-300">Toca una opción</span>
               </label>
               <input type="hidden" id="categoriaId" value="Bodas" />
               <div class="category-pills-container" id="categoryPills">
@@ -95,7 +95,7 @@
             <div class="form-group">
               <label>Subir fotografía propia (opcional)</label>
               <div class="upload-dropzone" id="dropzoneBox" title="Haz clic para seleccionar un archivo">
-                <input type="file" id="galleryImage" accept="image/*" style="display: none;" />
+                <input type="file" id="galleryImage" accept="image/*" class="hidden" />
                 <div class="dropzone-content">
                   <div class="dropzone-icon">
                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -106,21 +106,21 @@
                   </div>
                   <p class="dropzone-title">Haz clic o arrastra tu foto aquí</p>
                   <p class="dropzone-subtitle">JPG, PNG o WEBP (opcional)</p>
-                  <div id="dropzonePill" class="dropzone-file-pill" style="display: none;"></div>
+                  <div id="dropzonePill" class="dropzone-file-pill hidden"></div>
                 </div>
               </div>
             </div>
 
             <div class="form-group">
-              <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label class="flex justify-between items-center mb-1.5">
                 <span>Vista previa y encuadre en vivo</span>
-                <span style="font-size: 0.78rem; color: var(--gold-light);">Arrastra para encuadrar • Rueda zoom</span>
+                <span class="text-xs text-amber-300">Arrastra para encuadrar • Rueda zoom</span>
               </label>
               <div class="framing-studio-wrap">
                 <div class="framing-viewport" id="uploadFramingViewport" title="Haz clic y arrastra para mover y encuadrar la imagen">
                   <img id="imagePreview" class="framing-img" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80" alt="Vista previa" />
                   <span class="framing-hint">👆 Arrastra para mover • Rueda para zoom</span>
-                  <span id="previewBadge" class="preview-badge" style="display:block; z-index: 10;">✨ Imagen por defecto para "Bodas"</span>
+                  <span id="previewBadge" class="preview-badge block z-10">✨ Imagen por defecto para "Bodas"</span>
                 </div>
 
                 <div class="framing-controls-bar">
@@ -139,7 +139,7 @@
 
             <div class="form-group full-width gallery-admin-actions">
               <button type="submit" class="btn btn-primary" id="saveGalleryBtn">Guardar imagen</button>
-              <button type="button" class="btn btn-secondary" id="cancelGalleryEditBtn" style="display:none;">Cancelar edición</button>
+              <button type="button" class="btn btn-secondary hidden" id="cancelGalleryEditBtn">Cancelar edición</button>
             </div>
           </form>
         </section>
@@ -147,7 +147,7 @@
 
       <div class="gallery-toolbar-pro">
         <div>
-          <label style="font-size: 0.85rem; color: var(--text-soft); display: block; margin-bottom: 8px;">Filtrar por categoría:</label>
+          <label class="text-sm text-white/60 block mb-2">Filtrar por categoría:</label>
           <div class="gallery-filters-row" id="galleryFilterChips">
             <button type="button" class="gallery-filter-chip active" data-cat="">Todas</button>
             <button type="button" class="gallery-filter-chip" data-cat="Bodas">💍 Bodas</button>
@@ -171,31 +171,31 @@
   </section>
 
   <!-- Modal de Edición Directa y Reacomodación de Galería -->
-  <div id="editGalleryModal" class="modal-edit" style="display: none;">
+  <div id="editGalleryModal" class="modal-edit hidden">
     <div class="modal-content gallery-edit-modal-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 12px; margin-bottom: 14px;">
-        <h3 style="margin: 0; color: #fff; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
+      <div class="flex justify-between items-center border-b border-amber-400/20 pb-3 mb-3.5">
+        <h3 class="m-0 text-white text-lg font-medium flex items-center gap-2">
           <span>✏️</span> Editar Fotografía
         </h3>
-        <button type="button" id="closeEditModalBtn" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; font-size: 1.2rem; cursor: pointer; line-height: 1; padding: 4px 10px; border-radius: 8px; transition: all 0.2s ease;" title="Cerrar ventana">✕</button>
+        <button type="button" id="closeEditModalBtn" class="bg-white/10 border border-white/15 text-white text-lg cursor-pointer leading-none px-2.5 py-1 rounded-lg hover:bg-white/20 transition-all" title="Cerrar ventana">✕</button>
       </div>
 
-      <form id="editModalForm" style="display: grid; gap: 14px;">
+      <form id="editModalForm" class="grid gap-3.5">
         <input type="hidden" id="modalItemId" />
 
         <div class="modal-grid-2col">
           <div>
-            <label style="color: var(--gold-light); font-size: 0.84rem; font-weight: 500; display: block; margin-bottom: 6px;">
+            <label class="text-amber-300 text-sm font-medium block mb-1.5">
               Encuadre y Zoom en vivo
             </label>
             <div class="framing-studio-wrap">
-              <div class="framing-viewport" id="modalFramingViewport" style="min-height: 155px; aspect-ratio: 4 / 3;" title="Haz clic y arrastra para mover y encuadrar la imagen">
+              <div class="framing-viewport min-h-[155px] aspect-[4/3]" id="modalFramingViewport" title="Haz clic y arrastra para mover y encuadrar la imagen">
                 <img id="modalImagePreview" class="framing-img" src="" alt="Vista previa" />
                 <span class="framing-hint">👆 Arrastra • Rueda zoom</span>
-                <span id="modalPreviewBadge" class="preview-badge" style="display: block; font-size: 0.68rem; z-index: 10;">Foto actual</span>
+                <span id="modalPreviewBadge" class="preview-badge block text-[0.68rem] z-10">Foto actual</span>
               </div>
 
-              <div class="framing-controls-bar" style="padding: 4px 8px;">
+              <div class="framing-controls-bar py-1 px-2">
                 <div class="framing-zoom-group">
                   <button type="button" class="framing-btn" id="modalZoomOutBtn" title="Alejar / Mermar zoom">🔍 −</button>
                   <input type="range" class="framing-zoom-slider" id="modalZoomSlider" min="0.2" max="3.0" step="0.01" value="1" title="Nivel de Zoom" />
@@ -210,31 +210,31 @@
           </div>
 
           <div>
-            <label style="color: var(--gold-light); font-size: 0.84rem; font-weight: 500; display: block; margin-bottom: 6px;">
+            <label class="text-amber-300 text-sm font-medium block mb-1.5">
               Cambiar fotografía (opcional)
             </label>
-            <div class="upload-dropzone" id="modalDropzoneBox" style="min-height: 185px; padding: 1rem; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;" title="Haz clic para seleccionar nueva foto">
-              <input type="file" id="modalImageInput" accept="image/*" style="display: none;" />
-              <div class="dropzone-content" style="text-align: center;">
-                <div class="dropzone-icon" style="margin-bottom: 6px;">
+            <div class="upload-dropzone min-h-[185px] p-4 flex flex-col justify-center items-center cursor-pointer" id="modalDropzoneBox" title="Haz clic para seleccionar nueva foto">
+              <input type="file" id="modalImageInput" accept="image/*" class="hidden" />
+              <div class="dropzone-content text-center">
+                <div class="dropzone-icon mb-1.5">
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="17 8 12 3 7 8"></polyline>
                     <line x1="12" y1="3" x2="12" y2="15"></line>
                   </svg>
                 </div>
-                <p class="dropzone-title" style="font-size: 0.85rem; margin: 0 0 3px 0;">Haz clic o arrastra nueva foto</p>
-                <p class="dropzone-subtitle" style="font-size: 0.74rem; margin: 0;">JPG, PNG o WEBP</p>
-                <div id="modalDropzonePill" class="dropzone-file-pill" style="display: none; font-size: 0.76rem; margin-top: 8px;"></div>
+                <p class="dropzone-title text-sm m-0 mb-1">Haz clic o arrastra nueva foto</p>
+                <p class="dropzone-subtitle text-xs m-0">JPG, PNG o WEBP</p>
+                <div id="modalDropzonePill" class="dropzone-file-pill hidden text-xs mt-2"></div>
               </div>
             </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <span style="color: var(--gold-light); font-size: 0.88rem; font-weight: 500;">Categoría</span>
-            <span style="font-size: 0.78rem; color: var(--text-soft);">Toca para seleccionar</span>
+          <label class="flex justify-between items-center mb-1.5">
+            <span class="text-amber-300 text-sm font-medium">Categoría</span>
+            <span class="text-xs text-white/60">Toca para seleccionar</span>
           </label>
           <input type="hidden" id="modalCategoria" value="Bodas" />
           <div class="category-pills-container" id="modalCategoryPills"></div>
@@ -252,11 +252,11 @@
 
         <!-- Reacomodar posición con Vista Previa Visual en Vivo -->
         <div class="modal-reorder-section">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <label style="color: var(--gold-light); font-size: 0.88rem; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 6px;">
+          <div class="flex justify-between items-center mb-2">
+            <label class="text-amber-300 text-sm font-semibold m-0 flex items-center gap-1.5">
               <span>⇄</span> Vista previa del orden en la galería
             </label>
-            <span style="font-size: 0.76rem; color: var(--text-soft);">Toca una foto o botón para reubicar</span>
+            <span class="text-xs text-white/60">Toca una foto o botón para reubicar</span>
           </div>
 
           <!-- Tira interactiva de miniaturas (Filmstrip visual) -->
@@ -266,20 +266,20 @@
           <div class="modal-order-feedback" id="modalOrderFeedback"></div>
 
           <!-- Barra de controles y botones de acción rápida -->
-          <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 10px;">
-            <button type="button" id="modalMoveFirstBtn" class="btn btn-secondary btn-sm" style="font-size: 0.78rem; padding: 5px 10px;" title="Poner al inicio">⏮ Al inicio</button>
-            <button type="button" id="modalMovePrevBtn" class="btn btn-secondary btn-sm" style="font-size: 0.78rem; padding: 5px 10px;" title="Mover una posición antes">◀ 1 antes</button>
-            <button type="button" id="modalMoveNextBtn" class="btn btn-secondary btn-sm" style="font-size: 0.78rem; padding: 5px 10px;" title="Mover una posición después">1 después ▶</button>
-            <button type="button" id="modalMoveLastBtn" class="btn btn-secondary btn-sm" style="font-size: 0.78rem; padding: 5px 10px;" title="Poner al final">⏭ Al final</button>
+          <div class="flex gap-1.5 items-center flex-wrap mt-2.5">
+            <button type="button" id="modalMoveFirstBtn" class="btn btn-secondary btn-sm text-xs px-2.5 py-1" title="Poner al inicio">⏮ Al inicio</button>
+            <button type="button" id="modalMovePrevBtn" class="btn btn-secondary btn-sm text-xs px-2.5 py-1" title="Mover una posición antes">◀ 1 antes</button>
+            <button type="button" id="modalMoveNextBtn" class="btn btn-secondary btn-sm text-xs px-2.5 py-1" title="Mover una posición después">1 después ▶</button>
+            <button type="button" id="modalMoveLastBtn" class="btn btn-secondary btn-sm text-xs px-2.5 py-1" title="Poner al final">⏭ Al final</button>
 
-            <div style="margin-left: auto; display: flex; align-items: center; gap: 6px;">
-              <span style="font-size: 0.78rem; color: var(--text-soft);">Posición:</span>
-              <select id="modalPosicionSelect" style="padding: 4px 10px; border-radius: 8px; background: #1a1a1a; color: #fff; border: 1px solid rgba(212, 175, 55, 0.35); font-size: 0.82rem;"></select>
+            <div class="ml-auto flex items-center gap-1.5">
+              <span class="text-xs text-white/60">Posición:</span>
+              <select id="modalPosicionSelect" class="px-2.5 py-1 rounded-lg bg-[#1a1a1a] text-white border border-amber-400/35 text-xs outline-none focus:border-amber-400"></select>
             </div>
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
+        <div class="grid grid-cols-2 gap-3 mt-2">
           <button type="submit" class="btn btn-primary" id="saveModalBtn">Guardar cambios</button>
           <button type="button" class="btn btn-secondary" id="cancelModalBtn">Cancelar</button>
         </div>

@@ -39,7 +39,7 @@
       </div>
 
       <!-- TARJETAS RESUMEN DE PAQUETES -->
-      <div class="admin-summary" style="margin-bottom: 2rem;">
+      <div class="admin-summary mb-8">
         <div class="summary-card">
           <span class="summary-title">💎 Paquetes Activos</span>
           <strong id="kpiTotalPackages">0</strong>
@@ -54,18 +54,18 @@
         </div>
         <div class="summary-card">
           <span class="summary-title">🌐 Conexión Landing Page</span>
-          <strong style="color: #25d366; font-size: 1.25rem;">En Vivo ⚡</strong>
+          <strong class="text-[#25d366] text-xl">En Vivo ⚡</strong>
         </div>
       </div>
 
       <!-- FORMULARIO DE CREACIÓN / EDICIÓN DE PAQUETE -->
-      <div class="dashboard-panel" style="margin-bottom: 2.5rem; background: var(--apple-card); border: 1px solid var(--apple-border); border-radius: var(--apple-radius-card); padding: 2rem;">
-        <div class="dashboard-panel-head" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--apple-border); padding-bottom: 1rem;">
+      <div class="dashboard-panel mb-10 bg-[#121216] border border-white/10 rounded-2xl p-8">
+        <div class="dashboard-panel-head flex justify-between items-center mb-6 border-b border-white/10 pb-4">
           <div>
-            <p class="dashboard-mini-label" style="color: var(--apple-gold-light); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;">Editor de Experiencias</p>
-            <h3 id="packageFormTitle" style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #fff; margin: 0;">Agregar Nuevo Paquete de Gala</h3>
+            <p class="dashboard-mini-label text-amber-300 text-xs uppercase tracking-wider mb-1">Editor de Experiencias</p>
+            <h3 id="packageFormTitle" class="font-serif text-2xl text-white m-0">Agregar Nuevo Paquete de Gala</h3>
           </div>
-          <a href="../index.html#paquetes" target="_blank" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+          <a href="../index.html#paquetes" target="_blank" class="btn btn-secondary text-sm px-4 py-2">
             👁️ Ver en Landing Page
           </a>
         </div>
@@ -76,12 +76,12 @@
 
           <!-- TÍTULO Y CATEGORÍA -->
           <div class="form-group">
-            <label for="pkgTitulo" style="color: #fff; font-weight: 600;">Título del Paquete *</label>
+            <label for="pkgTitulo" class="text-white font-semibold">Título del Paquete *</label>
             <input type="text" id="pkgTitulo" placeholder="Ej: Boda Almar Imperial (Todo Incluido)" required />
           </div>
 
           <div class="form-group">
-            <label for="pkgCategoria" style="color: #fff; font-weight: 600;">Categoría / Ocasión *</label>
+            <label for="pkgCategoria" class="text-white font-semibold">Categoría / Ocasión *</label>
             <select id="pkgCategoria" required>
               <option value="bodas">💍 Bodas de Ensueño</option>
               <option value="quince">👑 Quince Años & Glam</option>
@@ -94,34 +94,34 @@
 
           <!-- BADGE Y PRECIO -->
           <div class="form-group">
-            <label for="pkgBadge" style="color: #fff; font-weight: 600;">Insignia / Badge de Portada</label>
+            <label for="pkgBadge" class="text-white font-semibold">Insignia / Badge de Portada</label>
             <input type="text" id="pkgBadge" placeholder="Ej: Más Solicitado, Juvenil & Elegante, VIP" />
-            <small style="color: var(--apple-text-secondary); font-size: 0.78rem;">Texto flotante sobre la foto en la tarjeta (ej: Más Solicitado)</small>
+            <small class="text-white/60 text-xs">Texto flotante sobre la foto en la tarjeta (ej: Más Solicitado)</small>
           </div>
 
           <div class="form-group">
-            <label for="pkgPrecio" style="color: #fff; font-weight: 600;">Precio por Persona / Invitado (COP) *</label>
+            <label for="pkgPrecio" class="text-white font-semibold">Precio por Persona / Invitado (COP) *</label>
             <input type="number" id="pkgPrecio" placeholder="Ej: 115000" min="10000" step="1000" required />
-            <small id="priceFormattedPreview" style="color: var(--apple-gold-light); font-size: 0.8rem; font-weight: 600;">$0 COP / persona</small>
+            <small id="priceFormattedPreview" class="text-amber-300 text-xs font-semibold">$0 COP / persona</small>
           </div>
 
           <!-- MÍNIMO DE INVITADOS -->
           <div class="form-group">
-            <label for="pkgMinPersonas" style="color: #fff; font-weight: 600;">Mínimo de Invitados Sugerido</label>
+            <label for="pkgMinPersonas" class="text-white font-semibold">Mínimo de Invitados Sugerido</label>
             <input type="number" id="pkgMinPersonas" placeholder="Ej: 50" min="10" value="40" />
           </div>
 
           <!-- FOTOGRAFÍA -->
           <div class="form-group">
-            <label for="pkgImagenUrl" style="color: #fff; font-weight: 600;">URL de Fotografía de Gala</label>
+            <label for="pkgImagenUrl" class="text-white font-semibold">URL de Fotografía de Gala</label>
             <input type="url" id="pkgImagenUrl" placeholder="https://images.unsplash.com/..." />
           </div>
 
           <div class="form-group full-width">
-            <label style="color: #fff; font-weight: 600;">O sube una imagen desde tu dispositivo / Elige foto sugerida</label>
-            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
-              <input type="file" id="pkgImageFile" accept="image/*" style="max-width: 300px;" />
-              <span style="color: var(--apple-text-secondary); font-size: 0.85rem;">O selecciona una foto recomendada:</span>
+            <label class="text-white font-semibold">O sube una imagen desde tu dispositivo / Elige foto sugerida</label>
+            <div class="flex gap-4 items-center flex-wrap mb-2">
+              <input type="file" id="pkgImageFile" accept="image/*" class="max-w-[300px]" />
+              <span class="text-white/60 text-sm">O selecciona una foto recomendada:</span>
             </div>
             
             <div class="quick-preset-photos" id="presetPhotosBar">
@@ -133,46 +133,46 @@
               <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=800&q=80" alt="Grados & Prom" class="preset-photo-thumb" title="Grados & Fiesta" />
             </div>
 
-            <div id="pkgPreviewWrap" style="margin-top: 1rem; display: none;">
-              <div style="width: 100%; max-width: 360px; height: 210px; border-radius: 16px; overflow: hidden; position: relative; border: 1px solid var(--apple-border); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-                <img id="pkgImagePreview" src="" alt="Previsualización" style="width: 100%; height: 100%; object-fit: cover;" />
-                <span id="pkgBadgePreview" class="package-badge" style="position: absolute; top: 12px; right: 12px; background: var(--apple-gold-gradient); color: #111; font-weight: 700; font-size: 0.75rem; padding: 4px 10px; border-radius: 999px;">Vista Previa</span>
+            <div id="pkgPreviewWrap" class="mt-4 hidden">
+              <div class="w-full max-w-[360px] h-[210px] rounded-2xl overflow-hidden relative border border-white/10 shadow-2xl shadow-black/50">
+                <img id="pkgImagePreview" src="" alt="Previsualización" class="w-full h-full object-cover" />
+                <span id="pkgBadgePreview" class="package-badge absolute top-3 right-3 bg-gradient-to-r from-amber-300 to-amber-500 text-stone-950 font-bold text-xs px-2.5 py-1 rounded-full">Vista Previa</span>
               </div>
             </div>
           </div>
 
           <!-- DESCRIPCIÓN -->
           <div class="form-group full-width">
-            <label for="pkgDescripcion" style="color: #fff; font-weight: 600;">Descripción Comercial del Paquete *</label>
+            <label for="pkgDescripcion" class="text-white font-semibold">Descripción Comercial del Paquete *</label>
             <textarea id="pkgDescripcion" rows="3" placeholder="Describe brevemente el alcance del paquete, atmósfera, tipo de montaje..." required></textarea>
           </div>
 
           <!-- GESTOR DINÁMICO DE INCLUSIONES -->
           <div class="form-group full-width">
-            <label style="color: #fff; font-weight: 600;">Inclusiones del Paquete (Lo que incluye el todo incluido) *</label>
+            <label class="text-white font-semibold">Inclusiones del Paquete (Lo que incluye el todo incluido) *</label>
             <div class="package-inclusions-manager">
-              <div style="display: flex; gap: 0.8rem; margin-bottom: 0.8rem; flex-wrap: wrap;">
-                <input type="text" id="newInclusionInput" placeholder="Ej: Menú de gala a 3 tiempos con degustación previa..." style="flex: 1; min-width: 250px;" />
-                <button type="button" class="btn btn-secondary" id="addInclusionBtn" style="white-space: nowrap;">
+              <div class="flex gap-3 mb-3 flex-wrap">
+                <input type="text" id="newInclusionInput" placeholder="Ej: Menú de gala a 3 tiempos con degustación previa..." class="flex-1 min-w-[250px]" />
+                <button type="button" class="btn btn-secondary whitespace-nowrap" id="addInclusionBtn">
                   ➕ Agregar Inclusión
                 </button>
               </div>
 
-              <div id="inclusionsList" style="min-height: 40px; padding: 0.5rem 0;">
+              <div id="inclusionsList" class="min-h-[40px] py-2">
                 <!-- Etiquetas de inclusiones añadidas dinámicamente -->
               </div>
-              <small style="color: var(--apple-text-secondary); font-size: 0.8rem;">
+              <small class="text-white/60 text-xs">
                 💡 Las primeras 4 inclusiones se muestran destacadas con viñetas en la tarjeta de la landing page.
               </small>
             </div>
           </div>
 
           <!-- BOTONES DE ACCIÓN -->
-          <div class="form-group full-width event-form-actions" style="margin-top: 1rem; display: flex; gap: 1rem;">
-            <button type="submit" class="btn btn-primary" id="savePackageBtn" style="padding: 0.9rem 2rem; font-size: 1rem;">
+          <div class="form-group full-width event-form-actions mt-4 flex gap-4">
+            <button type="submit" class="btn btn-primary px-8 py-3.5 text-base" id="savePackageBtn">
               💾 Guardar y Publicar Paquete
             </button>
-            <button type="button" class="btn btn-secondary" id="cancelEditPkgBtn" style="display: none; padding: 0.9rem 1.6rem;">
+            <button type="button" class="btn btn-secondary hidden px-6 py-3.5" id="cancelEditPkgBtn">
               Cancelar Edición
             </button>
           </div>
@@ -180,20 +180,20 @@
       </div>
 
       <!-- LISTADO DE PAQUETES PUBLICADOS EN LA WEB -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
         <div>
-          <h3 style="color: #fff; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin: 0 0 0.3rem 0;">
+          <h3 class="text-white font-serif text-3xl m-0 mb-1">
             Paquetes Publicados en la Landing Page
           </h3>
-          <p style="color: var(--apple-text-secondary); font-size: 0.9rem; margin: 0;" id="packagesCount">
+          <p class="text-white/60 text-sm m-0" id="packagesCount">
             Cargando catálogo...
           </p>
         </div>
 
-        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center;">
-          <input type="text" id="searchPkgInput" placeholder="🔍 Buscar paquete..." style="padding: 0.55rem 1.1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff; font-size: 0.88rem;" />
+        <div class="flex gap-3 flex-wrap items-center">
+          <input type="text" id="searchPkgInput" placeholder="🔍 Buscar paquete..." class="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white text-sm outline-none focus:border-amber-400" />
           
-          <select id="filterPkgCat" style="padding: 0.55rem 1.1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff; font-size: 0.88rem;">
+          <select id="filterPkgCat" class="px-4 py-2 rounded-full bg-stone-900 border border-white/10 text-white text-sm outline-none focus:border-amber-400">
             <option value="todos">Todas las ocasiones</option>
             <option value="bodas">💍 Bodas</option>
             <option value="quince">👑 Quince Años</option>
@@ -202,14 +202,14 @@
             <option value="social">🕊️ Comunión / Bautizo</option>
           </select>
 
-          <button type="button" class="btn btn-secondary" id="resetDefaultsBtn" style="font-size: 0.82rem; padding: 0.55rem 1rem; border-color: rgba(212,175,55,0.4);" title="Restablece los 3 paquetes iniciales originales">
+          <button type="button" class="btn btn-secondary text-xs px-4 py-2 border-amber-400/40" id="resetDefaultsBtn" title="Restablece los 3 paquetes iniciales originales">
             🔄 Restablecer Plantillas
           </button>
         </div>
       </div>
 
       <!-- CUADRÍCULA DE TARJETAS DE PAQUETES (ESTILO IDÉNTICO A LA WEB DEL CLIENTE) -->
-      <div id="packagesAdminGrid" class="packages-grid" style="margin-top: 1rem;">
+      <div id="packagesAdminGrid" class="packages-grid mt-4">
         <!-- Renderizado dinámico desde db.js -->
       </div>
     </div>

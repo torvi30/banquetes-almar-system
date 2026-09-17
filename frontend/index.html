@@ -111,24 +111,24 @@
   <main>
     <!-- HERO SECTION -->
     <section class="hero" id="inicio">
-      <div class="hero-overlay" style="background: radial-gradient(circle at center, rgba(10,10,12,0.4) 0%, rgba(5,5,7,0.85) 100%);"></div>
+      <div class="hero-overlay bg-gradient-to-b from-zinc-950/40 via-zinc-950/70 to-black/90"></div>
       <div class="container hero-content">
-        <p class="hero-tag" style="background: rgba(212,175,55,0.15); border: 1px solid var(--apple-gold); color: var(--apple-gold-light); display: inline-block; padding: 0.35rem 1rem; border-radius: 999px; margin-bottom: 1.5rem;">
+        <p class="hero-tag bg-amber-500/15 border border-amber-500/40 text-amber-300 inline-block px-4 py-1.5 rounded-full mb-6 text-sm font-semibold tracking-wide">
           Salón de Gala en Marinilla & Finca Campestre en El Peñol
         </p>
-        <h1 style="font-size: clamp(2.4rem, 5vw, 4.2rem); letter-spacing: -1px; font-family: 'Playfair Display', serif;">
+        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl tracking-tight text-white font-bold leading-tight mb-4">
           Celebra Momentos Inolvidables con Elegancia Excepcional
         </h1>
-        <p style="max-width: 720px; margin: 0 auto; color: var(--apple-text-secondary); font-size: 1.15rem; line-height: 1.7;">
+        <p class="max-w-2xl mx-auto text-zinc-300 text-lg leading-relaxed mb-8">
           Bodas de ensueño, Quinceañeras mágicas, Grados y Eventos Empresariales. 
           Dos sedes exclusivas en el Oriente Antioqueño: Salón de Gala en Marinilla y Finca Campestre en El Peñol, con alta gastronomía y producción integral.
         </p>
 
-        <div class="hero-actions" style="margin-top: 2.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-          <a href="#cotizador" class="btn-apple-primary" style="font-size: 1.05rem; padding: 1.1rem 2.2rem;">
+        <div class="hero-actions mt-10 flex gap-4 justify-center flex-wrap">
+          <a href="#cotizador" class="btn-apple-primary text-base px-8 py-4">
             ✨ Configurar Evento al Instante
           </a>
-          <a href="#sedes" class="btn-apple-secondary" style="font-size: 1.05rem; padding: 1.1rem 2rem;">
+          <a href="#sedes" class="btn-apple-secondary text-base px-8 py-4">
             🏛️ Conocer Nuestras 2 Sedes
           </a>
         </div>
@@ -136,7 +136,7 @@
     </section>
 
     <!-- SECCIÓN DE NUESTRAS DOS SEDES -->
-    <section class="section" id="sedes" style="background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(212, 175, 55, 0.05) 0%, rgba(9, 9, 12, 0.98) 75%);">
+    <section class="section bg-gradient-to-b from-zinc-900/50 via-zinc-950 to-black" id="sedes">
       <div class="container">
         <div class="section-heading">
           <span class="section-label">🏛️ LOCACIONES EXCLUSIVAS</span>
@@ -150,17 +150,17 @@
           </div>
         </div>
 
-        <div class="sedes-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 2rem; margin-top: 2.5rem;">
+        <div class="sedes-cards-grid grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
           
           <!-- SEDE 1: SALÓN MARINILLA -->
-          <article class="package-card" style="border-color: var(--apple-border); background: var(--apple-card);">
-            <div class="package-image-wrap" style="height: 260px;">
+          <article class="package-card border border-zinc-800 bg-zinc-900/60 rounded-2xl overflow-hidden backdrop-blur-md">
+            <div class="package-image-wrap h-64 relative overflow-hidden">
               <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1000&q=80" alt="Salón Banquetes Almar Marinilla" class="package-image" />
-              <span class="package-badge" style="background: var(--apple-gold-gradient); color: #000;">Sede 1 • Marinilla</span>
+              <span class="package-badge bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 text-black font-semibold">Sede 1 • Marinilla</span>
             </div>
             <div class="package-body">
-              <h3 class="package-title" style="font-size: 1.6rem;">Salón de Gala Almar</h3>
-              <p class="package-desc" style="color: var(--apple-gold-light); font-weight: 500;">
+              <h3 class="package-title text-2xl font-bold font-serif text-white">Salón de Gala Almar</h3>
+              <p class="package-desc text-amber-300 font-medium text-sm">
                 📍 Calle 29 n° 28-25, Marinilla, Antioquia
               </p>
               <p class="package-desc">
@@ -175,21 +175,21 @@
                 <li>Ideal para bodas clásicas, 15 años y grados formales</li>
               </ul>
 
-              <a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20deseo%20cotizar%20un%20evento%20en%20el%20Sal%C3%B3n%20de%20Gala%20en%20Marinilla" target="_blank" class="btn-apple-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+              <a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20deseo%20cotizar%20un%20evento%20en%20el%20Sal%C3%B3n%20de%20Gala%20en%20Marinilla" target="_blank" class="btn-apple-primary w-full justify-center mt-4">
                 Cotizar en Salón Marinilla
               </a>
             </div>
           </article>
 
           <!-- SEDE 2: FINCA EL PEÑOL -->
-          <article class="package-card" style="border-color: var(--apple-border); background: var(--apple-card);">
-            <div class="package-image-wrap" style="height: 260px;">
+          <article class="package-card border border-zinc-800 bg-zinc-900/60 rounded-2xl overflow-hidden backdrop-blur-md">
+            <div class="package-image-wrap h-64 relative overflow-hidden">
               <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1000&q=80" alt="Finca Campestre Almar El Peñol" class="package-image" />
-              <span class="package-badge" style="background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%); color: #000;">Sede 2 • El Peñol</span>
+              <span class="package-badge bg-gradient-to-r from-teal-300 to-indigo-300 text-black font-semibold">Sede 2 • El Peñol</span>
             </div>
             <div class="package-body">
-              <h3 class="package-title" style="font-size: 1.6rem;">Finca Campestre Almar</h3>
-              <p class="package-desc" style="color: #88c0d0; font-weight: 500;">
+              <h3 class="package-title text-2xl font-bold font-serif text-white">Finca Campestre Almar</h3>
+              <p class="package-desc text-cyan-300 font-medium text-sm">
                 🌄 Sector Campestre, El Peñol, Antioquia (Cerca a la Represa)
               </p>
               <p class="package-desc">
@@ -204,7 +204,7 @@
                 <li>Ideal para bodas campestres, aniversarios y fiestas al aire libre</li>
               </ul>
 
-              <a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20deseo%20cotizar%20un%20evento%20en%20la%20Finca%20Campestre%20en%20El%20Pe%C3%B1ol" target="_blank" class="btn-apple-primary" style="width: 100%; justify-content: center; margin-top: 1rem; background: linear-gradient(135deg, #e6c77b 0%, #9face6 100%); color: #000;">
+              <a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20deseo%20cotizar%20un%20evento%20en%20la%20Finca%20Campestre%20en%20El%20Pe%C3%B1ol" target="_blank" class="btn-apple-primary w-full justify-center mt-4 bg-gradient-to-r from-amber-200 to-indigo-300 text-black font-semibold hover:opacity-95">
                 Cotizar en Finca El Peñol
               </a>
             </div>
@@ -214,7 +214,7 @@
     </section>
 
     <!-- SECCIÓN PAQUETES TODO INCLUIDO -->
-    <section class="section" id="paquetes" style="background: var(--apple-canvas);">
+    <section class="section bg-zinc-950" id="paquetes">
       <div class="container">
         <div class="section-heading">
           <span class="section-label">💎 EXPERIENCIAS COMPLETAS SIN ESTRÉS</span>
@@ -238,7 +238,7 @@
     </section>
 
     <!-- SECCIÓN DE ALTA GASTRONOMÍA & BANQUETERÍA DE GALA -->
-    <section class="section" id="gastronomia" style="background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(212, 175, 55, 0.04) 0%, rgba(8, 8, 11, 0.98) 75%);">
+    <section class="section bg-gradient-to-b from-zinc-900/40 via-zinc-950 to-black" id="gastronomia">
       <div class="container">
         <div class="section-heading">
           <span class="section-label">🍽️ ALTA GASTRONOMÍA & BANQUETERÍA</span>
@@ -255,99 +255,99 @@
         </div>
 
         <!-- 4 PILARES GASTRONÓMICOS -->
-        <div class="packages-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.8rem; margin-bottom: 3.5rem;">
+        <div class="packages-cards-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-14">
           
           <!-- PLATO 1: CENA FORMAL 3 TIEMPOS -->
-          <article class="package-card active" style="background: var(--apple-card); border-color: var(--apple-border); display: flex; flex-direction: column;">
-            <div class="package-image-wrap" style="height: 220px;">
+          <article class="package-card active bg-zinc-900/60 border border-zinc-800 rounded-2xl flex flex-col overflow-hidden backdrop-blur-md">
+            <div class="package-image-wrap h-52 relative overflow-hidden">
               <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="Cena de Gala a 3 Tiempos" class="package-image" loading="lazy" />
-              <span class="package-badge" style="background: var(--apple-gold-gradient); color: #111;">Cena Formal</span>
+              <span class="package-badge bg-gradient-to-r from-amber-400 to-yellow-500 text-zinc-950 font-bold">Cena Formal</span>
             </div>
-            <div class="package-body" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="package-body flex-1 flex flex-col justify-between p-5">
               <div>
-                <h3 style="color: #fff; font-size: 1.35rem; font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">
+                <h3 class="text-white text-xl font-serif font-bold mb-2">
                   Menú de Gala a 3 Tiempos
                 </h3>
-                <p style="color: var(--apple-gold-light); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.8rem;">
+                <p class="text-amber-300 text-xs font-semibold uppercase tracking-wider mb-2">
                   Entrada de Autor + Plato Fuerte Selecto + Postre
                 </p>
-                <p style="color: var(--apple-text-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                <p class="text-zinc-400 text-sm leading-relaxed mb-4">
                   Medallones de lomo en reducción de vino tinto o pechuga de gala rellena en salsa de quesos madurados, acompañados de risotto aromatizado o puré rústico y ensalada silvestre.
                 </p>
               </div>
-              <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.8rem; font-size: 0.82rem; color: #aaa;">
+              <div class="border-t border-white/10 pt-3 text-xs text-zinc-400">
                 ✨ Vajilla de porcelana, cubiertos dorados y servicio al plato.
               </div>
             </div>
           </article>
 
           <!-- PLATO 2: PASABOCAS & CÓCTEL -->
-          <article class="package-card active" style="background: var(--apple-card); border-color: var(--apple-border); display: flex; flex-direction: column;">
-            <div class="package-image-wrap" style="height: 220px;">
+          <article class="package-card active bg-zinc-900/60 border border-zinc-800 rounded-2xl flex flex-col overflow-hidden backdrop-blur-md">
+            <div class="package-image-wrap h-52 relative overflow-hidden">
               <img src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=800&q=80" alt="Estación de Cóctel y Pasabocas" class="package-image" loading="lazy" />
-              <span class="package-badge" style="background: linear-gradient(135deg, #f39c12, #e67e22); color: #fff;">Recepción & Brindis</span>
+              <span class="package-badge bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold">Recepción & Brindis</span>
             </div>
-            <div class="package-body" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="package-body flex-1 flex flex-col justify-between p-5">
               <div>
-                <h3 style="color: #fff; font-size: 1.35rem; font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">
+                <h3 class="text-white text-xl font-serif font-bold mb-2">
                   Pasabocas & Estación de Cóctel
                 </h3>
-                <p style="color: var(--apple-gold-light); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.8rem;">
+                <p class="text-amber-300 text-xs font-semibold uppercase tracking-wider mb-2">
                   Bocados Gourmet Calientes y Fríos
                 </p>
-                <p style="color: var(--apple-text-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                <p class="text-zinc-400 text-sm leading-relaxed mb-4">
                   Canapés finos, volovanes de pollo al curry, brochetas caprese en reducción balsámica, mini quiches lorenes, tartaletas de mariscos y copas de mimosa o champaña de bienvenida.
                 </p>
               </div>
-              <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.8rem; font-size: 0.82rem; color: #aaa;">
+              <div class="border-t border-white/10 pt-3 text-xs text-zinc-400">
                 🥂 Ideal para el cóctel de bienvenida mientras llegan los invitados.
               </div>
             </div>
           </article>
 
           <!-- PLATO 3: MESA DULCE & TORTA -->
-          <article class="package-card active" style="background: var(--apple-card); border-color: var(--apple-border); display: flex; flex-direction: column;">
-            <div class="package-image-wrap" style="height: 220px;">
+          <article class="package-card active bg-zinc-900/60 border border-zinc-800 rounded-2xl flex flex-col overflow-hidden backdrop-blur-md">
+            <div class="package-image-wrap h-52 relative overflow-hidden">
               <img src="https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=800&q=80" alt="Mesa Dulce y Torta de Gala" class="package-image" loading="lazy" />
-              <span class="package-badge" style="background: linear-gradient(135deg, #e84393, #fd79a8); color: #fff;">Repostería Fina</span>
+              <span class="package-badge bg-gradient-to-r from-pink-500 to-rose-400 text-white font-bold">Repostería Fina</span>
             </div>
-            <div class="package-body" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="package-body flex-1 flex flex-col justify-between p-5">
               <div>
-                <h3 style="color: #fff; font-size: 1.35rem; font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">
+                <h3 class="text-white text-xl font-serif font-bold mb-2">
                   Mesa de Postres & Torta
                 </h3>
-                <p style="color: var(--apple-gold-light); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.8rem;">
+                <p class="text-amber-300 text-xs font-semibold uppercase tracking-wider mb-2">
                   Shots Dulces, Macarons & Torta Nupcial
                 </p>
-                <p style="color: var(--apple-text-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                <p class="text-zinc-400 text-sm leading-relaxed mb-4">
                   Montaje temático con fuentes de cristal y chandeliers. Shots de mousse de maracuyá y chocolate belga, mini cheesecakes, trufas artesanales y torta de corte ceremonial.
                 </p>
               </div>
-              <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.8rem; font-size: 0.82rem; color: #aaa;">
+              <div class="border-t border-white/10 pt-3 text-xs text-zinc-400">
                 🎂 Decoración a juego con la paleta de colores del evento.
               </div>
             </div>
           </article>
 
           <!-- PLATO 4: SERVICIO & PROTOCOLO -->
-          <article class="package-card active" style="background: var(--apple-card); border-color: var(--apple-border); display: flex; flex-direction: column;">
-            <div class="package-image-wrap" style="height: 220px;">
+          <article class="package-card active bg-zinc-900/60 border border-zinc-800 rounded-2xl flex flex-col overflow-hidden backdrop-blur-md">
+            <div class="package-image-wrap h-52 relative overflow-hidden">
               <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80" alt="Servicio y Protocolo Banquetes Almar" class="package-image" loading="lazy" />
-              <span class="package-badge" style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: #fff;">Personal de Etiqueta</span>
+              <span class="package-badge bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold">Personal de Etiqueta</span>
             </div>
-            <div class="package-body" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="package-body flex-1 flex flex-col justify-between p-5">
               <div>
-                <h3 style="color: #fff; font-size: 1.35rem; font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">
+                <h3 class="text-white text-xl font-serif font-bold mb-2">
                   Servicio a la Mesa & Protocolo
                 </h3>
-                <p style="color: var(--apple-gold-light); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.8rem;">
+                <p class="text-amber-300 text-xs font-semibold uppercase tracking-wider mb-2">
                   Atención Distinguida para Cada Invitado
                 </p>
-                <p style="color: var(--apple-text-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                <p class="text-zinc-400 text-sm leading-relaxed mb-4">
                   Capitán de servicio, meseros uniformados de rigurosa etiqueta y bartenders profesionales para coctelería. Cronograma sincronizado con el vals, el brindis y la fiesta.
                 </p>
               </div>
-              <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.8rem; font-size: 0.82rem; color: #aaa;">
+              <div class="border-t border-white/10 pt-3 text-xs text-zinc-400">
                 👨‍🍳 Cocina industrial y servicio cálido propio de Antioquia.
               </div>
             </div>
@@ -356,21 +356,21 @@
         </div>
 
         <!-- BANNER DE DEGUSTACIÓN PREVIA DE REGALO -->
-        <div style="background: linear-gradient(135deg, rgba(30, 27, 20, 0.95), rgba(18, 17, 14, 0.98)); border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 20px; padding: 2.2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; box-shadow: 0 15px 35px rgba(0,0,0,0.5);">
-          <div style="max-width: 650px;">
-            <span style="background: rgba(212,175,55,0.15); color: var(--apple-gold-light); font-size: 0.8rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; text-transform: uppercase;">
+        <div class="bg-gradient-to-r from-zinc-900/95 via-zinc-950 to-amber-950/20 border border-amber-500/40 rounded-3xl p-8 sm:p-10 flex justify-between items-center flex-wrap gap-6 shadow-2xl shadow-black/80 backdrop-blur-md">
+          <div class="max-w-2xl">
+            <span class="bg-amber-500/15 text-amber-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block">
               ✨ Experiencia Exclusiva Almar
             </span>
-            <h3 style="color: #fff; font-family: 'Playfair Display', serif; font-size: 1.6rem; margin: 0.6rem 0 0.4rem 0;">
+            <h3 class="text-white font-serif text-2xl sm:text-3xl font-bold my-2">
               Degustación Previa de Menú para Anfitriones
             </h3>
-            <p style="color: var(--apple-text-secondary); font-size: 0.95rem; margin: 0; line-height: 1.6;">
+            <p class="text-zinc-300 text-sm sm:text-base leading-relaxed m-0">
               Tu tranquilidad es nuestra prioridad. En todos nuestros paquetes de boda y quinceañera agendamos una sesión de cata y degustación para 2 a 4 personas en nuestra sede de Marinilla, donde probarán las opciones de menú y elegirán su favorito.
             </p>
           </div>
 
           <div>
-            <a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20deseo%20conocer%20las%20opciones%20del%20men%C3%BA%20gastron%C3%B3mico%20y%20degustaci%C3%B3n" target="_blank" class="btn-apple-primary" style="white-space: nowrap; padding: 1rem 1.8rem; font-size: 0.95rem;">
+            <a href="https://wa.me/573148849011?text=Hola%20Banquetes%20Almar,%20deseo%20conocer%20las%20opciones%20del%20men%C3%BA%20gastron%C3%B3mico%20y%20degustaci%C3%B3n" target="_blank" class="btn-apple-primary whitespace-nowrap px-7 py-3.5 text-sm font-semibold">
               🍽️ Cotizar Menú por WhatsApp
             </a>
           </div>
@@ -380,7 +380,7 @@
     </section>
 
     <!-- CONFIGURADOR DE EVENTO APPLE STYLE (STUDIO CONFIGURATOR) -->
-    <section class="section" id="cotizador" style="background: var(--apple-canvas);">
+    <section class="section bg-zinc-950" id="cotizador">
       <div class="container">
         <div class="section-heading">
           <span class="section-label">✨ COTIZADOR INTELIGENTE EN TIEMPO REAL</span>
@@ -433,7 +433,7 @@
             </div>
 
             <!-- Input Dinámico para Ocasión Personalizada -->
-            <div class="custom-celebration-wrapper" id="customCelebrationWrapper" style="display: none;">
+            <div class="custom-celebration-wrapper hidden" id="customCelebrationWrapper">
               <div class="custom-celebration-card">
                 <span class="custom-celebration-icon">✍️</span>
                 <input 
@@ -508,7 +508,7 @@
               <span class="studio-step-desc">Salón propio o finca campestre</span>
             </div>
 
-            <div class="interactive-tiles-grid" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));">
+            <div class="interactive-tiles-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div class="selectable-tile tile-location active" data-location="salon_almar">
                 <span class="tile-badge">Sede Urbana</span>
                 <div>
@@ -520,7 +520,7 @@
               </div>
 
               <div class="selectable-tile tile-location" data-location="finca_penol">
-                <span class="tile-badge" style="background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%); color: #000;">Sede Campestre</span>
+                <span class="tile-badge bg-gradient-to-r from-teal-300 to-indigo-300 text-black font-semibold">Sede Campestre</span>
                 <div>
                   <span class="tile-icon">🌄</span>
                   <h4 class="tile-title">Finca Almar (El Peñol)</h4>
@@ -637,66 +637,66 @@
                 <div class="addon-chip-info">
                   <span class="addon-checkbox-circle">✓</span>
                   <div>
-                    <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🌸 Arco Floral Natural</div>
-                    <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Arco o backing fotográfico</div>
+                    <div class="font-semibold text-white text-sm">🌸 Arco Floral Natural</div>
+                    <div class="text-xs text-zinc-400">Arco o backing fotográfico</div>
                   </div>
                 </div>
-                <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$650.000</span>
+                <span class="font-bold text-amber-300 text-xs sm:text-sm">+$650.000</span>
               </div>
 
               <div class="addon-chip active" data-addon="dj_robotica">
                 <div class="addon-chip-info">
                   <span class="addon-checkbox-circle">✓</span>
                   <div>
-                    <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🎧 DJ Pro & Luces Robóticas</div>
-                    <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">6 horas de fiesta y cabezas móviles</div>
+                    <div class="font-semibold text-white text-sm">🎧 DJ Pro & Luces Robóticas</div>
+                    <div class="text-xs text-zinc-400">6 horas de fiesta y cabezas móviles</div>
                   </div>
                 </div>
-                <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$950.000</span>
+                <span class="font-bold text-amber-300 text-xs sm:text-sm">+$950.000</span>
               </div>
 
               <div class="addon-chip" data-addon="pista_led">
                 <div class="addon-chip-info">
                   <span class="addon-checkbox-circle"></span>
                   <div>
-                    <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">✨ Pista de Baile LED</div>
-                    <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Piso iluminado interactivo</div>
+                    <div class="font-semibold text-white text-sm">✨ Pista de Baile LED</div>
+                    <div class="text-xs text-zinc-400">Piso iluminado interactivo</div>
                   </div>
                 </div>
-                <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$600.000</span>
+                <span class="font-bold text-amber-300 text-xs sm:text-sm">+$600.000</span>
               </div>
 
               <div class="addon-chip" data-addon="hora_loca">
                 <div class="addon-chip-info">
                   <span class="addon-checkbox-circle"></span>
                   <div>
-                    <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🎭 Show de Hora Loca</div>
-                    <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Animación y cotillón temático</div>
+                    <div class="font-semibold text-white text-sm">🎭 Show de Hora Loca</div>
+                    <div class="text-xs text-zinc-400">Animación y cotillón temático</div>
                   </div>
                 </div>
-                <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$380.000</span>
+                <span class="font-bold text-amber-300 text-xs sm:text-sm">+$380.000</span>
               </div>
 
               <div class="addon-chip" data-addon="cabina_360">
                 <div class="addon-chip-info">
                   <span class="addon-checkbox-circle"></span>
                   <div>
-                    <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">📹 Cabina 360° PhotoBooth</div>
-                    <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Videos instantáneos para invitados</div>
+                    <div class="font-semibold text-white text-sm">📹 Cabina 360° PhotoBooth</div>
+                    <div class="text-xs text-zinc-400">Videos instantáneos para invitados</div>
                   </div>
                 </div>
-                <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$420.000</span>
+                <span class="font-bold text-amber-300 text-xs sm:text-sm">+$420.000</span>
               </div>
 
               <div class="addon-chip" data-addon="brindis_champagne">
                 <div class="addon-chip-info">
                   <span class="addon-checkbox-circle"></span>
                   <div>
-                    <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">🥂 Brindis con Champaña</div>
-                    <div style="font-size: 0.78rem; color: var(--apple-text-secondary);">Copas de cristal para todos</div>
+                    <div class="font-semibold text-white text-sm">🥂 Brindis con Champaña</div>
+                    <div class="text-xs text-zinc-400">Copas de cristal para todos</div>
                   </div>
                 </div>
-                <span style="font-weight: 700; color: var(--apple-gold-light); font-size: 0.85rem;">+$280.000</span>
+                <span class="font-bold text-amber-300 text-xs sm:text-sm">+$280.000</span>
               </div>
             </div>
           </div>
@@ -717,11 +717,11 @@
                   <span class="summary-total-val" id="appleTotalLive">$0</span>
                 </div>
                 <div class="summary-per-guest-row">
-                  <span class="summary-per-guest-text">Equivale a <strong id="applePerPersonLive" style="color: var(--apple-gold-light);">$0</strong> / persona</span>
+                  <span class="summary-per-guest-text">Equivale a <strong id="applePerPersonLive" class="text-amber-300 font-bold">$0</strong> / persona</span>
                 </div>
                 <div class="summary-deposit-row">
                   <span>Anticipo de separación (30%):</span>
-                  <strong id="appleDepositLive" style="color: #fff;">$0</strong>
+                  <strong id="appleDepositLive" class="text-white font-bold">$0</strong>
                 </div>
               </div>
 
@@ -789,7 +789,7 @@
     </section>
 
     <!-- TIENDA E-COMMERCE DE ALQUILER DE MOBILIARIO -->
-    <section class="section" id="alquiler" style="background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(212, 175, 55, 0.04) 0%, rgba(9, 9, 12, 0.98) 75%);">
+    <section class="section bg-gradient-to-b from-zinc-900/40 via-zinc-950 to-black" id="alquiler">
       <div class="container">
         <div class="section-heading">
           <span class="section-label">📦 CATÁLOGO DE MOBILIARIO & EQUIPAMIENTO</span>
@@ -824,7 +824,7 @@
     </section>
 
     <!-- GALERÍA DE MONTAJES REALES & EVENTOS DE GALA -->
-    <section class="section" id="galeria" style="background: var(--apple-canvas);">
+    <section class="section bg-zinc-950" id="galeria">
       <div class="container">
         <div class="section-heading">
           <span class="section-label">📸 PORTAFOLIO VISUAL DE MONTAJES REALES</span>
@@ -851,7 +851,7 @@
     </section>
 
     <!-- UBICACIÓN & CONTACTO EN MARINILLA -->
-    <section class="section" id="ubicacion" style="background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(212, 175, 55, 0.04) 0%, rgba(7, 7, 9, 0.98) 75%);">
+    <section class="section bg-gradient-to-b from-zinc-900/40 via-zinc-950 to-black" id="ubicacion">
       <div class="container">
         <div class="section-heading">
           <span class="section-label">📍 VISÍTANOS EN MARINILLA</span>
@@ -865,16 +865,16 @@
           </div>
         </div>
 
-        <div class="location-card" style="background: var(--apple-card); border-color: var(--apple-border); backdrop-filter: var(--apple-blur);">
+        <div class="location-card bg-zinc-900/60 border border-zinc-800 backdrop-blur-xl rounded-3xl p-8">
           <div>
-            <h3 style="font-family: 'Playfair Display', serif; color: var(--apple-gold-light); font-size: 1.8rem; margin-bottom: 1rem;">
+            <h3 class="font-serif text-amber-300 text-3xl font-bold mb-4">
               Salón Banquetes Almar
             </h3>
-            <p style="color: var(--apple-text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+            <p class="text-zinc-300 mb-6 leading-relaxed text-sm sm:text-base">
               Un espacio versátil, climatizado y con acústica profesional. Capacidad de hasta 200 personas, baños accesibles y zona para cocina y servicio.
             </p>
 
-            <ul style="color: #dedede; font-size: 0.95rem; display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem;">
+            <ul class="text-zinc-200 text-sm sm:text-base flex flex-col gap-3 mb-8">
               <li>📍 <strong>Dirección:</strong> Calle 29 n° 28-25, Marinilla, Colombia</li>
               <li>📱 <strong>Celular & WhatsApp:</strong> +57 314 8849011</li>
               <li>☎️ <strong>Teléfono fijo:</strong> (604) 548 5352</li>
@@ -901,16 +901,16 @@
   </main>
 
   <!-- PIE DE PÁGINA APPLE MINIMALISTA -->
-  <footer style="background: #050507; border-top: 1px solid var(--apple-border); padding: 3.5rem 0 2rem; color: var(--apple-text-secondary); font-size: 0.9rem;">
-    <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;">
+  <footer class="bg-zinc-950 border-t border-zinc-800/80 py-14 px-4 sm:px-6 text-zinc-400 text-sm">
+    <div class="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
       <div>
-        <h4 style="color: var(--apple-gold-light); font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 0.8rem;">Banquetes Almar</h4>
+        <h4 class="text-amber-300 font-serif text-xl font-bold mb-3">Banquetes Almar</h4>
         <p>Especialistas en bodas, 15 años, eventos corporativos, catering de gala y alquiler de mobiliario en Marinilla y todo el Oriente Antioqueño.</p>
       </div>
 
       <div>
-        <h4 style="color: var(--apple-gold-light); font-size: 0.9rem; margin-bottom: 0.8rem; text-transform: uppercase;">Servicios</h4>
-        <ul style="display: flex; flex-direction: column; gap: 0.4rem;">
+        <h4 class="text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">Servicios</h4>
+        <ul class="flex flex-col gap-2 text-sm text-zinc-300">
           <li><a href="#paquetes">Bodas de Ensueño</a></li>
           <li><a href="#paquetes">Quince Años de Gala</a></li>
           <li><a href="#gastronomia">Gastronomía & Banquetería</a></li>
@@ -921,19 +921,19 @@
       </div>
 
       <div>
-        <h4 style="color: var(--apple-gold-light); font-size: 0.9rem; margin-bottom: 0.8rem; text-transform: uppercase;">Oriente Antioqueño</h4>
+        <h4 class="text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">Oriente Antioqueño</h4>
         <p>Prestamos servicio en: Marinilla, Rionegro, Guarne, El Carmen de Viboral, El Santuario, El Retiro, La Ceja y San Vicente Ferrer.</p>
       </div>
 
       <div>
-        <h4 style="color: var(--apple-gold-light); font-size: 0.9rem; margin-bottom: 0.8rem; text-transform: uppercase;">Contacto & Accesos</h4>
+        <h4 class="text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">Contacto & Accesos</h4>
         <p>📱 +57 314 8849011</p>
         <p>📍 Calle 29 n° 28-25, Marinilla</p>
-        <p style="margin-top: 0.8rem;"><a href="./portal-cliente.html" style="color: var(--apple-gold-light); text-decoration: underline;">👑 Portal del Anfitrión (Mi Evento)</a></p>
+        <p class="mt-3"><a href="./portal-cliente.html" class="text-amber-300 underline font-medium hover:text-amber-200">👑 Portal del Anfitrión (Mi Evento)</a></p>
       </div>
     </div>
 
-    <div class="container" style="text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 1.5rem; font-size: 0.82rem;">
+    <div class="container text-center border-t border-white/5 pt-6 text-xs text-zinc-500">
       <p>© 2026 Banquetes Almar. Diseñado con excelencia y precisión para Marinilla, Antioquia.</p>
     </div>
   </footer>
@@ -954,7 +954,7 @@
 
   <!-- BOTÓN FLOTANTE DEL CARRITO -->
   <button class="cart-floating-btn open-cart-btn" type="button" aria-label="Ver carrito de alquiler">
-    <span style="font-size: 1.5rem;">🛒</span>
+    <span class="text-2xl">🛒</span>
     <span class="cart-count-badge">0</span>
   </button>
 
@@ -973,7 +973,7 @@
         <span>Subtotal Mobiliario:</span>
         <span id="cartSubtotal">$0</span>
       </div>
-      <button class="btn-apple-primary" id="cartCheckoutBtn" style="width: 100%; justify-content: center; padding: 0.95rem;">
+      <button class="btn-apple-primary w-full justify-center py-3.5" id="cartCheckoutBtn">
         Solicitar Disponibilidad por WhatsApp
       </button>
     </div>
@@ -1001,7 +1001,7 @@
         </div>
 
         <div class="client-lightbox-actions">
-          <a href="#" target="_blank" rel="noopener noreferrer" class="btn-apple-primary" id="clientLightboxWpBtn" style="width: 100%; justify-content: center; text-decoration: none;">
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn-apple-primary w-full justify-center no-underline" id="clientLightboxWpBtn">
             <span>💬 Cotizar Este Montaje</span>
           </a>
         </div>

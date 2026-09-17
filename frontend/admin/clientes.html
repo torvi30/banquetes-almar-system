@@ -29,7 +29,7 @@
 
         <div class="pipeline-metric-card">
           <span class="pipeline-metric-label">👑 Clientes VIP & Corp.</span>
-          <strong id="metricClientesVip" class="pipeline-metric-val" style="color: #e6c77b;">0</strong>
+          <strong id="metricClientesVip" class="pipeline-metric-val text-amber-300">0</strong>
         </div>
 
         <div class="pipeline-metric-card">
@@ -39,13 +39,13 @@
 
         <div class="pipeline-metric-card">
           <span class="pipeline-metric-label">📅 Con Eventos Activos</span>
-          <strong id="metricConEventos" class="pipeline-metric-val" style="color: #10b981;">0</strong>
+          <strong id="metricConEventos" class="pipeline-metric-val text-emerald-500">0</strong>
         </div>
       </div>
 
       <!-- BARRA DE HERRAMIENTAS EJECUTIVA: BÚSQUEDA, FILTROS Y NUEVO CLIENTE -->
-      <div class="cotizaciones-toolbar" style="margin-bottom: 2rem;">
-        <div class="form-group" style="flex: 2;">
+      <div class="cotizaciones-toolbar mb-8">
+        <div class="form-group flex-[2]">
           <label for="searchClienteInput">Buscar en el directorio</label>
           <input type="text" id="searchClienteInput" placeholder="Buscar por nombre, teléfono, cédula/NIT, correo o ciudad..." />
         </div>
@@ -69,8 +69,8 @@
           </select>
         </div>
 
-        <div style="display: flex; gap: 8px; align-self: flex-end;">
-          <button id="btnOpenNewClientModal" class="btn btn-primary" style="padding: 10px 18px; font-size: 0.88rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+        <div class="flex gap-2 self-end">
+          <button id="btnOpenNewClientModal" class="btn btn-primary px-4 py-2.5 text-sm font-bold inline-flex items-center gap-1.5">
             ✨ + Nuevo Cliente
           </button>
         </div>
@@ -99,7 +99,7 @@
           <input type="text" id="nombre" placeholder="Ej: Valentina Muñoz & Juan Esteban" required />
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="form-group">
             <label for="telefono">Teléfono Móvil (WhatsApp) *</label>
             <input type="tel" id="telefono" placeholder="Ej: 311 789 2233" required />
@@ -111,7 +111,7 @@
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="form-group">
             <label for="email">Correo Electrónico</label>
             <input type="email" id="email" placeholder="cliente@banquetesalmar.com" />
@@ -132,7 +132,7 @@
           <input type="text" id="direccion" placeholder="Ej: Calle 30 # 29-15, Marinilla (Antioquia)" />
         </div>
 
-        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+        <div class="flex justify-end gap-2.5 mt-6 pt-4 border-t border-white/10">
           <button type="button" class="btn btn-secondary" id="btnCancelModal">Cancelar</button>
           <button type="submit" class="btn btn-primary" id="saveClientBtn">Guardar Cliente</button>
         </div>

@@ -46,29 +46,29 @@
         </div>
 
         <div class="live-preview-box" id="livePreviewBanner">
-          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-            <span id="pvIcon" style="font-size: 1.05rem;">✨</span>
-            <strong id="pvTitle" style="color: #f5d77f; font-weight: 700; letter-spacing: 0.02em;">Temporada de Eventos 2026-2027:</strong>
-            <span id="pvMessage" style="color: #e4e4e7; font-weight: 500;">Salón de Gala en Marinilla & Finca Campestre en El Peñol</span>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="pvIcon" class="text-base">✨</span>
+            <strong id="pvTitle" class="text-amber-200 font-bold tracking-wide">Temporada de Eventos 2026-2027:</strong>
+            <span id="pvMessage" class="text-zinc-200 font-medium">Salón de Gala en Marinilla & Finca Campestre en El Peñol</span>
           </div>
-          <div id="pvRightGroup" style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: #a1a1aa; margin-left: auto;">
-            <span id="pvBadge" style="background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.4); color: #f5d77f; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600;">Oriente Antioqueño</span>
+          <div id="pvRightGroup" class="flex items-center gap-2.5 text-sm text-zinc-400 ml-auto">
+            <span id="pvBadge" class="bg-amber-500/15 border border-amber-500/40 text-amber-200 px-2.5 py-1 rounded-full text-xs font-semibold">Oriente Antioqueño</span>
             <span id="pvDot">•</span>
             <span id="pvSubtext">Degustación Previa de Menú Incluida</span>
           </div>
         </div>
 
-        <div id="pausedNotice" style="display: none; margin-top: 0.75rem; text-align: center; color: #ff9f0a; font-size: 0.85rem; font-weight: 500;">
+        <div id="pausedNotice" class="hidden mt-3 text-center text-amber-500 text-sm font-medium">
           ⚠️ La franja está en pausa. Actualmente está oculta en la página web pública.
         </div>
       </div>
 
       <!-- PLANTILLAS RÁPIDAS DE 1 CLIC (IDEAS DE GALA) -->
-      <div style="margin-bottom: 1.5rem;">
-        <h3 style="color: #fff; font-size: 1.25rem; font-family: 'Playfair Display', serif; margin-bottom: 0.4rem;">
+      <div class="mb-6">
+        <h3 class="text-white text-xl font-serif mb-1.5">
           ✨ Plantillas de Gala Recomendadas (Aplica con 1 Clic)
         </h3>
-        <p style="color: #a1a1aa; font-size: 0.88rem; margin: 0 0 1rem 0;">
+        <p class="text-zinc-400 text-sm m-0 mb-4">
           Selecciona una propuesta comercial preconfigurada o personaliza libremente cada campo a continuación.
         </p>
 
@@ -115,18 +115,18 @@
               <span class="switch-slider"></span>
             </label>
             <div>
-              <strong style="color: #ffffff; font-size: 1.05rem; display: block;">Mostrar Franja Superior en la Web</strong>
-              <span style="color: #a1a1aa; font-size: 0.85rem;">Si lo desactivas, la barra se ocultará inmediatamente en la página principal.</span>
+              <strong class="text-white text-base block font-bold">Mostrar Franja Superior en la Web</strong>
+              <span class="text-zinc-400 text-sm">Si lo desactivas, la barra se ocultará inmediatamente en la página principal.</span>
             </div>
           </div>
 
           <!-- FILA 1: ICONO / EMOJI -->
-          <div class="form-group full-width" style="margin-bottom: 1.5rem;">
-            <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+          <div class="form-group full-width mb-6">
+            <label class="flex justify-between items-center mb-2.5">
               <span>Icono o Emoji del Anuncio</span>
-              <span style="color: var(--apple-gold-light); font-size: 0.82rem;">Toca un emoji rápido o escribe el tuyo</span>
+              <span class="text-amber-300 text-xs">Toca un emoji rápido o escribe el tuyo</span>
             </label>
-            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.6rem;">
+            <div class="flex gap-2.5 items-center flex-wrap mb-2.5">
               <button type="button" class="emoji-pill-btn" data-emoji="✨">✨</button>
               <button type="button" class="emoji-pill-btn" data-emoji="💍">💍</button>
               <button type="button" class="emoji-pill-btn" data-emoji="👑">👑</button>
@@ -137,12 +137,12 @@
               <button type="button" class="emoji-pill-btn" data-emoji="🌟">🌟</button>
               <button type="button" class="emoji-pill-btn" data-emoji="🎪">🎪</button>
               <button type="button" class="emoji-pill-btn" data-emoji="🍽️">🍽️</button>
-              <input type="text" id="announcementIconInput" maxlength="4" style="width: 70px; text-align: center; font-size: 1.2rem; padding: 0.4rem;" value="✨" title="Emoji personalizado" />
+              <input type="text" id="announcementIconInput" maxlength="4" class="w-[70px] text-center text-xl p-1.5 rounded-lg bg-white/5 border border-white/10 text-white outline-none focus:border-amber-400" value="✨" title="Emoji personalizado" />
             </div>
           </div>
 
           <!-- FILA 2: TÍTULO DESTACADO Y MENSAJE PRINCIPAL -->
-          <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 1.2rem; margin-bottom: 1.5rem;">
+          <div class="grid grid-cols-1 md:grid-cols-[1fr_1.6fr] gap-5 mb-6">
             <div class="form-group">
               <label for="announcementTitleInput">
                 Título / Frase Destacada (Dorado)
@@ -152,10 +152,10 @@
                 id="announcementTitleInput" 
                 placeholder="Ej: Temporada de Eventos 2026-2027:" 
                 value="Temporada de Eventos 2026-2027:" 
-                maxlength="60"
+                maxlength="60" 
                 required 
               />
-              <small style="color: #71717a; font-size: 0.78rem;">Se resalta en negrita dorada de gala.</small>
+              <small class="text-zinc-500 text-xs">Se resalta en negrita dorada de gala.</small>
             </div>
 
             <div class="form-group">
@@ -167,15 +167,15 @@
                 id="announcementMessageInput" 
                 placeholder="Ej: Salón de Gala en Marinilla & Finca Campestre en El Peñol" 
                 value="Salón de Gala en Marinilla & Finca Campestre en El Peñol" 
-                maxlength="120"
+                maxlength="120" 
                 required 
               />
-              <small style="color: #71717a; font-size: 0.78rem;">El texto principal que acompaña el título.</small>
+              <small class="text-zinc-500 text-xs">El texto principal que acompaña el título.</small>
             </div>
           </div>
 
           <!-- FILA 3: BADGE LATERAL Y SUBTEXTO DERECHO -->
-          <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 1.2rem; margin-bottom: 2rem;">
+          <div class="grid grid-cols-1 md:grid-cols-[1fr_1.4fr] gap-5 mb-8">
             <div class="form-group">
               <label for="announcementBadgeInput">
                 Insignia / Badge Lateral (Píldora)
@@ -185,9 +185,9 @@
                 id="announcementBadgeInput" 
                 placeholder="Ej: Oriente Antioqueño" 
                 value="Oriente Antioqueño" 
-                maxlength="30"
+                maxlength="30" 
               />
-              <small style="color: #71717a; font-size: 0.78rem;">Aparece como etiqueta destacada (opcional).</small>
+              <small class="text-zinc-500 text-xs">Aparece como etiqueta destacada (opcional).</small>
             </div>
 
             <div class="form-group">
@@ -199,21 +199,21 @@
                 id="announcementSubtextInput" 
                 placeholder="Ej: Degustación Previa de Menú Incluida" 
                 value="Degustación Previa de Menú Incluida" 
-                maxlength="80"
+                maxlength="80" 
               />
-              <small style="color: #71717a; font-size: 0.78rem;">Texto secundario después de la viñeta (opcional).</small>
+              <small class="text-zinc-500 text-xs">Texto secundario después de la viñeta (opcional).</small>
             </div>
           </div>
 
           <!-- BARRA DE ACCIONES DE GALA -->
-          <div class="admin-actions-bar" style="display: flex; gap: 1rem; align-items: center; justify-content: flex-end; flex-wrap: wrap; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1.5rem;">
+          <div class="admin-actions-bar flex gap-4 items-center justify-end flex-wrap border-t border-white/10 pt-6">
             <button type="button" class="btn btn-secondary" id="resetAnnouncementBtn">
               🔄 Restablecer Predeterminado
             </button>
             <a href="../index.html" target="_blank" class="btn btn-secondary">
               🌐 Ver en la Web
             </a>
-            <button type="submit" class="btn btn-primary" style="padding: 0.8rem 2rem; font-size: 1rem;">
+            <button type="submit" class="btn btn-primary px-8 py-3 text-base">
               💾 Guardar y Publicar en Vivo
             </button>
           </div>

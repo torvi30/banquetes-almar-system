@@ -31,7 +31,7 @@
         <a href="./anuncio.html" class="catalog-tab-btn">📢 Franja de Anuncio Web</a>
       </div>
 
-      <div class="dashboard-panel" style="margin-bottom: 2rem;">
+      <div class="dashboard-panel mb-8">
         <div class="dashboard-panel-head">
           <div>
             <p class="dashboard-mini-label">Gestión de Catálogo</p>
@@ -76,29 +76,38 @@
             <input type="url" id="imagenUrl" placeholder="https://ejemplo.com/foto.jpg" />
           </div>
 
-          <div class="form-group full-width" id="previewWrapper" style="display: none;">
+          <div class="form-group full-width hidden" id="previewWrapper">
             <label>Vista previa de la imagen</label>
-            <div style="width: 100%; max-width: 380px; height: 210px; border-radius: 14px; overflow: hidden; border: 1px solid var(--apple-border); background: #0c0c0e;">
-              <img id="imagePreview" src="" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover;" />
+            <div class="w-full max-w-[380px] h-[210px] rounded-[14px] overflow-hidden border border-white/10 bg-[#0c0c0e]">
+              <img id="imagePreview" src="" alt="Vista previa" class="w-full h-full object-cover" />
             </div>
           </div>
 
           <div class="form-group full-width event-form-actions">
             <button type="submit" class="btn btn-primary" id="saveServiceBtn">Guardar servicio</button>
-            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display: none;">Cancelar edición</button>
+            <button type="button" class="btn btn-secondary hidden" id="cancelEditBtn">Cancelar edición</button>
           </div>
         </form>
       </div>
 
       <!-- Filtros y búsqueda de servicios -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
         <div>
-          <h3 style="color: #fff; font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.3rem;">Servicios Publicados</h3>
-          <p style="color: var(--apple-text-secondary); font-size: 0.88rem;" id="servicesCount">Cargando...</p>
+          <h3 class="text-white font-serif text-2xl mb-1">Servicios Publicados</h3>
+          <p class="text-white/60 text-sm" id="servicesCount">Cargando...</p>
         </div>
-        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
-          <input type="text" id="searchServiceInput" placeholder="🔍 Buscar servicio..." style="padding: 0.55rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff; font-size: 0.88rem;" />
-          <select id="filterCategorySelect" style="padding: 0.55rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--apple-border); color: #fff; font-size: 0.88rem;">
+        <div class="flex gap-3 flex-wrap">
+          <input type="text" id="searchServiceInput" placeholder="🔍 Buscar servicio..." class="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white text-sm outline-none focus:border-amber-400" />
+          <select id="filterCategorySelect" class="px-4 py-2 rounded-full bg-stone-900 border border-white/10 text-white text-sm outline-none focus:border-amber-400">
+            <option value="Todos">Todas las categorías</option>
+            <option value="Catering">🍽️ Catering</option>
+            <option value="Decoración">💐 Decoración</option>
+            <option value="Mobiliario">🪑 Mobiliario</option>
+            <option value="Locación">🏛️ Locación</option>
+            <option value="Producción">🎵 Producción</option>
+          </select>
+        </div>
+      </div>
             <option value="Todos">Todas las categorías</option>
             <option value="Catering">🍽️ Catering</option>
             <option value="Decoración">💐 Decoración</option>

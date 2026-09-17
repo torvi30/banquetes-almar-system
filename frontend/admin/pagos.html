@@ -25,43 +25,43 @@
         <div class="finance-kpi-card">
           <span class="kpi-title">💰 Total Recaudado</span>
           <span class="kpi-value green" id="kpiTotalRecaudado">$0</span>
-          <small style="color: var(--text-soft); font-size: 0.8rem;">Historial consolidado</small>
+          <small class="text-white/60 text-xs">Historial consolidado</small>
         </div>
         <div class="finance-kpi-card">
           <span class="kpi-title">⏳ Cartera por Cobrar</span>
           <span class="kpi-value amber" id="kpiCarteraPendiente">$0</span>
-          <small style="color: var(--text-soft); font-size: 0.8rem;">Saldos de eventos activos</small>
+          <small class="text-white/60 text-xs">Saldos de eventos activos</small>
         </div>
         <div class="finance-kpi-card">
           <span class="kpi-title">🧾 Abonos Registrados</span>
           <span class="kpi-value gold" id="kpiCantidadPagos">0</span>
-          <small style="color: var(--text-soft); font-size: 0.8rem;">Transacciones de abono</small>
+          <small class="text-white/60 text-xs">Transacciones de abono</small>
         </div>
       </div>
 
       <!-- 1. SELECTOR INTELIGENTE DE EVENTOS -->
       <div class="selector-box">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem;">
-          <h3 style="color: var(--gold-light); font-size: 1.15rem; margin: 0;">
+        <div class="flex justify-between items-center mb-3 flex-wrap gap-2">
+          <h3 class="text-amber-300 text-lg m-0 font-medium">
             1. Seleccionar Evento para Abono o Consulta
           </h3>
-          <button type="button" id="clearSelectionBtn" class="btn btn-secondary btn-sm" style="font-size: 0.8rem; padding: 4px 10px;">
+          <button type="button" id="clearSelectionBtn" class="btn btn-secondary btn-sm text-xs px-2.5 py-1">
             ✕ Deseleccionar evento
           </button>
         </div>
 
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
-          <div class="form-group" style="margin-bottom: 0;">
+        <div class="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4">
+          <div class="form-group mb-0">
             <label for="eventoSelect">Buscar en agenda por cliente o tipo de evento:</label>
-            <select id="eventoSelect" class="form-control" style="background: #111; color: #fff; border-color: rgba(212,175,55,0.4); padding: 0.75rem;">
+            <select id="eventoSelect" class="form-control bg-[#111] text-white border-amber-400/40 p-3">
               <option value="">-- Selecciona un evento para ver saldo y abonar --</option>
             </select>
           </div>
-          <div class="form-group" style="margin-bottom: 0;">
+          <div class="form-group mb-0">
             <label for="eventoIdManual">O busca / ingresa ID o Cédula:</label>
-            <div style="display: flex; gap: 0.5rem;">
-              <input type="text" id="eventoIdManual" placeholder="Ej: res-201 o nombre..." style="background: #111;" />
-              <button type="button" id="loadEventBtn" class="btn btn-primary" style="white-space: nowrap; padding: 0 1rem;">
+            <div class="flex gap-2">
+              <input type="text" id="eventoIdManual" placeholder="Ej: res-201 o nombre..." class="bg-[#111]" />
+              <button type="button" id="loadEventBtn" class="btn btn-primary whitespace-nowrap px-4">
                 Buscar
               </button>
             </div>
@@ -71,24 +71,24 @@
 
       <!-- 2. RESUMEN FINANCIERO DINÁMICO DEL EVENTO SELECCIONADO -->
       <div id="eventSummary">
-        <div style="background: rgba(255,255,255,0.03); border: 1px dashed rgba(212,175,55,0.25); border-radius: var(--radius-md); padding: 1.8rem; text-align: center; color: var(--text-soft); margin-bottom: 1.8rem;">
-          <p style="margin: 0; font-size: 0.95rem;">
+        <div class="bg-white/[0.03] border border-dashed border-amber-400/25 rounded-2xl p-7 text-center text-white/60 mb-7">
+          <p class="m-0 text-sm">
             💡 Selecciona un evento arriba para ver el estado de su contrato, su barra de abonos y registrar pagos con 1 solo clic.
           </p>
         </div>
       </div>
 
       <!-- 3. FORMULARIO DE REGISTRO DE ABONO -->
-      <form id="paymentForm" class="quote-form" style="margin-bottom: 2.5rem;">
+      <form id="paymentForm" class="quote-form mb-10">
         <input type="hidden" id="paymentId" />
         <input type="hidden" id="selectedEventoId" />
         <input type="hidden" id="selectedClientName" />
 
-        <div style="grid-column: 1 / -1; margin-bottom: 0.5rem;">
-          <h3 id="formActionTitle" style="color: #fff; font-size: 1.15rem; margin: 0 0 0.4rem 0;">
+        <div class="col-span-full mb-2">
+          <h3 id="formActionTitle" class="text-white text-lg m-0 mb-1.5 font-medium">
             2. Registrar Nuevo Abono
           </h3>
-          <p style="color: var(--text-soft); font-size: 0.85rem; margin: 0;">
+          <p class="text-white/60 text-sm m-0">
             Los abonos descuentan automáticamente el saldo del evento y se reflejan en el contrato y en la agenda.
           </p>
         </div>
@@ -100,7 +100,7 @@
             <span class="amount-pill" data-amount="500000">+$500.000</span>
             <span class="amount-pill" data-amount="1000000">+$1.000.000</span>
             <span class="amount-pill" data-amount="2000000">+$2.000.000</span>
-            <span class="amount-pill" id="pillPagarSaldo" style="border-color: #2ecc71; color: #a8d5ba; display: none;">⚡ Saldo Completo</span>
+            <span class="amount-pill hidden border-[#2ecc71] text-[#a8d5ba]" id="pillPagarSaldo">⚡ Saldo Completo</span>
           </div>
         </div>
 
@@ -128,18 +128,18 @@
         </div>
 
         <div class="form-group full-width">
-          <label for="comprobanteArchivo" style="color: #fff; font-weight: 600;">Foto o Captura del Comprobante (Voucher)</label>
-          <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-            <input type="file" id="comprobanteArchivo" accept="image/*" style="max-width: 320px;" />
-            <span style="color: var(--text-soft); font-size: 0.8rem;">☁️ Se alojará automáticamente en Cloudinary</span>
+          <label for="comprobanteArchivo" class="text-white font-semibold">Foto o Captura del Comprobante (Voucher)</label>
+          <div class="flex gap-4 items-center flex-wrap">
+            <input type="file" id="comprobanteArchivo" accept="image/*" class="max-w-[320px]" />
+            <span class="text-white/60 text-xs">☁️ Se alojará automáticamente en Cloudinary</span>
           </div>
           <input type="hidden" id="comprobanteUrl" />
-          <div id="comprobantePreviewWrap" style="display: none; margin-top: 0.6rem;">
-            <div style="display: inline-flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 6px 12px; border-radius: 10px;">
-              <img id="comprobantePreviewImg" src="" alt="Voucher" style="height: 50px; width: 50px; object-fit: cover; border-radius: 6px;" />
+          <div id="comprobantePreviewWrap" class="hidden mt-2.5">
+            <div class="inline-flex items-center gap-3 bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl">
+              <img id="comprobantePreviewImg" src="" alt="Voucher" class="h-[50px] w-[50px] object-cover rounded-md" />
               <div>
-                <span id="comprobantePreviewName" style="font-size: 0.82rem; color: #fff; display: block; font-weight: 600;">Voucher cargado</span>
-                <button type="button" id="btnQuitarVoucher" style="background: none; border: none; color: #ff6b6b; font-size: 0.75rem; cursor: pointer; padding: 0;">Quitar</button>
+                <span id="comprobantePreviewName" class="text-xs text-white block font-semibold">Voucher cargado</span>
+                <button type="button" id="btnQuitarVoucher" class="bg-transparent border-0 text-[#ff6b6b] text-xs cursor-pointer p-0">Quitar</button>
               </div>
             </div>
           </div>
@@ -150,30 +150,30 @@
           <textarea id="nota" rows="2" placeholder="Ej: Anticipo 30% separación de fecha, segundo abono vajilla..."></textarea>
         </div>
 
-        <div class="form-group full-width event-form-actions" style="display: flex; gap: 1rem; align-items: center;">
-          <button type="submit" class="btn btn-primary" id="savePaymentBtn" style="min-width: 200px;">
+        <div class="form-group full-width event-form-actions flex gap-4 items-center">
+          <button type="submit" class="btn btn-primary min-w-[200px]" id="savePaymentBtn">
             💰 Registrar Abono
           </button>
-          <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display: none;">
+          <button type="button" class="btn btn-secondary hidden" id="cancelEditBtn">
             Cancelar edición
           </button>
         </div>
       </form>
 
       <!-- 4. HISTORIAL DE PAGOS Y RECIBOS -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 1rem; border-top: 1px solid var(--border-glass); padding-top: 2rem;">
+      <div class="flex justify-between items-center mb-5 flex-wrap gap-4 border-t border-white/10 pt-8">
         <div>
-          <h3 style="color: #fff; margin: 0; font-size: 1.3rem;">Historial de Pagos & Comprobantes</h3>
-          <p style="color: var(--text-soft); margin: 0.2rem 0 0 0; font-size: 0.85rem;">
+          <h3 class="text-white m-0 text-xl font-medium">Historial de Pagos & Comprobantes</h3>
+          <p class="text-white/60 m-0 mt-1 text-sm">
             Consulta recibos de caja, genera comprobantes oficiales e imprime soporte de pago.
           </p>
         </div>
 
-        <div style="display: flex; gap: 0.8rem; align-items: center;">
-          <button type="button" id="filterAllBtn" class="btn btn-secondary btn-sm" style="background: rgba(212,175,55,0.2); border-color: var(--gold);">
+        <div class="flex gap-3 items-center">
+          <button type="button" id="filterAllBtn" class="btn btn-secondary btn-sm bg-amber-400/20 border-amber-400">
             Todos los pagos
           </button>
-          <button type="button" id="filterEventBtn" class="btn btn-secondary btn-sm" style="display: none;">
+          <button type="button" id="filterEventBtn" class="btn btn-secondary btn-sm hidden">
             Solo este evento
           </button>
         </div>
@@ -187,97 +187,97 @@
   <div id="receiptModal" class="payment-receipt-modal">
     <div class="receipt-paper">
       <!-- Cabecera del recibo -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #e0c878; padding-bottom: 1rem; margin-bottom: 1.2rem;">
+      <div class="flex justify-between items-start border-b-2 border-[#e0c878] pb-4 mb-5">
         <div>
-          <h2 style="margin: 0; color: #9c7a23; font-size: 1.4rem; font-family: 'Cinzel', Georgia, serif; letter-spacing: 0.05em;">
+          <h2 class="m-0 text-[#9c7a23] text-2xl font-serif tracking-wider">
             BANQUETES ALMAR
           </h2>
-          <p style="margin: 3px 0 0 0; font-size: 0.8rem; color: #555;">
+          <p class="m-0 mt-1 text-xs text-[#555]">
             Eventos & Catering de Alta Gama • Marinilla, Antioquia
           </p>
-          <p style="margin: 2px 0 0 0; font-size: 0.78rem; color: #777;">
+          <p class="m-0 mt-0.5 text-xs text-[#777]">
             NIT 901.458.921-3 • Tel: (+57) 311 789 2233
           </p>
         </div>
-        <div style="text-align: right;">
-          <div style="background: #fbf6e8; border: 1px solid #d4af37; border-radius: 6px; padding: 6px 12px;">
-            <span style="font-size: 0.75rem; text-transform: uppercase; color: #886c1f; font-weight: 700; display: block;">Recibo Oficial de Caja</span>
-            <strong id="reciboNumero" style="font-size: 1.15rem; color: #111;">REC-0000</strong>
+        <div class="text-right">
+          <div class="bg-[#fbf6e8] border border-[#d4af37] rounded-md px-3 py-1.5">
+            <span class="text-xs uppercase text-[#886c1f] font-bold block">Recibo Oficial de Caja</span>
+            <strong id="reciboNumero" class="text-lg text-[#111]">REC-0000</strong>
           </div>
-          <small id="reciboFechaHora" style="display: block; color: #666; font-size: 0.75rem; margin-top: 4px;"></small>
+          <small id="reciboFechaHora" class="block text-[#666] text-xs mt-1"></small>
         </div>
       </div>
 
       <!-- Datos del Cliente y Evento -->
-      <div style="background: #fafafa; border-radius: 8px; padding: 0.9rem; margin-bottom: 1.2rem; font-size: 0.88rem; line-height: 1.5;">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+      <div class="bg-[#fafafa] rounded-lg p-3.5 mb-5 text-sm leading-relaxed">
+        <div class="grid grid-cols-2 gap-2">
           <div>
-            <strong style="color: #666; font-size: 0.75rem; text-transform: uppercase;">Recibido de:</strong>
-            <div id="reciboCliente" style="font-weight: 700; color: #111;">-</div>
+            <strong class="text-[#666] text-xs uppercase">Recibido de:</strong>
+            <div id="reciboCliente" class="font-bold text-[#111]">-</div>
           </div>
           <div>
-            <strong style="color: #666; font-size: 0.75rem; text-transform: uppercase;">Evento / Ocasión:</strong>
-            <div id="reciboEvento" style="font-weight: 600; color: #333;">-</div>
+            <strong class="text-[#666] text-xs uppercase">Evento / Ocasión:</strong>
+            <div id="reciboEvento" class="font-semibold text-[#333]">-</div>
           </div>
           <div>
-            <strong style="color: #666; font-size: 0.75rem; text-transform: uppercase;">Método de Pago:</strong>
-            <div id="reciboMetodo" style="font-weight: 600; color: #333;">-</div>
+            <strong class="text-[#666] text-xs uppercase">Método de Pago:</strong>
+            <div id="reciboMetodo" class="font-semibold text-[#333]">-</div>
           </div>
           <div>
-            <strong style="color: #666; font-size: 0.75rem; text-transform: uppercase;">Nro. Comprobante / Ref:</strong>
-            <div id="reciboComprobante" style="font-weight: 600; color: #333;">-</div>
+            <strong class="text-[#666] text-xs uppercase">Nro. Comprobante / Ref:</strong>
+            <div id="reciboComprobante" class="font-semibold text-[#333]">-</div>
           </div>
         </div>
       </div>
 
       <!-- Valor y Concepto -->
-      <div style="border-left: 4px solid #d4af37; background: #fffcf2; padding: 0.9rem 1.2rem; margin-bottom: 1.2rem; border-radius: 0 8px 8px 0;">
-        <div style="font-size: 0.8rem; text-transform: uppercase; color: #886c1f; font-weight: 600;">La Suma de:</div>
-        <div id="reciboMonto" style="font-size: 1.6rem; font-weight: 800; color: #1b4332; margin: 2px 0;">$0</div>
-        <div style="font-size: 0.85rem; color: #444; margin-top: 4px;">
+      <div class="border-l-4 border-[#d4af37] bg-[#fffcf2] px-5 py-3.5 mb-5 rounded-r-lg">
+        <div class="text-xs uppercase text-[#886c1f] font-semibold">La Suma de:</div>
+        <div id="reciboMonto" class="text-2xl font-extrabold text-[#1b4332] my-0.5">$0</div>
+        <div class="text-sm text-[#444] mt-1">
           <strong>Concepto:</strong> <span id="reciboConcepto">-</span>
         </div>
       </div>
 
       <!-- Estado de cuenta del evento -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; text-align: center; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 0.8rem 0; margin-bottom: 1.5rem; font-size: 0.82rem;">
+      <div class="grid grid-cols-3 gap-2 text-center border-y border-[#eee] py-3 mb-6 text-xs">
         <div>
-          <span style="color: #777; display: block;">Total Contratado</span>
-          <strong id="reciboTotalEvento" style="color: #111;">-</strong>
+          <span class="text-[#777] block">Total Contratado</span>
+          <strong id="reciboTotalEvento" class="text-[#111]">-</strong>
         </div>
         <div>
-          <span style="color: #777; display: block;">Total Abonado</span>
-          <strong id="reciboAbonadoEvento" style="color: #2e7d32;">-</strong>
+          <span class="text-[#777] block">Total Abonado</span>
+          <strong id="reciboAbonadoEvento" class="text-[#2e7d32]">-</strong>
         </div>
         <div>
-          <span style="color: #777; display: block;">Nuevo Saldo</span>
-          <strong id="reciboSaldoEvento" style="color: #c0392b;">-</strong>
+          <span class="text-[#777] block">Nuevo Saldo</span>
+          <strong id="reciboSaldoEvento" class="text-[#c0392b]">-</strong>
         </div>
       </div>
 
       <!-- Firmas -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1.5rem; font-size: 0.8rem; color: #666;">
-        <div style="text-align: center; width: 45%;">
-          <div style="border-bottom: 1px solid #999; height: 35px; margin-bottom: 4px;"></div>
+      <div class="flex justify-between items-end mt-6 text-xs text-[#666]">
+        <div class="text-center w-[45%]">
+          <div class="border-b border-[#999] h-[35px] mb-1"></div>
           <span>Firma Recibido (Cliente)</span>
         </div>
-        <div style="text-align: center; width: 45%;">
-          <div style="border-bottom: 1px solid #999; height: 35px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center;">
-            <span style="font-family: 'Brush Script MT', cursive; font-size: 1.2rem; color: #9c7a23;">Banquetes Almar</span>
+        <div class="text-center w-[45%]">
+          <div class="border-b border-[#999] h-[35px] mb-1 flex items-center justify-center">
+            <span class="font-serif italic text-lg text-[#9c7a23]">Banquetes Almar</span>
           </div>
           <span>Autorizado Banquetes Almar</span>
         </div>
       </div>
 
       <!-- Botones del modal (no imprimibles) -->
-      <div class="no-print" style="margin-top: 1.8rem; display: flex; gap: 0.8rem; justify-content: flex-end; border-top: 1px solid #eee; padding-top: 1rem;">
-        <button type="button" id="imprimirReciboBtn" class="btn btn-secondary" style="color: #111; border-color: #999;">
+      <div class="no-print mt-7 flex gap-3 justify-end border-t border-[#eee] pt-4">
+        <button type="button" id="imprimirReciboBtn" class="btn btn-secondary text-[#111] border-[#999]">
           🖨️ Imprimir Recibo
         </button>
-        <button type="button" id="whatsappReciboBtn" class="btn btn-primary" style="background: #25d366; border-color: #25d366; color: #fff;">
+        <button type="button" id="whatsappReciboBtn" class="btn btn-primary bg-[#25d366] border-[#25d366] text-white hover:bg-[#20ba59]">
           💬 Enviar WhatsApp
         </button>
-        <button type="button" id="cerrarReciboBtn" class="btn btn-secondary" style="color: #555;">
+        <button type="button" id="cerrarReciboBtn" class="btn btn-secondary text-[#555]">
           Cerrar
         </button>
       </div>

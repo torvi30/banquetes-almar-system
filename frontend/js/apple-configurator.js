@@ -270,10 +270,16 @@ export const EventStudio = {
       btn.addEventListener("click", () => {
         this.state.celebration = btn.dataset.type;
         if (this.state.celebration === "personalizado") {
-          if (customWrapper) customWrapper.style.display = "block";
+          if (customWrapper) {
+            customWrapper.classList.remove("hidden");
+            customWrapper.style.display = "block";
+          }
           if (customInput) customInput.focus();
         } else {
-          if (customWrapper) customWrapper.style.display = "none";
+          if (customWrapper) {
+            customWrapper.classList.add("hidden");
+            customWrapper.style.display = "none";
+          }
         }
         this.render();
       });
