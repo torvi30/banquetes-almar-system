@@ -5,6 +5,7 @@
 
 import { authService } from "./firebase/auth.js";
 import { dbService } from "./firebase/db.js";
+import { openWhatsAppModal } from "./components/whatsapp-concierge.js";
 
 authService.requireAuth("./login.html");
 
@@ -20,6 +21,10 @@ const eventosCliente = document.getElementById("eventosCliente");
 const pagosCliente = document.getElementById("pagosCliente");
 
 let currentCliente = null;
+let cachedReservations = [];
+let cachedPayments = [];
+let cachedTotalContracted = 0;
+let cachedTotalPaid = 0;
 
 // Formateador de moneda en pesos colombianos
 function formatMoney(amount) {
@@ -109,6 +114,9 @@ async function loadClientDossier() {
       return false;
     });
 
+    cachedReservations = clientReservations;
+    cachedPayments = clientPayments;
+
     // 4. Renderizar componentes
     renderHero(cliente);
     renderFinancialStats(clientReservations, clientPayments);
@@ -183,11 +191,9 @@ function renderHero(cliente) {
       </div>
 
       <div class="profile-header-actions">
-        ${waUrl ? `
-          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="background: #10b981; color: #fff; font-weight: 700; border: none;">
-            💬 WhatsApp
-          </a>
-        ` : ""}
+        <button type="button" id="btnClientWhatsApp" class="btn btn-secondary" style="background: #10b981; color: #fff; font-weight: 700; border: none; display: inline-flex; align-items: center; gap: 6px;">
+          💬 WhatsApp
+        </button>
 
         <button id="btnEditProfile" class="btn btn-secondary" style="color: var(--gold-light); border-color: rgba(230,199,123,0.35);">
           ✏️ Editar Datos
@@ -195,6 +201,23 @@ function renderHero(cliente) {
       </div>
     </div>
   `;
+
+  document.getElementById("btnClientWhatsApp")?.addEventListener("click", () => {
+    const primaryEvent = cachedReservations[0] || {};
+    openWhatsAppModal({
+      id: primaryEvent.id || cliente.id,
+      clientName: cliente.nombre,
+      phone: cliente.telefono,
+      eventType: primaryEvent.tipo_evento || "Celebración de Gala",
+      guestCount: primaryEvent.personas || 0,
+      location: primaryEvent.locacion || primaryEvent.lugar || "",
+      eventDate: primaryEvent.fecha_evento || "",
+      totalAmount: cachedTotalContracted,
+      downPayment: cachedTotalPaid,
+      remainingBalance: Math.max(0, cachedTotalContracted - cachedTotalPaid),
+      origin: "cliente"
+    });
+  });
 
   document.getElementById("btnEditProfile")?.addEventListener("click", openEditModal);
 }
@@ -219,6 +242,8 @@ function renderFinancialStats(reservations, payments) {
     });
   }
 
+  cachedTotalContracted = totalContracted;
+  cachedTotalPaid = totalPaid;
   const balance = Math.max(0, totalContracted - totalPaid);
 
   if (kpiEventosCount) kpiEventosCount.textContent = reservations.length;
@@ -283,6 +308,9 @@ function renderEventsList(reservations) {
         </div>
 
         <div style="display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.8rem;">
+          <button type="button" class="btn btn-secondary btn-sm btn-event-wa" data-id="${ev.id}" style="color: #25d366; border-color: rgba(37,211,102,0.4); font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+            💬 WhatsApp
+          </button>
           <a href="./contrato.html?id=${ev.id}" target="_blank" class="btn btn-secondary btn-sm" style="color: var(--gold-light); border-color: rgba(200,155,60,0.4); font-weight: 700;">
             📄 Contrato Oficial
           </a>
@@ -293,6 +321,30 @@ function renderEventsList(reservations) {
       </article>
     `;
   }).join("");
+
+  eventosCliente.querySelectorAll(".btn-event-wa").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const ev = cachedReservations.find(r => String(r.id) === String(btn.dataset.id));
+      if (ev) {
+        const total = Number(ev.total || ev.valor_total || 0);
+        const anticipo = Number(ev.anticipo || ev.abono || 0);
+        const saldo = Math.max(0, total - anticipo);
+        openWhatsAppModal({
+          id: ev.id,
+          clientName: ev.cliente || (currentCliente ? currentCliente.nombre : "Cliente"),
+          phone: ev.telefono || (currentCliente ? currentCliente.telefono : ""),
+          eventType: ev.tipo_evento,
+          guestCount: ev.personas,
+          location: ev.locacion || ev.lugar,
+          eventDate: ev.fecha_evento,
+          totalAmount: total,
+          downPayment: anticipo,
+          remainingBalance: saldo,
+          origin: "reserva"
+        });
+      }
+    });
+  });
 }
 
 // Renderizar lista de pagos

@@ -5,6 +5,7 @@
 
 import { authService } from "./firebase/auth.js";
 import { dbService } from "./firebase/db.js";
+import { openWhatsAppModal } from "./components/whatsapp-concierge.js";
 
 authService.requireAuth("./login.html");
 
@@ -203,11 +204,9 @@ function renderListaEventos(lista) {
         </div>
 
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.06);">
-          ${wpUrl ? `
-            <a href="${wpUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="background: #25d366; color: #000; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
-              💬 WhatsApp
-            </a>
-          ` : ""}
+          <button type="button" class="btn btn-secondary btn-sm btn-reserva-wa" data-id="${ev.id}" style="background: #25d366; color: #000; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+            💬 WhatsApp
+          </button>
 
           <a href="./contrato.html?id=${ev.id}" target="_blank" class="btn btn-secondary btn-sm" style="color: #a0c4ff; border-color: rgba(160,196,255,0.3);">
             📄 Contrato
@@ -228,6 +227,31 @@ function renderListaEventos(lista) {
       </article>
     `;
   }).join("");
+
+  // Acciones: WhatsApp Concierge
+  reservationsGrid.querySelectorAll(".btn-reserva-wa").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const ev = reservasCache.find(r => String(r.id) === String(btn.dataset.id));
+      if (ev) {
+        const total = Number(ev.total || ev.valor_total || 0);
+        const anticipo = Number(ev.anticipo || ev.abono || 0);
+        const saldo = Number(ev.saldo !== undefined ? ev.saldo : (total - anticipo));
+        openWhatsAppModal({
+          id: ev.id,
+          clientName: ev.cliente,
+          phone: ev.telefono,
+          eventType: ev.tipo_evento,
+          guestCount: ev.personas,
+          location: ev.locacion || ev.lugar,
+          eventDate: ev.fecha_evento,
+          totalAmount: total,
+          downPayment: anticipo,
+          remainingBalance: saldo,
+          origin: "reserva"
+        });
+      }
+    });
+  });
 
   // Acciones: Editar
   reservationsGrid.querySelectorAll(".edit-reserva-btn").forEach(btn => {
@@ -553,11 +577,9 @@ function abrirModalDia(fechaISO) {
           </div>
 
           <div style="display: flex; gap: 0.6rem; justify-content: flex-end; flex-wrap: wrap;">
-            ${ev.telefono ? `
-              <a href="https://api.whatsapp.com/send?phone=57${ev.telefono.replace(/\D/g, '')}" target="_blank" class="btn btn-secondary btn-sm" style="color: #25d366; border-color: rgba(37,211,102,0.4); padding: 4px 10px; font-size: 0.8rem;">
-                💬 WhatsApp
-              </a>
-            ` : ""}
+            <button type="button" class="btn btn-secondary btn-sm btn-cal-wa" data-id="${ev.id}" style="color: #25d366; border-color: rgba(37,211,102,0.4); padding: 4px 10px; font-size: 0.8rem;">
+              💬 WhatsApp
+            </button>
             <a href="./contrato.html?id=${ev.id}" target="_blank" class="btn btn-secondary btn-sm" style="color: var(--gold-light); border-color: rgba(212,175,55,0.4); padding: 4px 10px; font-size: 0.8rem;">
               📄 Contrato
             </a>
@@ -571,6 +593,30 @@ function abrirModalDia(fechaISO) {
         </div>
       `;
     }).join("");
+
+    calModalEventsList.querySelectorAll(".btn-cal-wa").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const ev = reservasCache.find(r => String(r.id) === String(btn.dataset.id));
+        if (ev) {
+          const total = Number(ev.total || ev.valor_total || 0);
+          const anticipo = Number(ev.anticipo || ev.abono || 0);
+          const saldo = Number(ev.saldo !== undefined ? ev.saldo : (total - anticipo));
+          openWhatsAppModal({
+            id: ev.id,
+            clientName: ev.cliente,
+            phone: ev.telefono,
+            eventType: ev.tipo_evento,
+            guestCount: ev.personas,
+            location: ev.locacion || ev.lugar,
+            eventDate: ev.fecha_evento,
+            totalAmount: total,
+            downPayment: anticipo,
+            remainingBalance: saldo,
+            origin: "reserva"
+          });
+        }
+      });
+    });
 
     calModalEventsList.querySelectorAll(".btn-modal-edit").forEach(btn => {
       btn.addEventListener("click", () => {

@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     :root {
@@ -631,7 +632,10 @@
       <button id="btnToggleEdit" class="btn-toolbar btn-toolbar-edit" title="Habilitar edición rápida en pantalla">
         ✏️ Modo Edición
       </button>
-      <button id="btnShareWhatsapp" class="btn-toolbar btn-toolbar-whatsapp" title="Enviar enlace o minuta por WhatsApp al cliente">
+      <button id="btnSaveChanges" class="btn-toolbar" style="display: none; background: #10b981; color: #fff; font-weight: 700; border: none; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);" title="Guardar los cambios en el sistema">
+        💾 Guardar Cambios
+      </button>
+      <button id="btnShareWhatsapp" class="btn-toolbar btn-toolbar-whatsapp" title="Abrir Centro de Plantillas de WhatsApp">
         💬 WhatsApp
       </button>
       <button onclick="window.print()" class="btn-toolbar btn-toolbar-gold" title="Imprimir documento o guardar como PDF">
@@ -852,6 +856,7 @@
   <script type="module">
     import { dbService } from "../js/firebase/db.js";
     import { DEFAULT_PACKAGES } from "../js/firebase/seed-data.js";
+    import { openWhatsAppModal } from "../js/components/whatsapp-concierge.js";
 
     let globalReservas = [];
     let globalCotizaciones = [];
@@ -1082,6 +1087,8 @@
 
       // Toggle Modo Edición
       const btnToggleEdit = document.getElementById("btnToggleEdit");
+      const btnSaveChanges = document.getElementById("btnSaveChanges");
+
       btnToggleEdit.addEventListener("click", () => {
         isEditMode = !isEditMode;
         const sheet = document.getElementById("contractSheet");
@@ -1090,6 +1097,7 @@
           sheet.classList.add("is-editing");
           btnToggleEdit.classList.add("active");
           btnToggleEdit.innerHTML = "💾 Finalizar Edición";
+          if (btnSaveChanges) btnSaveChanges.style.display = "inline-flex";
           document.querySelectorAll(".editable").forEach(el => {
             el.setAttribute("contenteditable", "true");
           });
@@ -1097,31 +1105,115 @@
           sheet.classList.remove("is-editing");
           btnToggleEdit.classList.remove("active");
           btnToggleEdit.innerHTML = "✏️ Modo Edición";
+          if (btnSaveChanges) btnSaveChanges.style.display = "none";
           document.querySelectorAll(".editable").forEach(el => {
             el.removeAttribute("contenteditable");
           });
         }
       });
 
-      // Compartir por WhatsApp
+      // Botón Guardar Cambios en Sistema
+      if (btnSaveChanges) {
+        btnSaveChanges.addEventListener("click", async () => {
+          if (!currentItem || !currentItem.data) return;
+          const isRes = currentItem.isReservation;
+          const id = currentItem.data.id;
+
+          const clientName = document.getElementById("contratoCliente")?.textContent?.trim() || "";
+          const docId = document.getElementById("contratoClienteDoc")?.textContent?.trim() || "";
+          const phone = document.getElementById("contratoTelefono")?.textContent?.trim() || "";
+          const email = document.getElementById("contratoEmail")?.textContent?.trim() || "";
+          const eventType = document.getElementById("contratoTipoEvento")?.textContent?.trim() || "";
+          const location = document.getElementById("contratoLocacion")?.textContent?.trim() || "";
+          const notes = document.getElementById("contratoObservaciones")?.textContent?.trim() || "";
+
+          const originalText = btnSaveChanges.innerHTML;
+          btnSaveChanges.disabled = true;
+          btnSaveChanges.innerHTML = "⏳ Guardando...";
+
+          try {
+            if (isRes) {
+              const updates = {
+                cliente: clientName,
+                documento: docId,
+                telefono: phone,
+                email: email,
+                tipo_evento: eventType,
+                locacion: location,
+                observaciones: notes
+              };
+              await dbService.updateReservation(id, updates);
+              Object.assign(currentItem.data, updates);
+            } else {
+              const updates = {
+                nombre: clientName,
+                documento: docId,
+                telefono: phone,
+                email: email,
+                evento: eventType,
+                locacion: location,
+                mensaje: notes
+              };
+              await dbService.updateQuote(id, updates);
+              Object.assign(currentItem.data, updates);
+            }
+
+            Swal.fire({
+              toast: true,
+              position: "top-end",
+              icon: "success",
+              title: "✓ Cambios guardados con éxito",
+              showConfirmButton: false,
+              timer: 2200,
+              background: "#161b22",
+              color: "#f8fafc",
+              customClass: {
+                popup: "almar-swal-toast"
+              }
+            });
+          } catch (err) {
+            console.error("Error al guardar cambios del contrato:", err);
+            Swal.fire({
+              toast: true,
+              position: "top-end",
+              icon: "error",
+              title: "Error al guardar cambios",
+              showConfirmButton: false,
+              timer: 2500,
+              background: "#161b22",
+              color: "#f8fafc"
+            });
+          } finally {
+            btnSaveChanges.disabled = false;
+            btnSaveChanges.innerHTML = originalText;
+          }
+        });
+      }
+
+      // Compartir por WhatsApp con el Centro de Plantillas
       const btnShareWhatsapp = document.getElementById("btnShareWhatsapp");
       btnShareWhatsapp.addEventListener("click", () => {
         if (!currentItem || !currentItem.data) return;
         const item = currentItem.data;
-        const clientName = (currentItem.isReservation ? item.cliente : item.nombre) || "Cliente";
-        const cleanPhone = (item.telefono || "").replace(/\D/g, "");
-        const folio = document.getElementById("contractNumBadge").textContent;
-        const eventType = document.getElementById("contratoTipoEvento").textContent;
-        const eventDate = document.getElementById("contratoFechaEvento").textContent;
-        const total = document.getElementById("contratoTotal").textContent;
-
-        const msg = `¡Hola ${clientName}! ✨ Te saludamos desde Banquetes Almar (Marinilla, Antioquia).\n\n📄 Te compartimos el resumen de tu ${folio} para tu ${eventType} el día ${eventDate}.\n💰 Valor total: ${total}.\n\nQuedamos a tu entera disposición para la firma y confirmación oficial de tu fecha. ¡Será un verdadero honor hacer realidad este gran evento! 🥂`;
-
-        const waUrl = cleanPhone
-          ? `https://wa.me/57${cleanPhone}?text=${encodeURIComponent(msg)}`
-          : `https://wa.me/?text=${encodeURIComponent(msg)}`;
-
-        window.open(waUrl, "_blank");
+        const isRes = currentItem.isReservation;
+        const totalVal = isRes ? Number(item.total || 0) : Number(item.totalEstimado || item.total || 0);
+        const anticipoVal = isRes ? Number(item.anticipo || 0) : Number(item.anticipoSugerido || Math.round(totalVal * 0.35));
+        const saldoVal = Math.max(0, totalVal - anticipoVal);
+        
+        openWhatsAppModal({
+          id: item.id,
+          clientName: (isRes ? item.cliente : item.nombre) || "Cliente",
+          phone: item.telefono || "",
+          eventType: (isRes ? item.tipo_evento : item.evento) || "Celebración de Gala",
+          guestCount: item.personas || item.invitados || 0,
+          location: item.locacion || item.lugar || "",
+          eventDate: isRes ? item.fecha_evento : (item.fechaEvento || item.fecha_evento),
+          totalAmount: totalVal,
+          downPayment: anticipoVal,
+          remainingBalance: saldoVal,
+          origin: isRes ? "reserva" : "cotizacion",
+          contractUrl: window.location.href
+        });
       });
     }
   </script>

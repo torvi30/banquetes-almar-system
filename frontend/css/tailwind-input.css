@@ -9936,3 +9936,26 @@ html, body {
   }
 }
 
+/* ==========================================================================
+   ALMAR WHATSAPP CONCIERGE MODAL LUXURY STYLES
+   ========================================================================== */
+.almar-wa-popup-luxury {
+  border: 1px solid rgba(212, 175, 55, 0.4) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 30px rgba(212, 175, 55, 0.15) !important;
+  padding: 1.8rem !important;
+}
+
+.almar-swal-close {
+  color: #94a3b8 !important;
+  transition: all 0.2s ease !important;
+}
+
+.almar-swal-close:hover {
+  color: #d4af37 !important;
+}
+
+.wa-template-tab-btn:hover {
+  border-color: rgba(212, 175, 55, 0.6) !important;
+  background: rgba(212, 175, 55, 0.08) !important;
+}

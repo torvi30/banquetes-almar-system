@@ -573,6 +573,27 @@ export const dbService = {
     return { id, estado };
   },
 
+  async updateQuote(id, quoteData) {
+    const live = await initFirestoreLive();
+    if (live && !String(id).startsWith("cot-")) {
+      try {
+        const { db, ops } = live;
+        await ops.updateDoc(ops.doc(db, "cotizaciones", String(id)), quoteData);
+      } catch (e) {
+        console.warn("Firestore updateQuote:", e.message);
+      }
+    }
+
+    const quotes = getLocal(STORAGE_KEYS.QUOTES);
+    const idx = quotes.findIndex(q => String(q.id) === String(id));
+    if (idx !== -1) {
+      quotes[idx] = { ...quotes[idx], ...quoteData };
+      setLocal(STORAGE_KEYS.QUOTES, quotes);
+      return quotes[idx];
+    }
+    return { id, ...quoteData };
+  },
+
   async deleteQuote(id) {
     const live = await initFirestoreLive();
     if (live && !id.startsWith("cot-")) {
@@ -633,8 +654,18 @@ export const dbService = {
   },
 
   async updateReservation(id, updatedData) {
+    const live = await initFirestoreLive();
+    if (live && !String(id).startsWith("res-")) {
+      try {
+        const { db, ops } = live;
+        await ops.updateDoc(ops.doc(db, "reservas", String(id)), updatedData);
+      } catch (e) {
+        console.warn("Firestore updateReservation error:", e.message);
+      }
+    }
+
     const reservas = getLocal(STORAGE_KEYS.RESERVATIONS);
-    const idx = reservas.findIndex(r => r.id === id);
+    const idx = reservas.findIndex(r => String(r.id) === String(id));
     if (idx !== -1) {
       reservas[idx] = { ...reservas[idx], ...updatedData };
       setLocal(STORAGE_KEYS.RESERVATIONS, reservas);
