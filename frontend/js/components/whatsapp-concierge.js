@@ -159,6 +159,48 @@ Una vez efectuada la transferencia, por favor envíanos el comprobante por aquí
     }
   },
   {
+    id: "official_payment_receipt",
+    title: "Recibo de Abono",
+    icon: "🧾",
+    badge: "Comprobante Oficial",
+    generateText: (data) => {
+      const clientName = data.clientName || "Estimado(a) Cliente";
+      const eventType = data.eventType || "tu celebración especial";
+      const receiptNumber = data.paymentReceiptNumber || `REC-${String(data.id || "").replace(/\D/g, '').slice(-5) || "001"}`;
+      const formattedPaymentAmount = formatCurrency(data.paymentAmount || data.downPayment || 0);
+      const paymentDate = data.paymentDate ? formatFriendlyDate(data.paymentDate) : "la fecha de hoy";
+      const paymentMethod = data.paymentMethod || "Transferencia Bancolombia";
+      const refText = data.paymentReference ? ` (N° Aprobación: *${data.paymentReference}*)` : "";
+      const paymentConcept = data.paymentConcept || "Abono general a servicios de eventos y banquetes";
+      const formattedTotal = formatCurrency(data.totalAmount);
+      const formattedPaid = formatCurrency(data.downPayment);
+      const formattedBalance = formatCurrency(data.remainingBalance);
+      const contractUrl = data.contractUrl || (window.location.origin + `/admin/contrato.html?id=${data.id || ""}`);
+
+      return `¡Hola, *${clientName}*! ✨
+
+Te saluda el área de Contabilidad y Tesorería de *Banquetes Almar* en Marinilla.
+
+Confirmamos la recepción exitosa y validación formal de tu abono para la realización de tu *${eventType}*:
+
+🧾 *COMPROBANTE OFICIAL DE CAJA (N° ${receiptNumber})*
+• *Valor Recibido:* *${formattedPaymentAmount}*
+• *Fecha:* ${paymentDate}
+• *Medio de Pago:* ${paymentMethod}${refText}
+• *Concepto:* ${paymentConcept}
+
+📊 *Estado de Cuenta Actualizado:*
+• Total Contratado: *${formattedTotal}*
+• Total Abonado a la fecha: *${formattedPaid}*
+• *Saldo Pendiente por Liquidar:* *${formattedBalance}*
+
+Puedes consultar el historial de abonos y tu contrato oficial en el siguiente enlace:
+🔗 ${contractUrl}
+
+¡Agradecemos mucho tu puntualidad y confianza! Seguimos coordinando cada detalle para que tu evento sea inolvidable. 🥂✨`;
+    }
+  },
+  {
     id: "balance_reminder",
     title: "Recordatorio de Saldo",
     icon: "⏳",
@@ -252,12 +294,20 @@ export function openWhatsAppModal(options = {}) {
       ? Number(options.remainingBalance) 
       : Number(options.saldo !== undefined ? options.saldo : Math.max(0, Number(options.totalAmount || options.totalEstimado || options.total || 0) - Number(options.downPayment || options.anticipo || 0))),
     origin: options.origin || "cotizacion",
-    contractUrl: options.contractUrl || (window.location.origin + `/admin/contrato.html?id=${options.id || ""}`)
+    contractUrl: options.contractUrl || (window.location.origin + `/admin/contrato.html?id=${options.id || ""}`),
+    paymentAmount: Number(options.paymentAmount || 0),
+    paymentMethod: options.paymentMethod || "",
+    paymentReceiptNumber: options.paymentReceiptNumber || "",
+    paymentReference: options.paymentReference || "",
+    paymentConcept: options.paymentConcept || "",
+    paymentDate: options.paymentDate || ""
   };
 
   // Select default template based on origin and balance
   let defaultTemplateId = "quote_proposal";
-  if (data.origin === "reserva") {
+  if (data.origin === "pago") {
+    defaultTemplateId = "official_payment_receipt";
+  } else if (data.origin === "reserva") {
     defaultTemplateId = (data.remainingBalance > 0) ? "balance_reminder" : "contract_banking";
   }
 

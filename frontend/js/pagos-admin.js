@@ -5,6 +5,7 @@
 
 import { authService } from "./firebase/auth.js";
 import { dbService } from "./firebase/db.js";
+import { openWhatsAppModal } from "./components/whatsapp-concierge.js";
 
 authService.requireAuth("./login.html");
 
@@ -438,21 +439,25 @@ if (form) {
           cliente
         });
 
-        // Diálogo con opción de ver recibo de inmediato
+        // Diálogo con opción de enviar comprobante por WhatsApp o ver recibo
         Swal.fire({
           icon: "success",
           title: "¡Abono Registrado!",
           html: `
-            <p>Se registraron <strong>${formatoMoneda(monto)}</strong> a nombre de <strong>${cliente}</strong>.</p>
-            <p style="font-size: 0.85rem; color: #888;">El saldo del evento se actualizó automáticamente.</p>
+            <div style="text-align: left; font-size: 0.9rem; color: #ccc; line-height: 1.6;">
+              <p>Se registraron <strong style="color: #2ecc71;">${formatoMoneda(monto)}</strong> a nombre de <strong style="color: #fff;">${cliente}</strong>.</p>
+              <p style="font-size: 0.85rem; color: #888;">El saldo del evento se actualizó automáticamente.</p>
+            </div>
           `,
           showCancelButton: true,
-          confirmButtonText: "🧾 Ver Recibo Oficial",
-          cancelButtonText: "Continuar",
-          confirmButtonColor: "#d4af37",
-          cancelButtonColor: "#444"
+          confirmButtonText: "📲 Enviar Recibo por WhatsApp",
+          cancelButtonText: "🧾 Ver Recibo Oficial",
+          confirmButtonColor: "#25d366",
+          cancelButtonColor: "#d4af37"
         }).then((result) => {
           if (result.isConfirmed) {
+            enviarReciboWhatsApp(nuevoPago.id);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
             abrirModalRecibo(nuevoPago.id);
           }
         });
@@ -527,7 +532,10 @@ function renderPagos() {
           </div>
         </div>
 
-        <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.2rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.8rem;">
+        <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.2rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.8rem; flex-wrap: wrap;">
+          <button type="button" class="btn btn-secondary btn-sm btn-wa-pago" data-id="${p.id}" style="color: #25d366; border-color: rgba(37,211,102,0.3); font-size: 0.8rem; padding: 4px 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;" title="Enviar comprobante oficial por WhatsApp">
+            💬 WhatsApp
+          </button>
           <button type="button" class="btn btn-secondary btn-sm btn-recibo" data-id="${p.id}" style="color: var(--gold-light); border-color: rgba(212,175,55,0.3); font-size: 0.8rem; padding: 4px 10px;">
             🧾 Recibo
           </button>
@@ -543,6 +551,10 @@ function renderPagos() {
   }).join("");
 
   // Listeners de botones de cada tarjeta
+  document.querySelectorAll(".btn-wa-pago").forEach(btn => {
+    btn.addEventListener("click", () => enviarReciboWhatsApp(btn.dataset.id));
+  });
+
   document.querySelectorAll(".btn-recibo").forEach(btn => {
     btn.addEventListener("click", () => abrirModalRecibo(btn.dataset.id));
   });
@@ -702,28 +714,43 @@ if (imprimirReciboBtn) {
   });
 }
 
+// ----------------- FUNCIÓN ENVIAR RECIBO OFICIAL POR WHATSAPP -----------------
+function enviarReciboWhatsApp(pagoId) {
+  const pago = pagosCache.find(p => String(p.id) === String(pagoId));
+  if (!pago) return;
+
+  const evento = eventosCache.find(e => String(e.id) === String(pago.reservaId));
+  const tel = evento?.telefono || "";
+  const total = evento ? Number(evento.total || 0) : Number(pago.monto || 0);
+  const anticipo = evento ? Number(evento.anticipo || 0) : Number(pago.monto || 0);
+  const saldo = evento ? Number(evento.saldo || 0) : 0;
+  const receiptNum = `REC-${String(pago.id).replace(/\D/g, '').slice(-5) || "001"}`;
+
+  openWhatsAppModal({
+    id: pago.reservaId || pago.id,
+    clientName: pago.cliente || (evento ? evento.cliente : "Cliente Almar"),
+    phone: tel,
+    eventType: evento ? evento.tipo_evento : "Celebración de Gala",
+    eventDate: evento ? evento.fecha_evento : (pago.fecha || ""),
+    guestCount: evento ? evento.personas : 0,
+    location: evento ? (evento.locacion || evento.lugar) : "",
+    totalAmount: total,
+    downPayment: anticipo,
+    remainingBalance: saldo,
+    paymentAmount: Number(pago.monto || 0),
+    paymentMethod: pago.metodo || "Transferencia Bancolombia",
+    paymentReceiptNumber: receiptNum,
+    paymentReference: pago.comprobante || "",
+    paymentConcept: pago.concepto || pago.nota || "Abono a evento",
+    paymentDate: pago.fecha || "",
+    origin: "pago"
+  });
+}
+
 if (whatsappReciboBtn) {
   whatsappReciboBtn.addEventListener("click", () => {
-    if (!currentReceiptData) return;
-    const { pago, evento } = currentReceiptData;
-    const tel = evento?.telefono ? evento.telefono.replace(/\D/g, "") : "";
-    const cliente = pago.cliente || evento?.cliente || "Estimado(a) Cliente";
-    const saldoTxt = evento ? formatoMoneda(evento.saldo) : "$0";
-
-    const mensaje = 
-`*BANQUETES ALMAR - COMPROBANTE DE PAGO OFICIAL* 🧾%0A` +
-`Estimado(a) *${encodeURIComponent(cliente)}*, confirmamos la recepción exitosa de su abono:%0A%0A` +
-`💰 *Monto recibido:* ${encodeURIComponent(formatoMoneda(pago.monto))}%0A` +
-`📅 *Fecha:* ${encodeURIComponent(pago.fecha || "")}%0A` +
-`💳 *Método de pago:* ${encodeURIComponent(pago.metodo || "")}%0A` +
-(pago.comprobante ? `🔖 *Nro. Aprobación:* ${encodeURIComponent(pago.comprobante)}%0A` : "") +
-`📝 *Concepto:* ${encodeURIComponent(pago.concepto || pago.nota || "Abono a evento")}%0A%0A` +
-(evento ? `🎪 *Evento:* ${encodeURIComponent(evento.tipo_evento)} (${encodeURIComponent(evento.fecha_evento || "")})%0A` : "") +
-`📊 *Saldo pendiente:* ${encodeURIComponent(saldoTxt)}%0A%0A` +
-`¡Muchas gracias por confiar en Banquetes Almar para su gran celebración! ✨🥂`;
-
-    const url = tel ? `https://api.whatsapp.com/send?phone=57${tel}&text=${mensaje}` : `https://api.whatsapp.com/send?text=${mensaje}`;
-    window.open(url, "_blank");
+    if (!currentReceiptData || !currentReceiptData.pago) return;
+    enviarReciboWhatsApp(currentReceiptData.pago.id);
   });
 }
 
