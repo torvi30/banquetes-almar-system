@@ -174,8 +174,7 @@
         <input 
           type="text" 
           id="lookupQuery" 
-          placeholder="Ej: 311 789 2233 o código de reserva" 
-          value="3117892233"
+          placeholder="Ingresa tu celular (ej: 311 789 2233) o código ALM-..." 
           required 
           style="flex: 1; min-width: 240px; padding: 0.9rem 1.2rem; background: #151518; border: 1px solid var(--apple-border); border-radius: var(--apple-radius-pill); color: #fff; font-size: 0.95rem;" 
         />
@@ -183,10 +182,22 @@
           Consultar
         </button>
       </form>
+
+      <!-- MENSAJE DE NO ENCONTRADO -->
+      <div id="eventNotFound" style="display: none; text-align: center; padding: 2.2rem 1.5rem; background: rgba(22,22,26,0.9); border: 1px dashed rgba(212,175,55,0.3); border-radius: 18px; margin-top: 1.5rem;">
+        <span style="font-size: 2.5rem; display: block; margin-bottom: 0.6rem;">🔍</span>
+        <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.4rem;">No encontramos una reserva con esos datos</h3>
+        <p style="color: var(--apple-text-secondary); max-width: 480px; margin: 0 auto 1.2rem; font-size: 0.88rem;">
+          Verifica que el número de celular o código coincida con el registrado en tu contrato, o comunícate directamente con nuestro equipo de coordinación.
+        </p>
+        <a href="https://wa.me/573104458892?text=Hola%20Banquetes%20Almar,%20necesito%20apoyo%20para%20consultar%20mi%20evento%20en%20el%20portal" target="_blank" class="btn-apple-primary" style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.88rem;">
+          💬 Contactar a mi Asesor
+        </a>
+      </div>
     </div>
 
     <!-- VISTA PRINCIPAL DEL CLIENTE (SE MUESTRA TRAS CONSULTAR) -->
-    <div id="eventDetailsSection">
+    <div id="eventDetailsSection" style="display: none;">
       
       <!-- HERO DE LA RESERVA & CUENTA REGRESIVA -->
       <div class="portal-card">
@@ -352,12 +363,12 @@
                 <strong style="color: #fff; font-size: 0.95rem;">🟡 Bancolombia</strong>
                 <span style="font-size: 0.75rem; color: var(--apple-gold-light); background: rgba(212,175,55,0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">Ahorros</span>
               </div>
-              <p style="font-size: 0.8rem; color: var(--apple-text-secondary); margin-bottom: 0.3rem;">Cuenta de Ahorros:</p>
+              <p style="font-size: 0.8rem; color: var(--apple-text-secondary); margin-bottom: 0.3rem;">Cuenta de Ahorros Oficial:</p>
               <div style="display: flex; justify-content: space-between; align-items: center; background: #121214; padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                <span style="font-family: monospace; font-size: 1rem; color: #fff; font-weight: 700;" id="bancolombiaAcc">314-8849011-01</span>
-                <button type="button" class="btn-copy" onclick="navigator.clipboard.writeText('314884901101'); this.textContent='¡Copiado!'; setTimeout(()=>this.textContent='Copiar', 2000);" style="background: transparent; border: none; color: var(--apple-gold-light); font-size: 0.75rem; cursor: pointer; text-decoration: underline;">Copiar</button>
+                <span style="font-family: monospace; font-size: 1rem; color: #fff; font-weight: 700;" id="bancolombiaAcc">108-923847-12</span>
+                <button type="button" class="btn-copy" onclick="navigator.clipboard.writeText('10892384712'); this.textContent='¡Copiado!'; setTimeout(()=>this.textContent='Copiar', 2000);" style="background: transparent; border: none; color: var(--apple-gold-light); font-size: 0.75rem; cursor: pointer; text-decoration: underline;">Copiar</button>
               </div>
-              <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-top: 0.5rem;">Titular: Banquetes Almar • NIT: 901.458.320</p>
+              <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-top: 0.5rem;">Titular: Banquetes Almar S.A.S. • NIT: 901.458.231-8</p>
             </div>
 
             <!-- NEQUI / DAVIPLATA -->
@@ -366,12 +377,12 @@
                 <strong style="color: #fff; font-size: 0.95rem;">🟣 Nequi / Daviplata / Bre-B</strong>
                 <span style="font-size: 0.75rem; color: #a855f7; background: rgba(168,85,247,0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">Digital</span>
               </div>
-              <p style="font-size: 0.8rem; color: var(--apple-text-secondary); margin-bottom: 0.3rem;">Número de Transferencia:</p>
+              <p style="font-size: 0.8rem; color: var(--apple-text-secondary); margin-bottom: 0.3rem;">Línea Corporativa Oficial:</p>
               <div style="display: flex; justify-content: space-between; align-items: center; background: #121214; padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                <span style="font-family: monospace; font-size: 1rem; color: #fff; font-weight: 700;" id="nequiAcc">314 884 9011</span>
-                <button type="button" class="btn-copy" onclick="navigator.clipboard.writeText('3148849011'); this.textContent='¡Copiado!'; setTimeout(()=>this.textContent='Copiar', 2000);" style="background: transparent; border: none; color: var(--apple-gold-light); font-size: 0.75rem; cursor: pointer; text-decoration: underline;">Copiar</button>
+                <span style="font-family: monospace; font-size: 1rem; color: #fff; font-weight: 700;" id="nequiAcc">310 445 8892</span>
+                <button type="button" class="btn-copy" onclick="navigator.clipboard.writeText('3104458892'); this.textContent='¡Copiado!'; setTimeout(()=>this.textContent='Copiar', 2000);" style="background: transparent; border: none; color: var(--apple-gold-light); font-size: 0.75rem; cursor: pointer; text-decoration: underline;">Copiar</button>
               </div>
-              <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-top: 0.5rem;">Acepta transferencias por Bre-B, Transfiya y Nequi</p>
+              <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-top: 0.5rem;">Acepta transferencias directas por Bre-B, Transfiya y Nequi</p>
             </div>
           </div>
 
@@ -446,6 +457,8 @@
     }
 
     // Elementos del dashboard
+    const eventDetailsSection = document.getElementById("eventDetailsSection");
+    const eventNotFound = document.getElementById("eventNotFound");
     const clientStatusBadge = document.getElementById("clientStatusBadge");
     const clientEventTitle = document.getElementById("clientEventTitle");
     const clientVenueText = document.getElementById("clientVenueText");
@@ -461,19 +474,42 @@
     const paymentHistoryBody = document.getElementById("paymentHistoryBody");
     const btnDownloadContract = document.getElementById("btnDownloadContract");
 
-    // Función de búsqueda
+    let countdownInterval = null;
+
+    // Función de búsqueda inteligente
     async function consultarEvento(query) {
+      if (!query) {
+        if (eventDetailsSection) eventDetailsSection.style.display = "none";
+        if (eventNotFound) eventNotFound.style.display = "none";
+        return;
+      }
+
       const clean = String(query || "").replace(/\D/g, "");
+      const q = String(query).toLowerCase().trim();
       const reservas = await dbService.getReservations();
       const pagos = await dbService.getPayments();
 
-      const encontrada = reservas.find(r => 
-        String(r.telefono || "").replace(/\D/g, "").includes(clean) ||
-        String(r.id || "").toLowerCase() === query.toLowerCase() ||
-        String(r.cliente || "").toLowerCase().includes(query.toLowerCase())
-      ) || reservas[0];
+      const encontrada = reservas.find(r => {
+        const telClean = String(r.telefono || "").replace(/\D/g, "");
+        const idClean = String(r.id || "").toLowerCase();
+        const codeClean = `alm-${String(r.id || "").slice(-6)}`.toLowerCase();
+        const clientName = String(r.cliente || "").toLowerCase();
 
-      if (!encontrada) return;
+        if (clean && clean.length >= 7 && telClean.includes(clean)) return true;
+        if (idClean === q || codeClean === q) return true;
+        if (q.length >= 4 && clientName.includes(q)) return true;
+        return false;
+      });
+
+      if (!encontrada) {
+        reservaActual = null;
+        if (eventDetailsSection) eventDetailsSection.style.display = "none";
+        if (eventNotFound) eventNotFound.style.display = "block";
+        return;
+      }
+
+      if (eventNotFound) eventNotFound.style.display = "none";
+      if (eventDetailsSection) eventDetailsSection.style.display = "block";
       reservaActual = encontrada;
 
       // Renderizar datos del evento
@@ -488,36 +524,45 @@
         btnDownloadContract.href = `./admin/contrato.html?id=${encontrada.id}`;
       }
 
-      // Financiero
-      const total = Number(encontrada.total || 11800000);
-      const abono = Number(encontrada.anticipo || 4000000);
-      const saldo = Math.max(0, total - abono);
-      const pct = Math.min(100, Math.round((abono / total) * 100));
+      // Financiero en tiempo real
+      const total = Number(encontrada.total || encontrada.valor_total || 0);
+      const abono = Number(encontrada.anticipo || encontrada.abono || 0);
+      const saldo = Number(encontrada.saldo !== undefined ? encontrada.saldo : Math.max(0, total - abono));
+      const pct = total > 0 ? Math.min(100, Math.round((abono / total) * 100)) : 0;
 
-      totalInversionDisplay.textContent = `$${total.toLocaleString("es-CO")}`;
-      totalAbonadoDisplay.textContent = `$${abono.toLocaleString("es-CO")}`;
-      saldoPendienteDisplay.textContent = `$${saldo.toLocaleString("es-CO")}`;
+      totalInversionDisplay.textContent = `$${total.toLocaleString("es-CO")} COP`;
+      totalAbonadoDisplay.textContent = `$${abono.toLocaleString("es-CO")} COP`;
+      saldoPendienteDisplay.textContent = `$${saldo.toLocaleString("es-CO")} COP`;
       paymentPercentageText.textContent = `${pct}% Pagado`;
       paymentProgressBar.style.width = `${pct}%`;
 
       // Pagos de la reserva
-      const pagosReserva = pagos.filter(p => p.reservaId === encontrada.id);
+      const pagosReserva = pagos.filter(p => String(p.reservaId) === String(encontrada.id));
       if (pagosReserva.length > 0) {
         paymentHistoryBody.innerHTML = pagosReserva.map(p => `
           <tr>
             <td>${p.fecha || new Date().toISOString().slice(0, 10)}</td>
-            <td>${p.concepto || "Abono"}</td>
+            <td>${p.concepto || p.nota || "Abono"}</td>
             <td>${p.metodo || "Transferencia"}</td>
-            <td style="text-align: right; color: #2ecc71; font-weight: 700;">+$${Number(p.monto).toLocaleString("es-CO")}</td>
+            <td style="text-align: right; color: #2ecc71; font-weight: 700;">+$${Number(p.monto || 0).toLocaleString("es-CO")}</td>
           </tr>
         `).join("");
+      } else {
+        paymentHistoryBody.innerHTML = `
+          <tr>
+            <td colspan="4" style="text-align: center; color: var(--apple-text-secondary); padding: 1.5rem;">
+              No se registran abonos en el sistema aún para esta reserva.
+            </td>
+          </tr>
+        `;
       }
 
-      // Cuenta regresiva
+      // Cuenta regresiva precisa
       iniciarCuentaRegresiva(encontrada.fecha_evento);
     }
 
     function iniciarCuentaRegresiva(fechaStr) {
+      if (countdownInterval) clearInterval(countdownInterval);
       if (!fechaStr) return;
       const target = new Date(fechaStr + "T16:00:00").getTime();
 
@@ -545,7 +590,7 @@
       }
 
       update();
-      setInterval(update, 1000);
+      countdownInterval = setInterval(update, 1000);
     }
 
     form.addEventListener("submit", (e) => {
@@ -569,7 +614,7 @@
           cliente: reservaActual.cliente,
           monto: monto,
           metodo: metodo,
-          concepto: `Abono reporte anfitrión (Ref: ${ref})`,
+          concepto: `Abono reportado por anfitrión (Ref: ${ref})`,
           fecha: new Date().toISOString().slice(0, 10),
           estado: "Pendiente Verificación"
         });
@@ -602,13 +647,13 @@
 ──────────────────────────────
 Adjunto en esta conversación la captura/foto del comprobante de transferencia para confirmación oficial.`;
 
-        window.open(`https://wa.me/573148849011?text=${encodeURIComponent(msg)}`, "_blank");
+        window.open(`https://wa.me/573104458892?text=${encodeURIComponent(msg)}`, "_blank");
       });
     }
 
-    // Consulta inicial: lee parámetros de URL (?tel=, ?id=, ?query=) o usa demostración
+    // Consulta inicial: lee parámetros de URL (?tel=, ?id=, ?query=)
     const urlParams = new URLSearchParams(window.location.search);
-    const initialQuery = urlParams.get("query") || urlParams.get("tel") || urlParams.get("id") || "3117892233";
+    const initialQuery = urlParams.get("query") || urlParams.get("tel") || urlParams.get("id");
     if (initialQuery) {
       if (queryInput) queryInput.value = initialQuery;
       consultarEvento(initialQuery);
