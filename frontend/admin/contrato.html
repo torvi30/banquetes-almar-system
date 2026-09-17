@@ -860,6 +860,7 @@
 
     let globalReservas = [];
     let globalCotizaciones = [];
+    let globalPackages = [];
     let currentItem = null;
     let isEditMode = false;
 
@@ -901,14 +902,16 @@
       let targetId = params.get("id") || "";
 
       try {
-        // Cargar reservas y cotizaciones en paralelo
-        const [reservas, cotizaciones] = await Promise.all([
+        // Cargar reservas, cotizaciones y paquetes en paralelo
+        const [reservas, cotizaciones, paquetes] = await Promise.all([
           dbService.getReservations().catch(() => []),
-          dbService.getQuotes().catch(() => [])
+          dbService.getQuotes().catch(() => []),
+          dbService.getPackages().catch(() => [])
         ]);
 
         globalReservas = reservas || [];
         globalCotizaciones = cotizaciones || [];
+        globalPackages = paquetes || [];
 
         // Poblar el dropdown selector de eventos
         populateSelector(targetId);
@@ -1038,12 +1041,30 @@
 
       // Paquete e Inclusiones Dinámicas
       const packageId = item.paqueteId || item.paquete_id || "";
-      const pkg = DEFAULT_PACKAGES.find(p => p.id === packageId) || DEFAULT_PACKAGES[0];
+      const pkgList = (globalPackages && globalPackages.length > 0) ? globalPackages : DEFAULT_PACKAGES;
+      let pkg = pkgList.find(p => String(p.id) === String(packageId));
+      if (!pkg) {
+        // Fallback inteligente según el tipo de evento
+        const eventLower = String(eventType || "").toLowerCase();
+        if (eventLower.includes("boda")) {
+          pkg = pkgList.find(p => (p.categoria || "").toLowerCase() === "bodas" || (p.titulo || "").toLowerCase().includes("boda")) || pkgList[0];
+        } else if (eventLower.includes("quince") || eventLower.includes("15")) {
+          pkg = pkgList.find(p => (p.categoria || "").toLowerCase() === "quince" || (p.titulo || "").toLowerCase().includes("quince")) || pkgList[0];
+        } else if (eventLower.includes("grado")) {
+          pkg = pkgList.find(p => (p.categoria || "").toLowerCase() === "grados" || (p.titulo || "").toLowerCase().includes("grado")) || pkgList[0];
+        } else {
+          pkg = pkgList[0];
+        }
+      }
 
       if (pkg) {
         document.getElementById("contratoPaqueteNombre").textContent = pkg.titulo || `${eventType} Todo Incluido`;
-        if (Array.isArray(pkg.inclusiones) && pkg.inclusiones.length > 0) {
-          const listHtml = pkg.inclusiones.map(inc => `<li>${inc}</li>`).join("");
+        const inclusions = (Array.isArray(pkg.inclusiones) && pkg.inclusiones.length > 0)
+          ? pkg.inclusiones
+          : (Array.isArray(pkg.inclusions) && pkg.inclusions.length > 0 ? pkg.inclusions : []);
+
+        if (inclusions.length > 0) {
+          const listHtml = inclusions.map(inc => `<li>${inc}</li>`).join("");
           document.getElementById("contratoServiciosLista").innerHTML = listHtml;
         }
       }

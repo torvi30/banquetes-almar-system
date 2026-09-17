@@ -251,6 +251,50 @@ Esperamos con todo el cariño que la gastronomía, la atención de nuestros mese
 
 Si tienes un momento libre, nos encantaría que nos compartas una breve opinión o reseña sobre tu experiencia con Banquetes Almar. ¡Te deseamos siempre los mayores éxitos y bendiciones! 🥂✨`;
     }
+  },
+  {
+    id: "package_brochure",
+    title: "Brochure de Paquete",
+    icon: "💎",
+    badge: "Catálogo de Gala",
+    generateText: (data) => {
+      const clientName = data.clientName && data.clientName !== "Estimado(a) Cliente" ? `*${data.clientName}*` : "estimado(a) anfitrión(a)";
+      const pkgTitle = data.pkgTitle || "Paquete Todo Incluido Banquetes Almar";
+      const pricePerPerson = data.pricePerPerson ? formatCurrency(data.pricePerPerson) : "";
+      const minGuests = data.minGuests || 40;
+      const inclusions = Array.isArray(data.inclusions) && data.inclusions.length > 0
+        ? data.inclusions
+        : [
+            "Menú de gala de 3 tiempos preparado por Chef Ejecutivo",
+            "Menaje y cubertería imperial de alta gama",
+            "Mobiliario de lujo (Sillas Tiffany / Phoenix)",
+            "Montaje y decoración floral de autor",
+            "Personal de protocolo, meseros y capitán de servicio",
+            "Sonido profesional, iluminación ambiental y cabina DJ"
+          ];
+      const inclusionsText = inclusions.slice(0, 6).map(inc => `• ✨ ${inc}`).join("\n");
+      const webUrl = (typeof window !== "undefined" && window.location.origin) 
+        ? (window.location.origin + "/#paquetes") 
+        : "https://banquetes-almar.web.app/#paquetes";
+
+      return `¡Hola, ${clientName}! ✨
+
+Te saluda el equipo directivo de *Banquetes Almar* en Marinilla. Esperamos que tengas un excelente día.
+
+Te compartimos la propuesta integral de nuestro exclusivo paquete de gala:
+
+💎 *${pkgTitle.toUpperCase()}*
+💰 Inversión desde: *${pricePerPerson} COP* por invitado (Aforo sugerido: ${minGuests} personas).
+
+📋 *Lo que incluye esta experiencia de gala:*
+${inclusionsText}
+${inclusions.length > 6 ? `• ... ¡y más de ${inclusions.length - 6} servicios y cortesías adicionales!` : ""}
+
+🌐 Puedes explorar la galería de fotos y detalles de este y otros paquetes en nuestra plataforma oficial:
+🔗 ${webUrl}
+
+¿Te gustaría que personalicemos esta propuesta para el número exacto de tus invitados o que coordinemos una degustación privada en nuestras sedes? 🥂✨`;
+    }
   }
 ];
 
@@ -268,7 +312,7 @@ Si tienes un momento libre, nos encantaría que nos compartas una breve opinión
  * @param {number} options.totalAmount Total event quotation or agreed price
  * @param {number} options.downPayment Down payment already made
  * @param {number} options.remainingBalance Pending balance
- * @param {string} options.origin "cotizacion" | "reserva" | "cliente"
+ * @param {string} options.origin "cotizacion" | "reserva" | "cliente" | "pago" | "paquete"
  * @param {string} [options.contractUrl] Absolute or relative URL to the contract
  */
 export function openWhatsAppModal(options = {}) {
@@ -300,12 +344,18 @@ export function openWhatsAppModal(options = {}) {
     paymentReceiptNumber: options.paymentReceiptNumber || "",
     paymentReference: options.paymentReference || "",
     paymentConcept: options.paymentConcept || "",
-    paymentDate: options.paymentDate || ""
+    paymentDate: options.paymentDate || "",
+    pkgTitle: options.pkgTitle || options.titulo || "",
+    pricePerPerson: Number(options.pricePerPerson || options.precioPorPersona || 0),
+    minGuests: options.minGuests || options.minimoPersonas || 40,
+    inclusions: options.inclusions || options.inclusiones || []
   };
 
   // Select default template based on origin and balance
   let defaultTemplateId = "quote_proposal";
-  if (data.origin === "pago") {
+  if (data.origin === "paquete") {
+    defaultTemplateId = "package_brochure";
+  } else if (data.origin === "pago") {
     defaultTemplateId = "official_payment_receipt";
   } else if (data.origin === "reserva") {
     defaultTemplateId = (data.remainingBalance > 0) ? "balance_reminder" : "contract_banking";
@@ -318,13 +368,15 @@ export function openWhatsAppModal(options = {}) {
       <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <div>
           <div style="font-size: 0.75rem; text-transform: uppercase; color: #d4af37; font-weight: 700; letter-spacing: 0.05em;">
-            DESTINATARIO OFICIAL
+            ${data.origin === "paquete" ? "💎 PAQUETE DE GALA SELECCIONADO" : "DESTINATARIO OFICIAL"}
           </div>
           <div style="font-size: 1.1rem; font-weight: 700; color: #ffffff;">
-            ${data.clientName}
+            ${data.origin === "paquete" ? (data.pkgTitle || "Experiencia de Gala") : data.clientName}
           </div>
           <div style="font-size: 0.85rem; color: #94a3b8;">
-            🎉 ${data.eventType} ${data.guestCount ? `• 👥 ${data.guestCount} pers.` : ""} ${data.eventDate ? `• 🗓️ ${formatFriendlyDate(data.eventDate)}` : ""}
+            ${data.origin === "paquete" 
+              ? `💰 ${formatCurrency(data.pricePerPerson)} COP / invitado • 👥 Mín. ${data.minGuests} personas`
+              : `🎉 ${data.eventType} ${data.guestCount ? `• 👥 ${data.guestCount} pers.` : ""} ${data.eventDate ? `• 🗓️ ${formatFriendlyDate(data.eventDate)}` : ""}`}
           </div>
         </div>
 

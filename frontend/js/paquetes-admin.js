@@ -5,6 +5,7 @@
 
 import { authService } from "./firebase/auth.js";
 import { dbService } from "./firebase/db.js";
+import { openWhatsAppModal } from "./components/whatsapp-concierge.js";
 
 // Proteger ruta con autenticación
 authService.requireAuth("./login.html");
@@ -300,16 +301,37 @@ function renderizarGrilla(list) {
         </ul>
 
         <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
-          <button type="button" class="btn btn-secondary edit-pkg-btn" data-id="${pkg.id}" style="flex: 1; padding: 0.65rem; font-size: 0.85rem; border-color: var(--apple-gold);">
+          <button type="button" class="btn btn-primary share-pkg-wa-btn" data-id="${pkg.id}" style="flex: 1; padding: 0.65rem; font-size: 0.85rem; background: #25d366; color: #0b2212; border: none; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem;" title="Compartir brochure comercial por WhatsApp">
+            💬 WhatsApp
+          </button>
+          <button type="button" class="btn btn-secondary edit-pkg-btn" data-id="${pkg.id}" style="padding: 0.65rem 0.9rem; font-size: 0.85rem; border-color: var(--apple-gold);" title="Editar paquete">
             ✏️ Editar
           </button>
-          <button type="button" class="btn btn-secondary delete-pkg-btn" data-id="${pkg.id}" style="padding: 0.65rem 0.9rem; font-size: 0.85rem; border-color: rgba(255, 75, 75, 0.4); color: #ff6b6b;">
+          <button type="button" class="btn btn-secondary delete-pkg-btn" data-id="${pkg.id}" style="padding: 0.65rem 0.9rem; font-size: 0.85rem; border-color: rgba(255, 75, 75, 0.4); color: #ff6b6b;" title="Eliminar paquete">
             🗑️
           </button>
         </div>
       </div>
     </article>
   `).join("");
+
+  // Conectar botones de WhatsApp
+  grid.querySelectorAll(".share-pkg-wa-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+      const pkg = packagesCache.find(p => String(p.id) === String(id));
+      if (!pkg) return;
+      openWhatsAppModal({
+        origin: "paquete",
+        pkgTitle: pkg.titulo,
+        pricePerPerson: pkg.precioPorPersona,
+        minGuests: pkg.minimoPersonas || 40,
+        inclusions: pkg.inclusiones || pkg.inclusions || [],
+        clientName: "Estimado(a) Cliente",
+        eventType: pkg.categoria === "bodas" ? "Boda de Ensueño" : (pkg.categoria === "quince" ? "Quince Años de Gala" : (pkg.titulo || "Evento Especial"))
+      });
+    });
+  });
 
   // Conectar botones de edición
   grid.querySelectorAll(".edit-pkg-btn").forEach(btn => {
