@@ -1,43 +1,120 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full bg-zinc-950">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Acceso Administrativo | Banquetes Almar</title>
+  <link rel="icon" type="image/png" href="../images/logo-almar.png" />
+  <link rel="apple-touch-icon" href="../images/logo-almar.png" />
+  <meta name="theme-color" content="#0b0b0b" />
+
+  <!-- Google Fonts: Luxury Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="../css/tailwind.css" />
 </head>
-<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: radial-gradient(circle at center, #1c1810 0%, #080808 100%);">
-  <div class="container" style="max-width: 460px; width: 90%;">
-    <div style="background: rgba(22, 22, 22, 0.95); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 2.8rem 2.2rem; box-shadow: 0 20px 50px rgba(0,0,0,0.8), var(--gold-glow); backdrop-filter: blur(12px);">
-      <div style="text-align: center; margin-bottom: 2rem;">
-        <span class="section-label">Panel de Control</span>
-        <h2 style="font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 2rem; margin-top: 0.3rem;">Banquetes Almar</h2>
-        <p style="color: var(--text-soft); font-size: 0.9rem; margin-top: 0.4rem;">Gestión de Cotizaciones, Reservas y Mobiliario</p>
+<body class="min-h-full flex items-center justify-center bg-radial-at-c from-zinc-900 via-zinc-950 to-black p-4 sm:p-6 text-zinc-100 font-sans selection:bg-amber-500 selection:text-black">
+  <div class="w-full max-w-md">
+    <!-- Luxury Glass Card -->
+    <div class="relative bg-zinc-900/90 border border-amber-500/25 rounded-2xl p-7 sm:p-9 shadow-2xl shadow-black/90 backdrop-blur-xl">
+      <!-- Ambient Glow Behind Card -->
+      <div class="absolute -top-10 -left-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-yellow-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Header & Branding -->
+      <div class="relative text-center mb-8">
+        <a href="../index.html" class="inline-block transition-transform hover:scale-105 duration-300">
+          <img src="../images/logo-almar.png" alt="Banquetes Almar Logo" class="w-16 h-16 mx-auto mb-3 object-contain drop-shadow-[0_0_20px_rgba(212,175,55,0.4)]" />
+        </a>
+        <span class="inline-block text-[11px] font-semibold tracking-widest uppercase text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 mb-2">
+          Suite Administrativa
+        </span>
+        <h1 class="font-serif text-3xl font-bold text-white tracking-wide">
+          Banquetes <span class="bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-500 bg-clip-text text-transparent">Almar</span>
+        </h1>
+        <p class="text-xs text-zinc-400 mt-1">Gestión integral de eventos, reservas y mobiliario</p>
       </div>
 
-      <form id="loginForm" style="display: flex; flex-direction: column; gap: 1.2rem;">
-        <div class="form-group">
-          <label for="email" style="display: block; font-weight: 600; margin-bottom: 0.4rem; color: #eee;">Correo Administrador</label>
-          <input type="email" id="email" value="victortamayopine@gmail.com" placeholder="victortamayopine@gmail.com" required style="width: 100%; padding: 0.85rem; background: #111; color: #fff; border: 1px solid var(--border-glass); border-radius: 8px;" />
+      <!-- Login Form -->
+      <form id="loginForm" class="relative space-y-4">
+        <div>
+          <label for="email" class="block text-xs font-semibold text-zinc-300 mb-1.5 uppercase tracking-wider">
+            Correo Electrónico
+          </label>
+          <div class="relative">
+            <input
+              type="email"
+              id="email"
+              value="victortamayopine@gmail.com"
+              placeholder="admin@almar.com"
+              required
+              class="w-full px-4 py-3 bg-zinc-950/80 text-zinc-100 placeholder-zinc-500 border border-zinc-700/80 rounded-xl focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all text-sm"
+            />
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="password" style="display: block; font-weight: 600; margin-bottom: 0.4rem; color: #eee;">Contraseña</label>
-          <input type="password" id="password" value="admin123" placeholder="Tu contraseña" required style="width: 100%; padding: 0.85rem; background: #111; color: #fff; border: 1px solid var(--border-glass); border-radius: 8px;" />
+        <div>
+          <label for="password" class="block text-xs font-semibold text-zinc-300 mb-1.5 uppercase tracking-wider">
+            Contraseña
+          </label>
+          <div class="relative">
+            <input
+              type="password"
+              id="password"
+              value="admin123"
+              placeholder="••••••••"
+              required
+              class="w-full px-4 py-3 bg-zinc-950/80 text-zinc-100 placeholder-zinc-500 border border-zinc-700/80 rounded-xl focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 transition-all text-sm"
+            />
+          </div>
         </div>
 
-        <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; padding: 0.95rem; font-size: 1rem; margin-top: 0.6rem;">
-          Ingresar al Panel
+        <button
+          type="submit"
+          id="loginBtn"
+          class="w-full py-3.5 px-6 rounded-xl font-bold text-zinc-950 bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-500 hover:from-amber-300 hover:to-yellow-400 shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 text-sm tracking-wide flex items-center justify-center gap-2 cursor-pointer mt-2"
+        >
+          <span>Ingresar al Panel</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
         </button>
 
-        <div style="background: rgba(200, 155, 60, 0.08); border: 1px dashed var(--border-glass); padding: 0.9rem; border-radius: 8px; font-size: 0.8rem; color: var(--text-soft); text-align: center;">
-          🔑 <strong>Cuenta Administrador Firebase Activa:</strong><br />
-          <code style="color: var(--gold-light);">victortamayopine@gmail.com</code>
+        <!-- Quick Access Credential Pills -->
+        <div class="pt-5 border-t border-zinc-800/80 text-center">
+          <p class="text-[11px] uppercase tracking-wider text-amber-400/90 font-semibold mb-2.5 flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+            Acceso Rápido Administradores
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
+            <button
+              type="button"
+              class="credential-pill p-2.5 rounded-xl bg-zinc-950/70 border border-zinc-800 hover:border-amber-500/60 hover:bg-zinc-800/40 transition-all text-xs group cursor-pointer"
+              data-email="victortamayopine@gmail.com"
+              data-pass="admin123"
+              title="Autocompletar credenciales de Víctor Tamayo"
+            >
+              <span class="block font-medium text-zinc-200 group-hover:text-amber-300 transition-colors">Víctor Tamayo</span>
+              <span class="block text-[10px] text-zinc-400 truncate">victortamayopine...</span>
+            </button>
+            <button
+              type="button"
+              class="credential-pill p-2.5 rounded-xl bg-zinc-950/70 border border-zinc-800 hover:border-amber-500/60 hover:bg-zinc-800/40 transition-all text-xs group cursor-pointer"
+              data-email="admin@almar.com"
+              data-pass="Admin123*"
+              title="Autocompletar credenciales de Admin Almar"
+            >
+              <span class="block font-medium text-zinc-200 group-hover:text-amber-300 transition-colors">Admin Almar</span>
+              <span class="block text-[10px] text-zinc-400 truncate">admin@almar.com</span>
+            </button>
+          </div>
         </div>
 
-        <div style="text-align: center; margin-top: 0.5rem;">
-          <a href="../index.html" style="font-size: 0.85rem; color: var(--gold-light); text-decoration: underline;">
-            ← Volver a la página principal
+        <!-- Back to Home -->
+        <div class="text-center pt-2">
+          <a href="../index.html" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-amber-300 transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Volver a la página principal
           </a>
         </div>
       </form>

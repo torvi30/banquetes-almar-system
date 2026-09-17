@@ -57,3 +57,16 @@ if (form) {
     }
   });
 }
+
+// Quick fill credential pills
+document.querySelectorAll(".credential-pill").forEach((pill) => {
+  pill.addEventListener("click", () => {
+    const emailInput = document.getElementById("email");
+    const passInput = document.getElementById("password");
+    if (emailInput && passInput) {
+      emailInput.value = pill.dataset.email || "";
+      passInput.value = pill.dataset.pass || "";
+      emailInput.focus();
+    }
+  });
+});
