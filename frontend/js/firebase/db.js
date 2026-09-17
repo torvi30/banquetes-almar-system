@@ -627,6 +627,24 @@ export const dbService = {
     return getLocal(STORAGE_KEYS.RESERVATIONS).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   },
 
+  async getReservationById(id) {
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        const docRef = ops.doc(db, "reservas", String(id));
+        const docSnap = await ops.getDoc(docRef);
+        if (docSnap.exists()) {
+          return { id: docSnap.id, ...docSnap.data() };
+        }
+      } catch (e) {
+        console.warn("Firestore getReservationById error:", e.message);
+      }
+    }
+    const reservas = getLocal(STORAGE_KEYS.RESERVATIONS) || [];
+    return reservas.find(r => String(r.id) === String(id)) || null;
+  },
+
   async createReservation(reservaData) {
     const newReserva = {
       ...reservaData,
@@ -675,6 +693,15 @@ export const dbService = {
   },
 
   async deleteReservation(id) {
+    const live = await initFirestoreLive();
+    if (live && !String(id).startsWith("res-")) {
+      try {
+        const { db, ops } = live;
+        await ops.deleteDoc(ops.doc(db, "reservas", String(id)));
+      } catch (e) {
+        console.warn("Firestore deleteReservation error:", e.message);
+      }
+    }
     let reservas = getLocal(STORAGE_KEYS.RESERVATIONS);
     reservas = reservas.filter(r => r.id !== id);
     setLocal(STORAGE_KEYS.RESERVATIONS, reservas);
@@ -683,16 +710,43 @@ export const dbService = {
 
   // PAGOS Y ABONOS
   async getPayments() {
-    return getLocal(STORAGE_KEYS.PAYMENTS);
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        const snapshot = await ops.getDocs(ops.collection(db, "pagos"));
+        if (!snapshot.empty) {
+          const remotePayments = [];
+          snapshot.forEach(doc => remotePayments.push({ id: doc.id, ...doc.data() }));
+          setLocal(STORAGE_KEYS.PAYMENTS, remotePayments);
+          return remotePayments;
+        }
+      } catch (e) {
+        console.warn("Firestore getPayments error:", e.message);
+      }
+    }
+    return getLocal(STORAGE_KEYS.PAYMENTS) || [];
   },
 
   async createPayment(paymentData) {
-    const payments = getLocal(STORAGE_KEYS.PAYMENTS);
     const newPayment = {
       id: "pay-" + Date.now(),
       ...paymentData,
-      fecha: paymentData.fecha || new Date().toISOString().slice(0, 10)
+      fecha: paymentData.fecha || new Date().toISOString().slice(0, 10),
+      createdAt: new Date().toISOString()
     };
+
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        await ops.setDoc(ops.doc(db, "pagos", newPayment.id), newPayment);
+      } catch (e) {
+        console.warn("Firestore createPayment error:", e.message);
+      }
+    }
+
+    const payments = getLocal(STORAGE_KEYS.PAYMENTS) || [];
     payments.unshift(newPayment);
     setLocal(STORAGE_KEYS.PAYMENTS, payments);
 
@@ -704,7 +758,20 @@ export const dbService = {
   },
 
   async updatePayment(id, paymentData) {
-    const payments = getLocal(STORAGE_KEYS.PAYMENTS);
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        await ops.updateDoc(ops.doc(db, "pagos", String(id)), {
+          ...paymentData,
+          updatedAt: new Date().toISOString()
+        });
+      } catch (e) {
+        console.warn("Firestore updatePayment error:", e.message);
+      }
+    }
+
+    const payments = getLocal(STORAGE_KEYS.PAYMENTS) || [];
     const idx = payments.findIndex(p => String(p.id) === String(id));
     if (idx !== -1) {
       const oldReservaId = payments[idx].reservaId;
@@ -723,7 +790,17 @@ export const dbService = {
   },
 
   async deletePayment(id) {
-    const payments = getLocal(STORAGE_KEYS.PAYMENTS);
+    const live = await initFirestoreLive();
+    if (live) {
+      try {
+        const { db, ops } = live;
+        await ops.deleteDoc(ops.doc(db, "pagos", String(id)));
+      } catch (e) {
+        console.warn("Firestore deletePayment error:", e.message);
+      }
+    }
+
+    const payments = getLocal(STORAGE_KEYS.PAYMENTS) || [];
     const item = payments.find(p => String(p.id) === String(id));
     const reservaId = item ? item.reservaId : null;
     const filtered = payments.filter(p => String(p.id) !== String(id));

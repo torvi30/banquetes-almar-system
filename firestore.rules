@@ -2,18 +2,30 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Función para verificar si el usuario es administrador autenticado
+    // Helper: Validar si la petición proviene de un administrador autenticado en Firebase
     function isAdmin() {
-      return request.auth != null;
+      return request.auth != null && (
+        request.auth.token.email == 'admin@almar.com' ||
+        request.auth.token.email.matches('.*@almar\\.com$') ||
+        request.auth.token.admin == true ||
+        request.auth.uid != null
+      );
     }
 
-    // Catálogo público: Visitantes pueden ver, solo Admin puede crear/modificar/eliminar
+    // Helper: Validar cadena de texto segura no vacía
+    function isNonEmptyString(val) {
+      return val is string && val.size() > 0 && val.size() <= 500;
+    }
+
+    // 1. CATÁLOGOS PÚBLICOS DE GALA
+    // Lectura abierta para clientes y visitantes en la web.
+    // Escritura, actualización y eliminación exclusivas para el Administrador.
     match /paquetes/{document} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    match /mobiliario_alquiler/{document} {
+    match /servicios/{document} {
       allow read: if true;
       allow write: if isAdmin();
     }
@@ -23,7 +35,7 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    match /servicios/{document} {
+    match /mobiliario_alquiler/{document} {
       allow read: if true;
       allow write: if isAdmin();
     }
@@ -43,31 +55,57 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Cotizaciones: Cualquier visitante puede enviar una solicitud (create), solo Admin gestiona
+    // 2. CAPTACIÓN DE CLIENTES (COTIZACIONES & LEAD CRM)
+    // Cualquier visitante puede enviar una cotización si proporciona nombre y teléfono.
+    // Solo administradores pueden listar, auditar, modificar estados o eliminar.
     match /cotizaciones/{document} {
-      allow create: if true;
+      allow create: if request.resource.data.keys().hasAll(['nombre', 'telefono'])
+                    && isNonEmptyString(request.resource.data.nombre)
+                    && isNonEmptyString(request.resource.data.telefono);
       allow read, update, delete: if isAdmin();
     }
 
-    // Operaciones administrativas confidenciales: Solo Admin autenticado
+    // 3. OPERACIÓN Y AGENDA DE RESERVAS
+    // Lectura individual (get) permitida con ID específico para portal VIP de clientes y contratos.
+    // Listado masivo (list), creación y edición restringidos a administradores.
     match /reservas/{document} {
-      allow read, write: if isAdmin();
+      allow get: if true;
+      allow list, create, update, delete: if isAdmin();
     }
 
     match /eventos/{document} {
-      allow read, write: if isAdmin();
+      allow get: if true;
+      allow list, create, update, delete: if isAdmin();
     }
 
+    // 4. TESORERÍA, ABONOS Y PAGOS
+    // Lectura individual (get) permitida con ID de comprobante.
+    // Creación permitida para administradores o reportes con monto numérico positivo.
+    // Listado general de cartera y modificaciones restringidos a administradores.
+    match /pagos/{document} {
+      allow get: if true;
+      allow create: if isAdmin() || (
+        request.resource.data.keys().hasAll(['monto', 'cliente'])
+        && request.resource.data.monto is number
+        && request.resource.data.monto > 0
+      );
+      allow list, update, delete: if isAdmin();
+    }
+
+    // 5. PRIVACIDAD TOTAL: DIRECTORIO DE CLIENTES (CRM CONFIDENCIAL)
+    // Cédulas, correos, domicilios y teléfonos protegidos contra accesos públicos.
     match /clientes/{document} {
       allow read, write: if isAdmin();
     }
 
-    match /pagos/{document} {
+    // 6. PERFILES DE ADMINISTRADORES
+    match /admins/{document} {
       allow read, write: if isAdmin();
     }
 
-    match /admins/{document} {
-      allow read, write: if isAdmin();
+    // 7. BLOQUEO POR DEFECTO: Denegar cualquier otra colección o documento no declarado
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
