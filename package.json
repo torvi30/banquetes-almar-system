@@ -8,6 +8,8 @@
     "build:css": "tailwindcss -i ./frontend/css/tailwind-input.css -o ./frontend/css/tailwind.css --minify",
     "watch:css": "tailwindcss -i ./frontend/css/tailwind-input.css -o ./frontend/css/tailwind.css --watch",
     "start": "npx serve -l 5000 frontend",
+    "firebase:login": "npx firebase-tools login",
+    "firebase:deploy": "npx firebase-tools deploy --only hosting",
     "admin:setup": "node scripts/create-firebase-admin.mjs",
     "db:migrate": "node scripts/migrate-sql-to-firestore.mjs"
   },
