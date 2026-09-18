@@ -200,6 +200,32 @@ function renderListaEventos(lista) {
             </div>
           </div>
 
+          ${ev.montaje ? `
+            <div style="background: rgba(212, 175, 55, 0.07); border: 1px solid rgba(212, 175, 55, 0.22); padding: 0.75rem 0.9rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.8rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <span style="color: var(--gold-light); font-weight: 700; display: flex; align-items: center; gap: 4px; font-size: 0.82rem;">
+                  ✨ Estilo & Mobiliario Confirmado
+                </span>
+                <span style="font-size: 0.7rem; padding: 2px 7px; border-radius: 999px; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #86efac; font-weight: 600;">
+                  Confirmado
+                </span>
+              </div>
+              <div style="color: #d1d5db; display: flex; flex-direction: column; gap: 2px; line-height: 1.35;">
+                <div>🪑 <strong>Sillas:</strong> ${ev.montaje.sillasLabel || ev.montaje.sillas}</div>
+                <div>🏛️ <strong>Mesas:</strong> ${ev.montaje.distribucionLabel || ev.montaje.distribucion}</div>
+                <div>🎨 <strong>Mantelería:</strong> ${ev.montaje.manteleriaLabel || ev.montaje.manteleria}</div>
+                <div>💐 <strong>Centros:</strong> ${ev.montaje.centrosLabel || ev.montaje.centros}</div>
+                <div>📸 <strong>Backing:</strong> ${ev.montaje.backingLabel || ev.montaje.backing}</div>
+                ${ev.montaje.observaciones ? `<div style="margin-top: 4px; color: #a1a1aa; font-style: italic; font-size: 0.76rem;">📝 "${ev.montaje.observaciones}"</div>` : ""}
+              </div>
+            </div>
+          ` : `
+            <div style="background: rgba(255, 255, 255, 0.02); border: 1px dashed rgba(255, 255, 255, 0.08); padding: 0.5rem 0.8rem; border-radius: 10px; margin-bottom: 1rem; font-size: 0.76rem; color: #71717a; display: flex; justify-content: space-between; align-items: center;">
+              <span>✨ Mobiliario & Gala: <span style="color: #eab308; font-weight: 500;">Pendiente</span></span>
+              <a href="../portal-cliente.html?id=${ev.id}" target="_blank" style="color: #93c5fd; text-decoration: underline; font-size: 0.72rem;">Abrir portal</a>
+            </div>
+          `}
+
           ${ev.observaciones ? `<p style="font-size: 0.82rem; color: #888; font-style: italic; margin-bottom: 1rem;">"${ev.observaciones}"</p>` : ""}
         </div>
 
@@ -207,6 +233,10 @@ function renderListaEventos(lista) {
           <button type="button" class="btn btn-secondary btn-sm btn-reserva-wa" data-id="${ev.id}" style="background: #25d366; color: #000; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
             💬 WhatsApp
           </button>
+
+          <a href="../portal-cliente.html?id=${ev.id}" target="_blank" class="btn btn-secondary btn-sm" title="Ver Portal Cliente y Montaje" style="color: #fbbf24; border-color: rgba(251, 191, 36, 0.3);">
+            ✨ Portal VIP
+          </a>
 
           <a href="./contrato.html?id=${ev.id}" target="_blank" class="btn btn-secondary btn-sm" style="color: #a0c4ff; border-color: rgba(160,196,255,0.3);">
             📄 Contrato

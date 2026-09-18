@@ -233,6 +233,342 @@
             💳 Realizar o Reportar Abono
           </button>
         </div>
+      <!-- CONFIGURADOR DE MONTAJE, MOBILIARIO & ESTILO DE GALA -->
+      <div class="portal-card" id="montajeCard">
+        <div class="flex justify-between items-start flex-wrap gap-4 mb-6 border-b border-amber-500/20 pb-4">
+          <div>
+            <span class="text-[11px] uppercase tracking-wider text-amber-300 font-bold block mb-1">
+              ✨ Personalización de Experiencia
+            </span>
+            <h3 class="font-serif text-2xl font-bold text-white">
+              Montaje, Mobiliario & Estilo de Gala
+            </h3>
+            <p class="text-xs text-zinc-400 mt-1 max-w-xl">
+              Configura cómo deseas que luzca tu salón o finca. El equipo de logística y decoración de Banquetes Almar preparará el mobiliario según tu selección.
+            </p>
+          </div>
+          <div id="montajeStatusBadge" class="text-xs px-3 py-1 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-300 font-semibold">
+            🟡 Pendiente por Definir
+          </div>
+        </div>
+
+        <form id="montajeForm" class="flex flex-col gap-6">
+          <!-- 1. SILLAS & ASIENTOS -->
+          <div class="montaje-category">
+            <div class="montaje-cat-header">
+              <span class="montaje-cat-title">🪑 1. Sillas & Asientos de Gala</span>
+              <span class="montaje-cat-badge">Mobiliario Principal</span>
+            </div>
+            <div class="montaje-grid" data-group="sillas">
+              <!-- Tiffany Dorada -->
+              <div class="montaje-card selected" data-value="tiffany-dorada" data-label="Tiffany Dorada Imperial">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80" alt="Silla Tiffany Dorada" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Tiffany Dorada Imperial</div>
+                  <div class="montaje-card-desc">Metálica dorada con cojinería blanca acolchada. La reina de bodas y 15 años de gala.</div>
+                  <span class="montaje-card-tag">Clásica de Gala</span>
+                </div>
+              </div>
+
+              <!-- Crossback Madera -->
+              <div class="montaje-card" data-value="crossback-madera" data-label="Crossback Madera Rústica">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80" alt="Silla Crossback Madera" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Crossback Madera Rústica</div>
+                  <div class="montaje-card-desc">Madera natural con espaldar en cruceta y estilo vintage. La favorita campestre.</div>
+                  <span class="montaje-card-tag">Campestre / Boho</span>
+                </div>
+              </div>
+
+              <!-- Tiffany Blanca -->
+              <div class="montaje-card" data-value="tiffany-blanca" data-label="Tiffany Blanca Glam">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80" alt="Silla Tiffany Blanca" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Tiffany Blanca Glam</div>
+                  <div class="montaje-card-desc">Acabado blanco puro con cojín blanco. Máxima luminosidad, elegancia moderna.</div>
+                  <span class="montaje-card-tag">Moderna / Nupcial</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. DISTRIBUCIÓN DE MESAS -->
+          <div class="montaje-category">
+            <div class="montaje-cat-header">
+              <span class="montaje-cat-title">🏛️ 2. Distribución de Salón & Mesas</span>
+              <span class="montaje-cat-badge">Layout del Salón</span>
+            </div>
+            <div class="montaje-grid" data-group="distribucion">
+              <!-- Mesas Redondas -->
+              <div class="montaje-card selected" data-value="mesas-redondas" data-label="Mesas Redondas Familiares">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="Mesas Redondas" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Mesas Redondas Familiares</div>
+                  <div class="montaje-card-desc">Mesas circulares para 10 personas. Circulación fluida y perfecta conversación entre familias.</div>
+                  <span class="montaje-card-tag">Tradicional & Cómodo</span>
+                </div>
+              </div>
+
+              <!-- Tablones Rústicos -->
+              <div class="montaje-card" data-value="tablones-imperiales" data-label="Tablones Imperiales Alargados">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80" alt="Tablones Rústicos" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Tablones Imperiales Alargados</div>
+                  <div class="montaje-card-desc">Montaje continuo estilo banquete europeo o campestre para 8 a 10 puestos por módulo.</div>
+                  <span class="montaje-card-tag">Banquete Europeo</span>
+                </div>
+              </div>
+
+              <!-- Distribución Mixta -->
+              <div class="montaje-card" data-value="distribucion-mixta" data-label="Distribución Mixta (Recomendada)">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80" alt="Distribución Mixta" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Distribución Mixta (Recomendada)</div>
+                  <div class="montaje-card-desc">Mesa imperial de honor para novios / anfitriones + mesas redondas para los invitados.</div>
+                  <span class="montaje-card-tag">Más Solicitada</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. MANTELERÍA & PALETA DE COLOR -->
+          <div class="montaje-category">
+            <div class="montaje-cat-header">
+              <span class="montaje-cat-title">🎨 3. Paleta de Mantelería & Caminos</span>
+              <span class="montaje-cat-badge">Armonía Cromática</span>
+            </div>
+            <div class="montaje-grid" data-group="manteleria">
+              <!-- Marfil & Oro -->
+              <div class="montaje-card selected" data-value="marfil-oro" data-label="Marfil & Camino Oro Imperial">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=800&q=80" alt="Marfil y Oro" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Marfil & Camino Oro Imperial</div>
+                  <div class="montaje-card-desc">Mantel base marfil con camino de tela satinada en hilo dorado y servilletas de gala.</div>
+                  <span class="montaje-card-tag">Gala Tradicional</span>
+                </div>
+              </div>
+
+              <!-- Palo de Rosa -->
+              <div class="montaje-card" data-value="palo-rosa" data-label="Palo de Rosa & Acentos Dorados">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80" alt="Palo de Rosa" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Palo de Rosa & Acentos Dorados</div>
+                  <div class="montaje-card-desc">Tonos pasteles románticos muy cotizados para 15 años y bodas de ensueño al atardecer.</div>
+                  <span class="montaje-card-tag">Romántico & Glam</span>
+                </div>
+              </div>
+
+              <!-- Verde Esmeralda -->
+              <div class="montaje-card" data-value="verde-esmeralda" data-label="Verde Esmeralda & Follaje">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=800&q=80" alt="Verde Esmeralda" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Verde Esmeralda & Follaje</div>
+                  <div class="montaje-card-desc">Contraste fresco y orgánico ideal para Finca El Peñol y recepciones campestres.</div>
+                  <span class="montaje-card-tag">Campestre Chic</span>
+                </div>
+              </div>
+
+              <!-- Azul Medianoche -->
+              <div class="montaje-card" data-value="azul-medianoche" data-label="Azul Medianoche & Plata">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80" alt="Azul Medianoche" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Azul Medianoche & Plata</div>
+                  <div class="montaje-card-desc">Sobriedad nocturna y distinción. Favorito en grados, aniversarios y recepciones formales.</div>
+                  <span class="montaje-card-tag">Nocturno & Distinguido</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. CENTROS DE MESA -->
+          <div class="montaje-category">
+            <div class="montaje-cat-header">
+              <span class="montaje-cat-title">💐 4. Centros de Mesa & Acentos</span>
+              <span class="montaje-cat-badge">Ambientación Floral</span>
+            </div>
+            <div class="montaje-grid" data-group="centros">
+              <!-- Alto Imperial -->
+              <div class="montaje-card selected" data-value="centro-alto-imperial" data-label="Candelabro / Arreglo Alto">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80" alt="Centro Alto" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Candelabro / Arreglo Alto</div>
+                  <div class="montaje-card-desc">Estructura metálica dorada esbelta con flores naturales en la cima sin obstruir miradas.</div>
+                  <span class="montaje-card-tag">Imponente</span>
+                </div>
+              </div>
+
+              <!-- Velas Flotantes -->
+              <div class="montaje-card" data-value="velas-flotantes" data-label="Cilindros con Velas Flotantes">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80" alt="Velas Flotantes" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Cilindros con Velas Flotantes</div>
+                  <div class="montaje-card-desc">Trío de cilindros de cristal con agua, velas cálidas flotantes y corona de follaje natural.</div>
+                  <span class="montaje-card-tag">Íntimo & Cálido</span>
+                </div>
+              </div>
+
+              <!-- Guirnalda Corrida -->
+              <div class="montaje-card" data-value="guirnalda-eucalipto" data-label="Guirnalda Corrida de Eucalipto">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80" alt="Guirnalda Eucalipto" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Guirnalda Corrida de Eucalipto</div>
+                  <div class="montaje-card-desc">Camino floral con follaje fresco de eucalipto natural, rosas blancas y veladoras votivas.</div>
+                  <span class="montaje-card-tag">Especial Tablones</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. BACKING & PUNTO FOTOGRÁFICO -->
+          <div class="montaje-category">
+            <div class="montaje-cat-header">
+              <span class="montaje-cat-title">📸 5. Punto de Fotos & Backing de Gala</span>
+              <span class="montaje-cat-badge">Fotocall</span>
+            </div>
+            <div class="montaje-grid" data-group="backing">
+              <!-- Arco Floral -->
+              <div class="montaje-card selected" data-value="arco-floral" data-label="Arco Floral Circular">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="Arco Floral" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Arco Floral Circular / Hexagonal</div>
+                  <div class="montaje-card-desc">Estructura decorada con flores frescas y follaje verde para ceremonias o fotos de gala.</div>
+                  <span class="montaje-card-tag">Nupcial & Ceremonial</span>
+                </div>
+              </div>
+
+              <!-- Letras Gigantes -->
+              <div class="montaje-card" data-value="letras-iluminadas" data-label="Letras Gigantes 'MIS 15' o 'LOVE'">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80" alt="Letras Iluminadas" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Letras Gigantes 'MIS 15' o 'LOVE'</div>
+                  <div class="montaje-card-desc">Letras luminosas de 1.20 metros con iluminación vintage cálida. Punto imperdible.</div>
+                  <span class="montaje-card-tag">Punto Estrella</span>
+                </div>
+              </div>
+
+              <!-- Pared Shimmer & Neón -->
+              <div class="montaje-card" data-value="shimmer-neon" data-label="Pared Shimmer & Neón">
+                <div class="montaje-card-img-wrap">
+                  <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80" alt="Pared Shimmer y Neón" class="montaje-card-img" />
+                  <div class="montaje-card-radio">
+                    <span class="montaje-card-radio-icon">✓</span>
+                  </div>
+                </div>
+                <div class="montaje-card-body">
+                  <div class="montaje-card-title">Pared de Brillo (Shimmer) & Neón</div>
+                  <div class="montaje-card-desc">Muro brillante con lentejuelas doradas o plateadas y letrero LED neón personalizado.</div>
+                  <span class="montaje-card-tag">Glam & Fiesta</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. OBSERVACIONES ESPECIALES -->
+          <div>
+            <label for="montajeNotas" class="block text-xs font-semibold text-zinc-300 mb-2">
+              📝 Peticiones Especiales de Ubicación o Montaje (Opcional):
+            </label>
+            <textarea id="montajeNotas" rows="2" placeholder="Ej: Mesa de niños cerca a la salida del salón, ubicar mesa de novios frente a la pista de baile..." class="w-full px-4 py-3 bg-zinc-900 border border-zinc-700/80 rounded-xl text-white text-sm focus:outline-none focus:border-amber-400 leading-relaxed"></textarea>
+          </div>
+
+          <!-- BARRA DE RESUMEN Y ACCIONES -->
+          <div class="montaje-summary-bar">
+            <div>
+              <span class="text-xs text-zinc-400 block mb-1.5 font-semibold">Configuración Seleccionada:</span>
+              <div class="montaje-summary-list" id="montajeSummaryList">
+                <span class="montaje-summary-item">🪑 <strong id="sumSillas">Tiffany Dorada</strong></span>
+                <span class="montaje-summary-item">🏛️ <strong id="sumDistribucion">Mesas Redondas</strong></span>
+                <span class="montaje-summary-item">🎨 <strong id="sumManteleria">Marfil & Oro</strong></span>
+                <span class="montaje-summary-item">💐 <strong id="sumCentros">Candelabro Alto</strong></span>
+                <span class="montaje-summary-item">📸 <strong id="sumBacking">Arco Floral</strong></span>
+              </div>
+            </div>
+
+            <div class="flex gap-3 flex-wrap">
+              <button type="submit" id="btnGuardarMontaje" class="btn-apple-primary px-6 py-2.5 text-sm font-semibold inline-flex items-center gap-2">
+                💾 Guardar Configuración
+              </button>
+              <button type="button" id="btnCompartirMontajeWa" class="btn-apple-secondary px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2">
+                💬 Compartir por WhatsApp
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
 
       <!-- MODAL DE MEDIOS DE PAGO Y REPORTAR ABONO -->
@@ -371,11 +707,191 @@
 
     let countdownInterval = null;
 
+    // ------------------- SELECTOR DE MONTAJE Y GALA -------------------
+    const montajeForm = document.getElementById("montajeForm");
+    const montajeStatusBadge = document.getElementById("montajeStatusBadge");
+    const btnGuardarMontaje = document.getElementById("btnGuardarMontaje");
+    const btnCompartirMontajeWa = document.getElementById("btnCompartirMontajeWa");
+    const montajeNotas = document.getElementById("montajeNotas");
+
+    const summaryLabels = {
+      sillas: document.getElementById("sumSillas"),
+      distribucion: document.getElementById("sumDistribucion"),
+      manteleria: document.getElementById("sumManteleria"),
+      centros: document.getElementById("sumCentros"),
+      backing: document.getElementById("sumBacking")
+    };
+
+    function initMontajeSelector() {
+      const grids = document.querySelectorAll(".montaje-grid");
+      grids.forEach(grid => {
+        const group = grid.dataset.group;
+        const cards = grid.querySelectorAll(".montaje-card");
+        cards.forEach(card => {
+          card.addEventListener("click", () => {
+            cards.forEach(c => c.classList.remove("selected"));
+            card.classList.add("selected");
+            if (summaryLabels[group]) {
+              summaryLabels[group].textContent = card.dataset.label || card.dataset.value;
+            }
+          });
+        });
+      });
+    }
+
+    function getMontajeSeleccionado() {
+      const groups = ["sillas", "distribucion", "manteleria", "centros", "backing"];
+      const result = {
+        observaciones: montajeNotas ? montajeNotas.value.trim() : "",
+        estado: "Confirmado",
+        ultimaActualizacion: new Date().toISOString()
+      };
+
+      groups.forEach(group => {
+        const card = document.querySelector(`.montaje-grid[data-group="${group}"] .montaje-card.selected`);
+        result[group] = card ? card.dataset.value : "";
+        result[`${group}Label`] = card ? card.dataset.label : "";
+      });
+
+      return result;
+    }
+
+    function cargarMontajeReserva(montaje) {
+      if (!montaje) {
+        if (montajeStatusBadge) {
+          montajeStatusBadge.textContent = "🟡 Pendiente por Definir";
+          montajeStatusBadge.className = "text-xs px-3 py-1 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-300 font-semibold";
+        }
+        return;
+      }
+
+      const groups = ["sillas", "distribucion", "manteleria", "centros", "backing"];
+      groups.forEach(group => {
+        const val = montaje[group];
+        if (val) {
+          const grid = document.querySelector(`.montaje-grid[data-group="${group}"]`);
+          if (grid) {
+            const card = grid.querySelector(`.montaje-card[data-value="${val}"]`);
+            if (card) {
+              grid.querySelectorAll(".montaje-card").forEach(c => c.classList.remove("selected"));
+              card.classList.add("selected");
+              if (summaryLabels[group]) {
+                summaryLabels[group].textContent = card.dataset.label || val;
+              }
+            }
+          }
+        }
+      });
+
+      if (montajeNotas && montaje.observaciones !== undefined) {
+        montajeNotas.value = montaje.observaciones;
+      }
+
+      if (montajeStatusBadge) {
+        montajeStatusBadge.textContent = "🟢 Confirmado por Anfitrión";
+        montajeStatusBadge.className = "text-xs px-3 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 font-semibold";
+      }
+    }
+
+    if (montajeForm) {
+      montajeForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!reservaActual) {
+          if (window.Swal) {
+            Swal.fire({
+              icon: "warning",
+              title: "Consulta tu Evento",
+              text: "Primero consulta tu evento con tu número de teléfono o código de reserva para guardar tu montaje."
+            });
+          }
+          return;
+        }
+
+        const data = getMontajeSeleccionado();
+
+        if (btnGuardarMontaje) {
+          btnGuardarMontaje.disabled = true;
+          btnGuardarMontaje.textContent = "💾 Guardando...";
+        }
+
+        try {
+          await dbService.updateReservation(reservaActual.id, { montaje: data });
+          reservaActual.montaje = data;
+
+          if (montajeStatusBadge) {
+            montajeStatusBadge.textContent = "🟢 Confirmado por Anfitrión";
+            montajeStatusBadge.className = "text-xs px-3 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 font-semibold";
+          }
+
+          if (window.Swal) {
+            Swal.fire({
+              icon: "success",
+              title: "¡Montaje Guardado con Éxito!",
+              html: `
+                <p class="text-zinc-300 text-sm">Tu selección de mobiliario y estilo ha quedado registrada en el sistema de Banquetes Almar.</p>
+                <p class="text-zinc-400 text-xs mt-2">Puedes compartirlo directamente por WhatsApp con tu coordinador de evento.</p>
+              `,
+              confirmButtonText: "Entendido"
+            });
+          }
+        } catch (err) {
+          console.error("Error al guardar montaje:", err);
+          if (window.Swal) {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "No fue posible guardar el montaje en este momento. Por favor intenta de nuevo."
+            });
+          }
+        } finally {
+          if (btnGuardarMontaje) {
+            btnGuardarMontaje.disabled = false;
+            btnGuardarMontaje.textContent = "💾 Guardar Configuración";
+          }
+        }
+      });
+    }
+
+    if (btnCompartirMontajeWa) {
+      btnCompartirMontajeWa.addEventListener("click", () => {
+        if (!reservaActual) {
+          if (window.Swal) {
+            Swal.fire({
+              icon: "warning",
+              title: "Consulta tu Evento",
+              text: "Primero consulta tu evento para compartir tu selección de montaje."
+            });
+          }
+          return;
+        }
+
+        const m = getMontajeSeleccionado();
+        const msg = 
+`✨ *SELECCIÓN DE MONTAJE Y GALA - BANQUETES ALMAR* ✨
+──────────────────────────────
+👤 *Anfitrión:* ${reservaActual.cliente}
+🔖 *Código:* ALM-${reservaActual.id.slice(-6).toUpperCase()}
+📅 *Fecha:* ${reservaActual.fecha_evento}
+🏛️ *Locación:* ${reservaActual.locacion || reservaActual.lugar}
+👥 *Invitados:* ${reservaActual.personas || 0} personas
+──────────────────────────────
+🪑 *Sillas:* ${m.sillasLabel || m.sillas}
+🏛️ *Distribución:* ${m.distribucionLabel || m.distribucion}
+🎨 *Mantelería:* ${m.manteleriaLabel || m.manteleria}
+💐 *Centros de Mesa:* ${m.centrosLabel || m.centros}
+📸 *Backing / Fotos:* ${m.backingLabel || m.backing}
+${m.observaciones ? `📝 *Observaciones:* ${m.observaciones}\n` : ""}──────────────────────────────
+Configurado en vivo en el Portal VIP de Clientes Banquetes Almar.`;
+
+        window.open(`https://wa.me/573104458892?text=${encodeURIComponent(msg)}`, "_blank");
+      });
+    }
+
     // Función de búsqueda inteligente
     async function consultarEvento(query) {
       if (!query) {
-        if (eventDetailsSection) eventDetailsSection.style.display = "none";
-        if (eventNotFound) eventNotFound.style.display = "none";
+        if (eventDetailsSection) eventDetailsSection.classList.add("hidden");
+        if (eventNotFound) eventNotFound.classList.add("hidden");
         return;
       }
 
@@ -398,13 +914,13 @@
 
       if (!encontrada) {
         reservaActual = null;
-        if (eventDetailsSection) eventDetailsSection.style.display = "none";
-        if (eventNotFound) eventNotFound.style.display = "block";
+        if (eventDetailsSection) eventDetailsSection.classList.add("hidden");
+        if (eventNotFound) eventNotFound.classList.remove("hidden");
         return;
       }
 
-      if (eventNotFound) eventNotFound.style.display = "none";
-      if (eventDetailsSection) eventDetailsSection.style.display = "block";
+      if (eventNotFound) eventNotFound.classList.add("hidden");
+      if (eventDetailsSection) eventDetailsSection.classList.remove("hidden");
       reservaActual = encontrada;
 
       // Renderizar datos del evento
@@ -451,6 +967,9 @@
           </tr>
         `;
       }
+
+      // Cargar configuración de montaje previa si existe
+      cargarMontajeReserva(encontrada.montaje);
 
       // Cuenta regresiva precisa
       iniciarCuentaRegresiva(encontrada.fecha_evento);
@@ -545,6 +1064,9 @@ Adjunto en esta conversación la captura/foto del comprobante de transferencia p
         window.open(`https://wa.me/573104458892?text=${encodeURIComponent(msg)}`, "_blank");
       });
     }
+
+    // Inicializar selector interactivo de montaje
+    initMontajeSelector();
 
     // Consulta inicial: lee parámetros de URL (?tel=, ?id=, ?query=)
     const urlParams = new URLSearchParams(window.location.search);
