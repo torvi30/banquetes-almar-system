@@ -11080,6 +11080,16 @@ html, body {
     color: #047857;
     border: 1px solid #a7f3d0;
   }
+  .contract-status-confirmed {
+    background: #ecfdf5 !important;
+    color: #047857 !important;
+    border: 1px solid #a7f3d0 !important;
+  }
+  .contract-status-draft {
+    background: #fef3c7 !important;
+    color: #b45309 !important;
+    border: 1px solid #fde68a !important;
+  }
   .meta-date {
     font-size: 0.78rem;
     color: #64748b;

@@ -8,6 +8,7 @@
   <link rel="apple-touch-icon" href="../images/logo-almar.png" />
   <meta name="theme-color" content="#0b0b0b" />
   <link rel="stylesheet" href="../css/tailwind.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
   <header id="adminNavbar"></header>
@@ -270,7 +271,10 @@
       </div>
 
       <!-- Botones del modal (no imprimibles) -->
-      <div class="no-print mt-7 flex gap-3 justify-end border-t border-[#eee] pt-4">
+      <div class="no-print mt-7 flex gap-3 justify-end border-t border-[#eee] pt-4 flex-wrap">
+        <button type="button" id="descargarReciboPdfBtn" class="btn btn-primary bg-[#d4af37] border-[#d4af37] text-black font-semibold hover:bg-[#c49f27]">
+          📥 Descargar PDF
+        </button>
         <button type="button" id="imprimirReciboBtn" class="btn btn-secondary text-[#111] border-[#999]">
           🖨️ Imprimir Recibo
         </button>

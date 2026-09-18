@@ -226,7 +226,7 @@
         </div>
 
         <div class="flex gap-3 flex-wrap">
-          <a href="./admin/contrato.html?id=res-201" id="btnDownloadContract" target="_blank" class="btn-apple-primary">
+          <a href="./admin/contrato.html?id=res-201&mode=client" id="btnDownloadContract" target="_blank" class="btn-apple-primary">
             📄 Descargar Contrato Oficial (PDF)
           </a>
           <button type="button" id="btnOpenPaymentModal" class="btn-apple-secondary cursor-pointer">
@@ -416,7 +416,7 @@
       clientGuestsCount.textContent = `${encontrada.personas || 0} personas`;
 
       if (btnDownloadContract) {
-        btnDownloadContract.href = `./admin/contrato.html?id=${encontrada.id}`;
+        btnDownloadContract.href = `./admin/contrato.html?id=${encontrada.id}&mode=client`;
       }
 
       // Financiero en tiempo real

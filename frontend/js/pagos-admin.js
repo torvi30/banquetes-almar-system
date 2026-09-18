@@ -54,6 +54,7 @@ const filterEventBtn = document.getElementById("filterEventBtn");
 const receiptModal = document.getElementById("receiptModal");
 const cerrarReciboBtn = document.getElementById("cerrarReciboBtn");
 const imprimirReciboBtn = document.getElementById("imprimirReciboBtn");
+const descargarReciboPdfBtn = document.getElementById("descargarReciboPdfBtn");
 const whatsappReciboBtn = document.getElementById("whatsappReciboBtn");
 
 // Estado local
@@ -782,6 +783,63 @@ if (cerrarReciboBtn) {
 
 if (imprimirReciboBtn) {
   imprimirReciboBtn.addEventListener("click", () => {
+    window.print();
+  });
+}
+
+if (descargarReciboPdfBtn) {
+  descargarReciboPdfBtn.addEventListener("click", () => {
+    downloadReceiptPdf();
+  });
+}
+
+// Generador de Recibo Oficial en PDF
+function downloadReceiptPdf() {
+  const paper = document.querySelector(".receipt-paper");
+  if (!paper) return;
+
+  const rawNum = document.getElementById("reciboNumero")?.textContent?.trim() || "REC_000";
+  const cleanNum = rawNum.replace(/[^a-zA-Z0-9_-]/g, "_");
+  const rawClient = document.getElementById("reciboCliente")?.textContent?.trim() || "CLIENTE";
+  const cleanClient = rawClient.replace(/[^a-zA-Z0-9_-]/g, "_");
+  const filename = `Recibo_Caja_${cleanNum}_${cleanClient}.pdf`;
+
+  const btn = document.getElementById("descargarReciboPdfBtn");
+  const originalText = btn ? btn.innerHTML : "";
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = "⏳ Generando...";
+  }
+
+  if (typeof html2pdf === "undefined") {
+    console.warn("html2pdf library not found, fallback to window.print()");
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
+    window.print();
+    return;
+  }
+
+  const opt = {
+    margin: [6, 6, 6, 6],
+    filename: filename,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, logging: false },
+    jsPDF: { unit: "mm", format: "letter", orientation: "portrait" }
+  };
+
+  html2pdf().set(opt).from(paper).save().then(() => {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
+  }).catch((err) => {
+    console.error("Error generating receipt PDF, fallback to print:", err);
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
     window.print();
   });
 }

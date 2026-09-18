@@ -13,6 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <!-- Estilos -->
   <link rel="stylesheet" href="../css/tailwind.css" />
@@ -20,12 +21,12 @@
 <body class="contract-page-body">
 
   <!-- BARRA DE ACCIONES EJECUTIVA (NO SE IMPRIME) -->
-  <header class="top-toolbar no-print">
+  <header class="top-toolbar no-print" id="topToolbar">
     <div class="toolbar-left">
       <a href="./reservas.html" class="btn-toolbar btn-toolbar-back" id="btnBack">
         ← Volver
       </a>
-      <div class="flex items-center gap-1.5 ml-2">
+      <div class="flex items-center gap-1.5 ml-2" id="eventSelectorWrap">
         <span class="selector-label">Cargar Evento:</span>
         <select id="eventSelector" class="event-select" title="Seleccionar reserva o cotización"></select>
       </div>
@@ -41,11 +42,26 @@
       <button id="btnShareWhatsapp" class="btn-toolbar btn-toolbar-whatsapp" title="Abrir Centro de Plantillas de WhatsApp">
         💬 WhatsApp
       </button>
-      <button onclick="window.print()" class="btn-toolbar btn-toolbar-gold" title="Imprimir documento o guardar como PDF">
-        🖨️ Imprimir / Guardar PDF
+      <button id="btnDownloadPdf" class="btn-toolbar btn-toolbar-gold" title="Descargar documento legal en PDF">
+        📥 Descargar PDF
+      </button>
+      <button onclick="window.print()" class="btn-toolbar btn-toolbar-back" title="Imprimir documento en papel">
+        🖨️ Imprimir
       </button>
     </div>
   </header>
+
+  <!-- MENSAJE DE CONTRATO NO ENCONTRADO (MODO CLIENTE) -->
+  <div id="contractNotFound" class="hidden max-w-xl mx-auto my-12 p-8 bg-[#121216] border border-amber-500/30 rounded-2xl text-center text-white">
+    <span class="text-4xl block mb-3">📜</span>
+    <h2 class="font-serif text-2xl font-bold text-amber-300 mb-2">Contrato no disponible</h2>
+    <p class="text-zinc-400 text-sm mb-6">
+      El contrato solicitado no existe, el enlace no es válido o requiere verificación con el equipo de Banquetes Almar.
+    </p>
+    <a href="../portal-cliente.html" class="btn-toolbar btn-toolbar-gold inline-flex items-center gap-2">
+      ← Volver al Portal del Anfitrión VIP
+    </a>
+  </div>
 
   <!-- DOCUMENTO LEGAL OFICIAL: CONTRATO DE PRESTACIÓN DE SERVICIOS -->
   <main class="contract-sheet" id="contractSheet">
@@ -260,12 +276,14 @@
     import { dbService } from "../js/firebase/db.js";
     import { DEFAULT_PACKAGES } from "../js/firebase/seed-data.js";
     import { openWhatsAppModal } from "../js/components/whatsapp-concierge.js";
+    import { authService } from "../js/firebase/auth.js";
 
     let globalReservas = [];
     let globalCotizaciones = [];
     let globalPackages = [];
     let currentItem = null;
     let isEditMode = false;
+    let isClientMode = false;
 
     // Formateador de moneda en pesos colombianos
     function formatMoney(amount) {
@@ -303,6 +321,14 @@
 
       const params = new URLSearchParams(window.location.search);
       let targetId = params.get("id") || "";
+      const isExplicitClient = params.get("mode") === "client";
+      const isAdminAuthenticated = authService.isAuthenticated();
+
+      // Determinar si opera en Modo Cliente Seguro
+      isClientMode = isExplicitClient || !isAdminAuthenticated;
+
+      // Configurar controles según el modo (Cliente vs Administrador)
+      configureModeUi(isClientMode);
 
       try {
         // Cargar reservas, cotizaciones y paquetes en paralelo
@@ -316,11 +342,13 @@
         globalCotizaciones = cotizaciones || [];
         globalPackages = paquetes || [];
 
-        // Poblar el dropdown selector de eventos
-        populateSelector(targetId);
+        // Poblar el dropdown selector de eventos (solo si es admin)
+        if (!isClientMode) {
+          populateSelector(targetId);
+        }
 
         // Buscar el elemento objetivo
-        loadItemById(targetId);
+        loadItemById(targetId, isClientMode);
 
         // Configurar botones de acción
         setupActions();
@@ -330,9 +358,31 @@
       }
     });
 
-    // Poblar el select superior
+    // Configuración de interfaz según rol
+    function configureModeUi(clientMode) {
+      const eventSelectorWrap = document.getElementById("eventSelectorWrap");
+      const btnToggleEdit = document.getElementById("btnToggleEdit");
+      const btnSaveChanges = document.getElementById("btnSaveChanges");
+      const btnShareWhatsapp = document.getElementById("btnShareWhatsapp");
+      const btnBack = document.getElementById("btnBack");
+
+      if (clientMode) {
+        if (eventSelectorWrap) eventSelectorWrap.classList.add("hidden");
+        if (btnToggleEdit) btnToggleEdit.classList.add("hidden");
+        if (btnSaveChanges) btnSaveChanges.classList.add("hidden");
+        if (btnShareWhatsapp) btnShareWhatsapp.classList.add("hidden");
+        if (btnBack) {
+          btnBack.href = "../portal-cliente.html";
+          btnBack.innerHTML = "← Volver a Mi Portal";
+          btnBack.title = "Regresar al Portal del Anfitrión VIP";
+        }
+      }
+    }
+
+    // Poblar el select superior (modo administrador)
     function populateSelector(selectedId) {
       const selector = document.getElementById("eventSelector");
+      if (!selector) return;
       selector.innerHTML = "";
 
       // Grupo Reservas
@@ -368,12 +418,12 @@
         const newUrl = new URL(window.location.href);
         newUrl.searchParams.set("id", newId);
         window.history.pushState({}, "", newUrl);
-        loadItemById(newId);
+        loadItemById(newId, false);
       });
     }
 
     // Cargar los datos de una reserva o cotización específica
-    function loadItemById(id) {
+    function loadItemById(id, clientMode = false) {
       let found = null;
       let isReservation = true;
 
@@ -385,14 +435,29 @@
         }
       }
 
-      // Fallback si no encuentra por ID
-      if (!found) {
-        if (globalReservas.length > 0) {
-          found = globalReservas[0];
-          isReservation = true;
-        } else if (globalCotizaciones.length > 0) {
-          found = globalCotizaciones[0];
-          isReservation = false;
+      const contractSheet = document.getElementById("contractSheet");
+      const contractNotFound = document.getElementById("contractNotFound");
+
+      // Blindaje de privacidad: si es modo cliente y no se encuentra el ID, no mostrar otro contrato
+      if (clientMode) {
+        if (!found) {
+          if (contractSheet) contractSheet.classList.add("hidden");
+          if (contractNotFound) contractNotFound.classList.remove("hidden");
+          return;
+        } else {
+          if (contractSheet) contractSheet.classList.remove("hidden");
+          if (contractNotFound) contractNotFound.classList.add("hidden");
+        }
+      } else {
+        // Fallback solo para administradores
+        if (!found) {
+          if (globalReservas.length > 0) {
+            found = globalReservas[0];
+            isReservation = true;
+          } else if (globalCotizaciones.length > 0) {
+            found = globalCotizaciones[0];
+            isReservation = false;
+          }
         }
       }
 
@@ -400,6 +465,11 @@
 
       currentItem = { data: found, isReservation };
       renderContract(found, isReservation);
+
+      // Desactivar edición en modo cliente
+      if (clientMode) {
+        document.querySelectorAll(".editable").forEach(el => el.removeAttribute("contenteditable"));
+      }
     }
 
     // Renderizar datos en el documento
@@ -408,10 +478,12 @@
       const folio = `ALM-${new Date().getFullYear()}-${codeId}`;
 
       document.getElementById("contractNumBadge").textContent = isReservation ? `CONTRATO N° ${folio}` : `PROPUESTA CONTRACTUAL ${folio}`;
-      document.getElementById("contractStatusBadge").textContent = isReservation ? "CONFIRMADO Y VIGENTE" : "PROPUESTA DE COTIZACIÓN";
-      document.getElementById("contractStatusBadge").style.background = isReservation ? "#ecfdf5" : "#fef3c7";
-      document.getElementById("contractStatusBadge").style.color = isReservation ? "#047857" : "#b45309";
-      document.getElementById("contractStatusBadge").style.borderColor = isReservation ? "#a7f3d0" : "#fde68a";
+      
+      const statusBadge = document.getElementById("contractStatusBadge");
+      if (statusBadge) {
+        statusBadge.textContent = isReservation ? "CONFIRMADO Y VIGENTE" : "PROPUESTA DE COTIZACIÓN";
+        statusBadge.className = isReservation ? "contract-status-tag contract-status-confirmed" : "contract-status-tag contract-status-draft";
+      }
 
       // Cliente
       const clientName = (isReservation ? item.cliente : item.nombre) || "Cliente";
@@ -523,7 +595,7 @@
           btnToggleEdit.innerHTML = "💾 Finalizar Edición";
           if (btnSaveChanges) {
             btnSaveChanges.classList.remove("hidden");
-            btnSaveChanges.style.display = "inline-flex";
+            btnSaveChanges.classList.add("inline-flex");
           }
           document.querySelectorAll(".editable").forEach(el => {
             el.setAttribute("contenteditable", "true");
@@ -533,14 +605,22 @@
           btnToggleEdit.classList.remove("active");
           btnToggleEdit.innerHTML = "✏️ Modo Edición";
           if (btnSaveChanges) {
+            btnSaveChanges.classList.remove("inline-flex");
             btnSaveChanges.classList.add("hidden");
-            btnSaveChanges.style.display = "none";
           }
           document.querySelectorAll(".editable").forEach(el => {
             el.removeAttribute("contenteditable");
           });
         }
       });
+
+      // Botón Descarga Directa en PDF
+      const btnDownloadPdf = document.getElementById("btnDownloadPdf");
+      if (btnDownloadPdf) {
+        btnDownloadPdf.addEventListener("click", () => {
+          downloadContractPdf();
+        });
+      }
 
       // Botón Guardar Cambios en Sistema
       if (btnSaveChanges) {
@@ -644,6 +724,57 @@
           origin: isRes ? "reserva" : "cotizacion",
           contractUrl: window.location.href
         });
+      });
+    }
+
+    // Generador y Descargador de Documento PDF
+    function downloadContractPdf() {
+      const sheet = document.getElementById("contractSheet");
+      if (!sheet) return;
+
+      const rawNum = document.getElementById("contractNumBadge")?.textContent?.trim() || "ALMAR_CONTRATO";
+      const cleanNum = rawNum.replace(/[^a-zA-Z0-9_-]/g, "_");
+      const rawName = document.getElementById("contratoCliente")?.textContent?.trim() || "CLIENTE";
+      const cleanName = rawName.replace(/[^a-zA-Z0-9_-]/g, "_");
+      const filename = `${cleanNum}_${cleanName}.pdf`;
+
+      const btn = document.getElementById("btnDownloadPdf");
+      const originalText = btn ? btn.innerHTML : "";
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = "⏳ Generando PDF...";
+      }
+
+      if (typeof html2pdf === "undefined") {
+        console.warn("html2pdf library not available, fallback to print");
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+        }
+        window.print();
+        return;
+      }
+
+      const opt = {
+        margin: [6, 8, 6, 8],
+        filename: filename,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: "mm", format: "letter", orientation: "portrait" }
+      };
+
+      html2pdf().set(opt).from(sheet).save().then(() => {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+        }
+      }).catch((err) => {
+        console.error("Error generating contract PDF, fallback to print:", err);
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+        }
+        window.print();
       });
     }
   </script>
